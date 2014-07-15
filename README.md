@@ -13,11 +13,12 @@ A light cache system with redis for express
     
 # Require it in your express file
 
-    if ( app.get('env') === 'production' ) {
-      // enable cache for all HTTP requests to app
-      app.use(require('express-redis-cache').all);
-      
-      // enable cache only for declared
-    }
+    var redisCache = require('express-redis-cache');
+
+    // get from cache
+    app.get('/', redisCache.get, require('./routes/home'));
+    
+    // create it if not exists
+    app.get('/', redisCache.get(true), require('./routes/home'));
     
 # 
