@@ -12,9 +12,9 @@ A light cache system with redis for express
     # Follow prompts
     express-redis-cache init
     
-# Create a new cache entry caching a page
+# Create a new cache entry
 
-    express-redis-cache add-page <cache-entry-name> <path> [<options...>]
+    express-redis-cache add <cache-entry-name> <path> [<options...>]
     
 Create a new cache entry. It will fetch with a HTTP request the page using &lt;path> and save it in redis under `erc<cache-entry-name>`
 
