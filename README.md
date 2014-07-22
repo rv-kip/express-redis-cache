@@ -62,7 +62,7 @@ By default, redis-express-cache connects to Redis using localhost as host and no
     
 # Commands
 
-    # Get the list of all cache entries
+## Get the list of all cache entries
     
     expressRedisCache.ls
         
@@ -74,7 +74,7 @@ By default, redis-express-cache connects to Redis using localhost as host and no
             
             Array entries
     
-    # Get a single cache entry by name
+## Get a single cache entry by name
     
     expressRedisCache.get
     
@@ -86,7 +86,7 @@ By default, redis-express-cache connects to Redis using localhost as host and no
             
             Object entry
     
-    # Add a new cache entry
+## Add a new cache entry
     
     expressRedisCache.add
     
