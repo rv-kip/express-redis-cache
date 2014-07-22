@@ -11,7 +11,7 @@ A module to make Express interact with Redis (create, get, delete). You can auto
 
 Just use it as a middleware in your route.
 
-    var cache = require('express-redis-cache');
+    var cache = require('express-redis-cache')();
 
     // replace
     app.get('/',
@@ -26,10 +26,11 @@ This will check if there is a cache entry in Redis named 'home'. If there is, it
 
 # Redis connexion info
 
-By default, redis-express-cache connects to Redis using localhost as host and nothing as port (using Redis default port). To use different port or host, use:
+By default, redis-express-cache connects to Redis using localhost as host and nothing as port (using Redis default port). To use different port or host, declare then when you require express-redis-cache.
 
-    cache.host('host name or IP address');
-    cache.port('some port number');
+    var cache = require('express-redis-cache')({
+        host: String, port: Number
+        });
     
 # Commands
 
