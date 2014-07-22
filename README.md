@@ -35,45 +35,62 @@ By default, redis-express-cache connects to Redis using localhost as host and no
 
 ## Get the list of all cache entries
     
-    expressRedisCache.ls(
+    cache.ls(
         
         [Object | Null options] ,
         
         Function callback(
             
-            Error | Null error,
-            
+            Error | Null error ,
             Array entries
         )
     )
     
 ## Get a single cache entry by name
     
-    expressRedisCache.get
+    cache.get(
     
-        String name
+        String name ,
         
-        Function callback
+        Function callback(
             
-            Error | Null error
+            Error | Null error ,
             
             Object entry
+        )
+    )
     
 ## Add a new cache entry
     
-    expressRedisCache.add
+    cache.add(
     
-        String name
+        String name ,
         
-        String body
+        String body ,
         
-        Function callback
+        Function callback(
         
-            Error | Null error
+            Error | Null error ,
             
             Object entry
+        )
+    )
 
-
+## Delete a cache entry
+    
+    cache.del(
+    
+        String name ,
+        
+        Function callback(
+        
+            Error | Null error ,
+            
+            Boolean success,
+            
+            Boolean | Null notFound
+        )
+    )
     
 # Command line
 
