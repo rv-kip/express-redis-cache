@@ -69,15 +69,36 @@ By default, redis-express-cache connects to Redis using localhost as host and no
         [Object | Null options]
         
         Function callback
+            
             Error | Null error
             
             Array entries
     
     # Get a single cache entry by name
-    expressRedisCache.get( String name, Function callback( Error | Null error, Object entry ) )
+    
+    expressRedisCache.get
+    
+        String name
+        
+        Function callback
+            
+            Error | Null error
+            
+            Object entry
     
     # Add a new cache entry
-    expressRedisCache.add( String name, String body, Function callback( Error | Null error, Object entry ) )
+    
+    expressRedisCache.add
+    
+        String name
+        
+        String body
+        
+        Function callback
+        
+            Error | Null error
+            
+            Object entry
 
 
     
