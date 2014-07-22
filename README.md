@@ -33,18 +33,42 @@ By default, redis-express-cache connects to Redis using localhost as host and no
     
 # Commands
 
+## Use a middleware
+    
+    cache.route(
+    
+        String | Null name
+    )
+    
+If `name` is a string, it is a cache entry name. If it is null, it will use `req.path` as the entry name.
+
+    app.get('/', cache.route('home'), require('./routes/'))
+    // will look for a cache entry named 'home'
+    
+    app.get('/about', cache.route(), require('./routes/'))
+    // will look for a cache entry named '/about'
+    
+## The Entry object
+
+    Object Entry {
+        body: String // the content of the cache
+        touched: Date // last time cache was set (created or updated)
+    }
+
+
 ## Get the list of all cache entries
     
     cache.ls(
         
-        [Object | Null options] ,
-        
         Function callback(
             
             Error | Null error ,
-            Array entries
+            
+            Array [Object Entry] entries
         )
     )
+    
+Feed a callback with an array of the cache entry names.
     
 ## Get a single cache entry by name
     
@@ -56,7 +80,7 @@ By default, redis-express-cache connects to Redis using localhost as host and no
             
             Error | Null error ,
             
-            Object entry
+            Object Entry
         )
     )
     
@@ -72,7 +96,7 @@ By default, redis-express-cache connects to Redis using localhost as host and no
         
             Error | Null error ,
             
-            Object entry
+            Object Entry
         )
     )
 
