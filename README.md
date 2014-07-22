@@ -1,78 +1,51 @@
 express-redis-cache
 ===================
 
-A light cache system with redis for express
+A module to make Express interact with Redis (create, get, delete). You can automatically cache all your most popular routes in Redis.
 
 # Install
 
     npm install -g express-redis-cache
     
-# Usage in Node
-
-    var expressRedisCache = require('express-redis-cache');
-    
-# Get a cache entry
-
-    expressRedisCache.get('name-of-cache-entry', function (error, cache) {
-        if ( error ) {
-            throw error;
-        }
-        assert(cache, instanceof Object);
-        assert(cache.body, instanceof String);
-        assert(cache.touched, instanceof Date);
-    });
-    
-# Create a new cache entry
-
-    expressRedisCache.add('name-of-cache-entry', function (error, cache) {
-        if ( error ) {
-            throw error;
-        }
-        assert(cache, instanceof Object);
-        assert(cache.body, instanceof String);
-        assert(cache.touched, instanceof Date);
-    });
-    
-# Delete a cache entry
-
-    expressRedisCache.del('name-of-cache-entry', function (error) {
-        if ( error ) {
-            throw error;
-        }
-    });
-    
 # Automatically cache a route
 
 Just use it as a middleware in your route.
 
+    var cache = require('express-redis-cache');
+
     // replace
-    app.get('/', require('./routes/index'));
-    // by
-    var cacheEntryName = '/home';
-    app.get('/', expressRedisCache.middleware(cacheEntryName), require('./routes/index'));
+    app.get('/',
+        function (req, res)  { ... });
     
-This will check if there is a cache entry in Redis named after cacheEntryName. If there is, it will display it. If not, it will record the response and save it as a new cache entry in Redis.
+    // by
+    app.get('/',
+        cache.route('home'),
+        function (req, res)  { ... });
+    
+This will check if there is a cache entry in Redis named 'home'. If there is, it will display it. If not, it will record the response and save it as a new cache entry in Redis - so that next time this route is called, it will be cached.
 
 # Redis connexion info
 
 By default, redis-express-cache connects to Redis using localhost as host and nothing as port (using Redis default port). To use different port or host, use:
 
-    expressRedisCache.host('host name or IP address');
-    expressRedisCache.port('some port number');
+    cache.host('host name or IP address');
+    cache.port('some port number');
     
 # Commands
 
 ## Get the list of all cache entries
     
-    expressRedisCache.ls
+    expressRedisCache.ls(
         
-        [Object | Null options]
+        [Object | Null options] ,
         
-        Function callback
+        Function callback(
             
-            Error | Null error
+            Error | Null error,
             
             Array entries
+        )
+    )
     
 ## Get a single cache entry by name
     
