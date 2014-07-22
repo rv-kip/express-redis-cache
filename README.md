@@ -31,12 +31,17 @@ By default, redis-express-cache connects to Redis using localhost as host and no
     var cache = require('express-redis-cache')({
         host: String, port: Number
         });
+        
+You can pass a Redis client as well:
+
+    require('express-redis-cache')({ client: RedisClient })
     
 # Commands
 
 ## Use a middleware
     
-    cache.route( String name? )
+    cache.route( String name?, Number expires_at? )
+        
     
 If `name` is a string, it is a cache entry name. If it is null, it will use `req.path` as the entry name.
 
@@ -46,11 +51,22 @@ If `name` is a string, it is a cache entry name. If it is null, it will use `req
     app.get('/about', cache.route(), require('./routes/'))
     // will look for a cache entry named '/about'
     
+## Set an expiration date for the cache entry
+
+    cache.route('home', +new Date() + ( 1000 * 60 * 5 ));
+    // cache will expire in 5 minutes
+    
 ## The Entry object
 
     Object Entry {
         body: String // the content of the cache
         touched: Date // last time cache was set (created or updated)
+    }
+
+## The CacheOptions Object
+
+    Object CacheOptions {
+        expires_at: Number
     }
 
 
@@ -62,11 +78,11 @@ Feed a callback with an array of the cache entry names.
     
 ## Get a single cache entry by name
     
-    cache.get( String name, Function( Error?, Entry ) )
+    cache.get( String name, Function( Error ?, Entry ) )
     
 ## Add a new cache entry
     
-    cache.add( String name, String body, Function( Error?, Entry ) )
+    cache.add( String name, String body, Object CacheOptions?, Function( Error?, Entry ) )
 
 ## Delete a cache entry
     
