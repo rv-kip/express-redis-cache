@@ -53,7 +53,7 @@ If `name` is a string, it is a cache entry name. If it is null, it will use `req
     
 ## Set an expiration date for the cache entry
 
-    cache.route('home', +new Date() + ( 1000 * 60 * 5 ));
+    cache.route('home', ( +new Date() + ( 1000 * 60 * 5 ) ));
     // cache will expire in 5 minutes
     
 ## The Entry object
