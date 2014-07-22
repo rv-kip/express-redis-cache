@@ -36,10 +36,7 @@ By default, redis-express-cache connects to Redis using localhost as host and no
 
 ## Use a middleware
     
-    cache.route(
-    
-        String | Null name
-    )
+    cache.route( String name? )
     
 If `name` is a string, it is a cache entry name. If it is null, it will use `req.path` as the entry name.
 
@@ -59,63 +56,21 @@ If `name` is a string, it is a cache entry name. If it is null, it will use `req
 
 ## Get the list of all cache entries
     
-    cache.ls(
-        
-        Function callback(
-            
-            Error | Null error ,
-            
-            Array [Object Entry] entries
-        )
-    )
+    cache.ls( Function ( Error?, [Entry] )
     
 Feed a callback with an array of the cache entry names.
     
 ## Get a single cache entry by name
     
-    cache.get(
-    
-        String name ,
-        
-        Function callback(
-            
-            Error | Null error ,
-            
-            Object Entry
-        )
-    )
+    cache.get( String name, Function( Error?, Entry )
     
 ## Add a new cache entry
     
-    cache.add(
-    
-        String name ,
-        
-        String body ,
-        
-        Function callback(
-        
-            Error | Null error ,
-            
-            Object Entry
-        )
-    )
+    cache.add( String name, String body, Function( Error?, Entry )
 
 ## Delete a cache entry
     
-    cache.del(
-    
-        String name ,
-        
-        Function callback(
-        
-            Error | Null error ,
-            
-            Boolean success,
-            
-            Boolean | Null notFound
-        )
-    )
+    cache.del( String name, Function ( Error?, Boolean success, Boolean notFound? )
     
 # Command line
 
