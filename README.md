@@ -36,10 +36,6 @@ You can pass a Redis client as well:
 
     require('express-redis-cache')({ client: RedisClient })
     
-# Constants
-
-    cache.FOREVER: Number -1 // to disable expiration
-    
 # Objects
 
 ## The Entry object
