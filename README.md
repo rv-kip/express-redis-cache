@@ -22,7 +22,7 @@ Just use it as a middleware in your route.
         cache.route(),
         function (req, res)  { ... });
     
-This will check if there is a cache entry in Redis named 'home'. If there is, it will display it. If not, it will record the response and save it as a new cache entry in Redis - so that next time this route is called, it will be cached.
+This will check if there is a cache entry for this route. If not. it will cache it and serve the cache next time route is called.
 
 # Redis connexion info
 

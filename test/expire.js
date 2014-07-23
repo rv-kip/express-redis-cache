@@ -1,17 +1,27 @@
+/**
+
+  Check if expire expired
+  #######################
+
+  Called by `test/test.js`
+
+  # Abstract
+
+  Expecting `test/test.js` to call this file and bind it with a `(require('express-redis-cache')())` instance.
+
+  This instance should have an array property called `newCaches` which represent the entries that have been test added. We use these entries to verify the expire entries have expired
+
+
+**/
+
 var expire = module.exports = function (cb) {
 
   var cache = this;
 
   var domain = require('domain').create();
 
-  var cacheEntry = '/path';
-
-  function rollback (cb) {
-    cache.del(cacheEntry, cb || function (error) {});
-  }
-
   domain.on('error', function (error) {
-    // rollback();
+    console.log(error);
     cb(error);
   });
 
@@ -19,57 +29,42 @@ var expire = module.exports = function (cb) {
 
     var assert = require('./assert');
 
-    require('async').parallel(
-      cache.newCaches
-        
-        .filter(function (entry) {
-          return !!( entry.expire );
-        })
+    console.log('Please wait a few seconds ...');
 
-        .map(function (entry) {
-          return function (then) {
-            var name = this.name;
-            var entry = this.entry;
+    setTimeout(function () {
+      require('async').parallel(
+        cache.newCaches
+          
+          .filter(function (entry) {
+            return !!( entry.entry.expire && typeof entry.entry.expire === 'number' && entry.entry.expire > 0 );
+          })
 
-            console.log();
-            console.log(' Testing expire'.bold.blue, entry);
-            console.log();
+          .map(function (entry) {
+            return function (then) {
+              var name = this.name;
+              var entry = this.entry;
 
-            cache.get(name, domain.interpret(function (cache) {
+              console.log();
+              console.log(' Testing expire'.bold.blue, name, entry);
+              console.log();
 
-              if ( ! cache ) {
-                assert('cache should have expired', (!!cache === false) );
-                return then();
-              }
+              cache.get(name, domain.intercept(function ($entry) {
 
-              cache.ttl(name, domain.interpret(function (seconds) {
-                if ( seconds === -2 ) { // has already expired
-                  throw new Error('cache has expired but cache.get() just returned it');
-                }
-                if ( seconds === -1 ) { // has no expire set
-                  throw new Error('cache is supposed to have an Redis Expire set but has not');
-                }
-                if ( seconds === 0 ) { // if key was not found
-                  throw new Error('cache not found in Redis but cache.get() just returned it');
+                if ( ! Object.keys($entry).length ) {
+                  return then();
                 }
 
-                setTimeout(function () {
-                    var f = {
-                      cache: cache
-                    };
-                    f.cache.newCaches = [entry];
-                    
-                    expire(cb).bind(f.cache);
-                  }, seconds * 1000);
+                else {
+                  console.log($entry);
+                  then(new Error('This entry should have expired: ' + name));
+                }
               }));
+              
+            }.bind(entry);
+          }),
 
-              return then(new Error('cache ' + name + ' should have expired'));
-            }));
-            
-          }.bind(entry);
-        }),
-
-      cb);
+        cb);
+    }, 1000 * 2);
 
   });
 };

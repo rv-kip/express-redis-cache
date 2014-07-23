@@ -1,3 +1,22 @@
+/**
+
+  express-redis-cache
+  ###################
+
+  # Constructor
+
+      var options = {
+        port: Number,         // Redis port
+        host: String,         // Redis host
+        prefix: String,       // Cache entry name prefix
+        client: RedisClient   // use this Redis Client
+      };
+  
+      var cache = require('express-redis-cache')(options);
+
+
+**/
+
 module.exports = function (options) {
   options = options || {};
 

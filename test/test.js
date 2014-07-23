@@ -15,6 +15,8 @@
 
 require('colors');
 
+console.time('test-express-redis-cache');
+
 var host, port;
 
 /** In case it is called like this: `npm test --host=<redis host> --port=<redis port>` **/
@@ -61,15 +63,6 @@ var caches = [
       touched: +new Date(),
       expire: -1
     }
-  },
-
-  {
-    name: 'expires_in_5_seconds',
-    entry: {
-      body: 'This is a test that expires in 5 seconds',
-      touched: +new Date(),
-      expire: 5
-    }
   }
 ];
 
@@ -86,16 +79,16 @@ var newCaches = [
   },
 
   {
-    name: 'new_expires_in_5_seconds',
+    name: 'new_expires_in_2_seconds',
     entry: {
-      body: 'This is a new test that expires in 5 seconds',
+      body: 'This is a new test that expires in 2 seconds',
       touched: +new Date(),
-      expire: 5
+      expire: 2
     }
   },
 
   {
-    name: '/route_never_expires',
+    name: '/route_never_expires_' + process.pid,
     entry: {
       body: 'This is a route test',
       touched: +new Date(),
@@ -104,11 +97,11 @@ var newCaches = [
   },
 
   {
-    name: '/route_expires_in_5_seconds',
+    name: '/route_expires_in_2_seconds_' + process.pid,
     entry: {
-      body: 'This is a route that expires in 5 seconds',
+      body: 'This is a route that expires in 2 seconds',
       touched: +new Date(),
-      expire: 5
+      expire: 2
     }
   }
 ];
@@ -153,7 +146,8 @@ async.parallel(
 
       [
         ['ls', 'get', 'add', 'route'],
-        ['del', 'expire']
+        ['del'],
+        ['expire']
       ]
         .map(function (command) {
           
@@ -170,13 +164,16 @@ async.parallel(
 
 
       /** End of async operations **/
-      
+
       function (error, results) {
         client.quit();
 
         if ( error ) {
           throw error;
         }
+
+        /** Time it took to run the tests **/
+        console.timeEnd('test-express-redis-cache');
       });
   });
 
