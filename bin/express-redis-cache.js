@@ -2,7 +2,7 @@
 
 /**
 
-  express-redis-line cli api
+  express-redis-cache cli api
   ##########################
 
   # Run
