@@ -60,14 +60,19 @@ domain.run(function () {
 
   function formatEntry (entry) {
     try {
+      var moment = require('moment');
+
       var iso = new Date(+entry.touched).toISOString();
 
+      /** Name **/
       console.log('  ' + entry.name.blue.bold);
 
+      /** Touched **/
       console.log('    %s    %s', 'touched'.yellow,
-        require('moment')(iso, require('moment').ISO_8601).fromNow());
+        moment(iso, moment.ISO_8601).fromNow());
 
-       console.log('    %s     %s', 'expires'.yellow,
+      /** Expire **/
+      console.log('    %s     %s', 'expires'.yellow,
         (function () {
           if ( entry.expire < 0 ) {
             return 'NEVER';
@@ -77,15 +82,17 @@ domain.run(function () {
 
             var iso2 = new Date(expire).toISOString();
 
-            return require('moment')(iso2, require('moment').ISO_8601).fromNow();
+            return moment(iso2, moment.ISO_8601).fromNow();
           }
         })());
 
+      /** Object size in bytes **/
       console.log('    %s       %s bytes ' + '%s MB'.grey,
         'size'.yellow,
         require('../lib/sizeof')(entry),
         (require('../lib/sizeof')(entry) / 1048576).toFixed(2));
       
+      /** Body length **/
       console.log('    %s       %s', 'body'.yellow, entry.body.length +
         ' characters');
     }
