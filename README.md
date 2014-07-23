@@ -58,6 +58,7 @@ You can pass a Redis client as well:
         port: Number?       // Redis port
         prefix: String?     // Cache entry name prefix,
         expire: Number?     // default expiration time in seconds
+        client: RedisClient // a Redis client of npm/redis
     }
 
 # Commands
