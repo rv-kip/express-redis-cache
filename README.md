@@ -36,29 +36,29 @@ You can pass a Redis client as well:
 
     require('express-redis-cache')({ client: RedisClient })
     
+# Constants
+
+    cache.FOREVER: Number -1 // to disable expiration
+    
 # Objects
 
 ## The Entry object
 
     Object Entry {
-        body: String // the content of the cache
-        touched: Date // last time cache was set (created or updated)
-    }
-
-## The CacheOptions Object
-
-    Object CacheOptions {
-        expires_at: Number
+        body:    String // the content of the cache
+        touched: Number // last time cache was set (created or updated) as a Unix timestamp
+        expire:  Number // the seconds cache entry lives (-1 if does not expire)
+        size:    Number // the size in bytes of the Entry
     }
     
 ## The ConstructorOPtions Object
 
     Object ConstructorOPtions {
-        host: String?       // Redis Host
-        port: Number?       // Redis port
+        host:   String?     // Redis Host
+        port:   Number?     // Redis port
         prefix: String?     // Cache entry name prefix,
-        expire: Number?     // default expiration time in seconds
-        client: RedisClient // a Redis client of npm/redis
+        expire: Number?     // Default expiration time in seconds
+        client: RedisClient // A Redis client of npm/redis
     }
 
 # Commands
@@ -87,7 +87,7 @@ The number of seconds the cache entry will live
     cache.route('home', ( 60 * 5 ));
     // cache will expire in 5 minutes
     
-If you don't define an expiration date but have set a default one in your constructor, this one will be used as the expiration date. If you want your cache entry not to expire even though you have set a default expiration date in your constructor, do like this:
+If you don't define an expiration date in your route but have set a default one in your constructor, the latter will be used. If you want your cache entry not to expire even though you have set a default expiration date in your constructor, do like this:
 
     cache.route('my-page', cache.FOREVER);
 
@@ -104,7 +104,11 @@ Feed a callback with an array of the cache entry names.
     
 ## Add a new cache entry
     
-    cache.add( String name, String body, Object CacheOptions?, Function( Error?, Entry ) )
+    cache.add( String name, String body, Number expire?, Function( Error?, Entry ) )
+    
+Example:
+
+    cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), 60, console.log);
 
 ## Delete a cache entry
     
