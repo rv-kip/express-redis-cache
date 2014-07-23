@@ -36,26 +36,8 @@ You can pass a Redis client as well:
 
     require('express-redis-cache')({ client: RedisClient })
     
-# Commands
+# Objects
 
-## Use a middleware
-    
-    cache.route( String name?, Number expires_at? )
-        
-    
-If `name` is a string, it is a cache entry name. If it is null, it will use `req.path` as the entry name.
-
-    app.get('/', cache.route('home'), require('./routes/'))
-    // will look for a cache entry named 'home'
-    
-    app.get('/about', cache.route(), require('./routes/'))
-    // will look for a cache entry named '/about'
-    
-## Set an expiration date for the cache entry
-
-    cache.route('home', ( +new Date() + ( 1000 * 60 * 5 ) ));
-    // cache will expire in 5 minutes
-    
 ## The Entry object
 
     Object Entry {
@@ -68,6 +50,45 @@ If `name` is a string, it is a cache entry name. If it is null, it will use `req
     Object CacheOptions {
         expires_at: Number
     }
+    
+## The ConstructorOPtions Object
+
+    Object ConstructorOPtions {
+        host: String?       // Redis Host
+        port: Number?       // Redis port
+        prefix: String?     // Cache entry name prefix,
+        expire: Number?     // default expiration time in seconds
+    }
+
+# Commands
+
+## Constructor
+
+    cache( Object ConstructorOPtions? )
+
+## Route
+    
+    cache.route( String name?, Number expire? )
+        
+    
+If `name` is a string, it is a cache entry name. If it is null, the route's URI (`req.path`) will be used as the entry name.
+
+    app.get('/', cache.route('home'), require('./routes/'))
+    // will get/set a cache entry named 'home'
+    
+    app.get('/about', cache.route(), require('./routes/'))
+    // will get/set a cache entry named '/about'
+    
+## Set an expiration date for the cache entry
+
+The number of seconds the cache entry will live
+
+    cache.route('home', ( 60 * 5 ));
+    // cache will expire in 5 minutes
+    
+If you don't define an expiration date but have set a default one in your constructor, this one will be used as the expiration date. If you want your cache entry not to expire even though you have set a default expiration date in your constructor, do like this:
+
+    cache.route('my-page', cache.FOREVER);
 
 
 ## Get the list of all cache entries
@@ -91,3 +112,7 @@ Feed a callback with an array of the cache entry names.
 # Command line
 
 We ship with a CLI. You can invoke it like this: `express-redis-cache`
+
+# Test
+
+    node test/test --host <redis-host> --port <redis-port>
