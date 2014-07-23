@@ -32,12 +32,15 @@ module.exports = function (cb) {
 
     require('async').parallel(
       
+      /** For each new cache **/
       cache.newCaches
 
+        /** Only create the ones whose entry name begins by new_ **/
         .filter(function (entry) {
           return ( /^new_/.test(entry.name) );
         })
 
+        /** create a function to test cache.add for each new cache **/
         .map(function (entry) {
           
           return function (next) {
@@ -67,6 +70,7 @@ module.exports = function (cb) {
             });
         }),
 
+      /** Test done **/
       cb);
 
           
