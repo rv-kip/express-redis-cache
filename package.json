@@ -1,13 +1,13 @@
 {
   "name": "express-redis-cache",
   "version": "0.0.1",
-  "description": "ERROR: No README.md file found!",
+  "description": "A module to make Express interact with Redis (create, get, delete). You can automatically cache all your most popular routes in Redis.",
   "main": "index.js",
   "bin": {
     "express-redis-cache": "bin/express-redis-cache.js"
   },
   "scripts": {
-    "test": "test/test.js"
+    "test": "node test/test.js"
   },
   "repository": "",
   "author": "",

@@ -116,3 +116,7 @@ We ship with a CLI. You can invoke it like this: `express-redis-cache`
 # Test
 
     node test/test --host <redis-host> --port <redis-port>
+
+    # or
+
+    npm test --host=<redis-host> --port=<redis-port>

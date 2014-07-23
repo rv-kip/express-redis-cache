@@ -17,25 +17,42 @@ require('colors');
 
 var host, port;
 
+/** In case it is called like this: `npm test --host=<redis host> --port=<redis port>` **/
+
+if ( process.env.npm_config_host ) {
+  host = process.env.npm_config_host;
+}
+
+if ( process.env.npm_config_port ) {
+  port = process.env.npm_config_port;
+}
+
+/** Read command line arguments in any **/
+
 process.argv.forEach(function (argv, i) {
-  if ( argv === '-p' || argv === '--port' && process.argv[i+1] ) {
+  if ( argv === '--port' && process.argv[i+1] ) {
     port = +process.argv[i+1];
   }
 
-  if ( argv === '-h' || argv === '--host' && process.argv[i+1] ) {
+  if ( argv === '--host' && process.argv[i+1] ) {
     host = +process.argv[i+1];
   }
 });
 
+/** Set a special prefix for tests */
+
 var prefix = 'test_erc:';
 
 console.log(' Creating testing database'.grey);
+
+/** Creating a new Redis client **/
 
 var client = require('redis').createClient(port, host);
 
 var async = require('async');
 
 /** The cache entries we will create in order to have something to ls and get **/
+
 var caches = [
   {
     name: 'never_expires',
@@ -152,7 +169,8 @@ async.parallel(
         }),
 
 
-
+      /** End of async operations **/
+      
       function (error, results) {
         client.quit();
 

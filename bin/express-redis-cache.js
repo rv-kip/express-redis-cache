@@ -1,18 +1,33 @@
 #! /usr/bin/env node
 
-var $ = require;
+/**
 
-$('colors');
+  Basic smoke test of express-redis-cache
+  #######################################
+
+  # Run
+
+      node test/test
+
+  You can pass parameters:
+
+      node test/test --host <redis host> --port <redis port> --prefix <prefix>
+
+**/
+
+require('colors');
 
 var package = require('../package.json');
 
-var domain = $('domain').create();
+var domain = require('domain').create();
 
 domain.on('error', function (error) {
   throw error;
 });
 
 domain.run(function () {
+
+  /** Get configuration from command line if any **/
 
   var port, prefix, skip = [];
 
@@ -34,10 +49,14 @@ domain.run(function () {
 
   skip = undefined;
 
-  var cache = $('../')({
+  /** Iniatilize express-redis-cache **/
+
+  var cache = require('../')({
     port: port,
     prefix: prefix || package.config.prefix
   });
+
+  /** A function to pretty print a cache entry **/
 
   function formatEntry (entry) {
     try {
@@ -46,7 +65,7 @@ domain.run(function () {
       console.log('  ' + entry.name.blue.bold);
 
       console.log('    %s    %s', 'touched'.yellow,
-        $('moment')(iso, $('moment').ISO_8601).fromNow());
+        require('moment')(iso, require('moment').ISO_8601).fromNow());
 
        console.log('    %s     %s', 'expires'.yellow,
         (function () {
@@ -58,14 +77,14 @@ domain.run(function () {
 
             var iso2 = new Date(expire).toISOString();
 
-            return $('moment')(iso2, $('moment').ISO_8601).fromNow();
+            return require('moment')(iso2, require('moment').ISO_8601).fromNow();
           }
         })());
 
       console.log('    %s       %s bytes ' + '%s MB'.grey,
         'size'.yellow,
-        $('../lib/sizeof')(entry),
-        ($('../lib/sizeof')(entry) / 1048576).toFixed(2));
+        require('../lib/sizeof')(entry),
+        (require('../lib/sizeof')(entry) / 1048576).toFixed(2));
       
       console.log('    %s       %s', 'body'.yellow, entry.body.length +
         ' characters');
@@ -75,8 +94,17 @@ domain.run(function () {
     }
   }
 
+  /** Switch action **/
+
   switch ( process.argv[2] ) {
+    
+    /**
+      HELP
+    **/
+
     case undefined:
+    case '-h':
+    case '--help':
       cache.client.quit();
 
       console.log(' express-redis-cache v%s'.yellow, package.version);
@@ -108,6 +136,10 @@ domain.run(function () {
       
       break;
 
+    /**
+      LS
+    **/
+
     case 'ls':
       
       cache.ls(domain.intercept(function (entries) {
@@ -124,6 +156,10 @@ domain.run(function () {
       }));
       break;
 
+    /**
+      ADD
+    **/
+
     case 'add':
       if ( ! process.argv[3] || ! process.argv[4] ) {
         throw new Error('Missing arguments');
@@ -139,6 +175,10 @@ domain.run(function () {
       }));
       break;
 
+    /**
+      DEL
+    **/
+
     case 'del':
       cache.del(process.argv[3], domain.intercept(function (occ) {
 
@@ -147,6 +187,10 @@ domain.run(function () {
         console.log(' %d deletions', occ);
       }));
       break;
+
+    /**
+      GET
+    **/
 
     case 'get':
       cache.get(process.argv[3], domain.intercept(function (entry) {
