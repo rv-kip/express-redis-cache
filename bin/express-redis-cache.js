@@ -136,6 +136,11 @@ domain.run(function () {
       console.log('    Add a new cache entry');
       console.log('     express-redis-cache add favorite-movie titanic'.magenta);
       console.log();
+
+      console.log('  get <name>'.bold.cyan);
+      console.log('    Get a single cache entry by name');
+      console.log('     express-redis-cache get favorite-movie'.magenta);
+      console.log();
       
       console.log('  del <name>'.bold.cyan);
       console.log('    Delete a cache entry');
@@ -144,7 +149,7 @@ domain.run(function () {
 
       console.log(' NOTE'.bold.yellow);
       
-      console.log(' express-redis-cache connects to Redis using localhost as default and Redis default port. You can override that with the options: --port <port> --host <host>.'.cyan);
+      console.log(' express-redis-cache connects to Redis using localhost as default and Redis default port. You can override that using the options: --port <port> --host <host>.'.cyan);
 
       console.log();
       
