@@ -29,7 +29,7 @@ domain.run(function () {
 
   /** Get configuration from command line if any **/
 
-  var port, prefix, skip = [];
+  var port, host, prefix, skip = [];
 
   process.argv = process.argv.map(function (argv, i, all) {
     if ( argv === '--prefix' && process.argv[(i + 1)] ) {
@@ -39,6 +39,11 @@ domain.run(function () {
 
     else if ( argv === '--port' && process.argv[(i + 1)] ) {
       port = process.argv[(i + 1)];
+      skip.push(i + 1);
+    }
+
+    else if ( argv === '--host' && process.argv[(i + 1)] ) {
+      host = process.argv[(i + 1)];
       skip.push(i + 1);
     }
 
@@ -52,6 +57,7 @@ domain.run(function () {
   /** Iniatilize express-redis-cache **/
 
   var cache = require('../')({
+    host: host,
     port: port,
     prefix: prefix || package.config.prefix
   });
