@@ -2,16 +2,16 @@
 
 /**
 
-  Basic smoke test of express-redis-cache
-  #######################################
+  express-redis-line cli api
+  ##########################
 
   # Run
 
-      node test/test
+      express-redis-cache
 
-  You can pass parameters:
+  # Help
 
-      node test/test --host <redis host> --port <redis port> --prefix <prefix>
+      express-redis-cache help
 
 **/
 
@@ -105,6 +105,7 @@ domain.run(function () {
     case undefined:
     case '-h':
     case '--help':
+    case 'help':
       cache.client.quit();
 
       console.log(' express-redis-cache v%s'.yellow, package.version);
