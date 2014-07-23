@@ -94,17 +94,17 @@ If you don't define an expiration date in your route but have set a default one 
 
 ## Get the list of all cache entries
     
-    cache.ls( Function ( Error?, [Entry] ) )
+    cache.ls( Function ( Error, [Entry] ) )
     
 Feed a callback with an array of the cache entry names.
     
 ## Get a single cache entry by name
     
-    cache.get( String name, Function( Error ?, Entry ) )
+    cache.get( String name, Function( Error, Entry ) )
     
 ## Add a new cache entry
     
-    cache.add( String name, String body, Number expire?, Function( Error?, Entry ) )
+    cache.add( String name, String body, Number expire?, Function( Error, Entry ) )
     
 Example:
 
@@ -112,7 +112,7 @@ Example:
 
 ## Delete a cache entry
     
-    cache.del( String name, Function ( Error?, Boolean success, Boolean notFound? ) )
+    cache.del( String name, Function ( Error, Number deletedEntries ) )
     
 # Command line
 
