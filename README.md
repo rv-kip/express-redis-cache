@@ -44,7 +44,6 @@ You can pass a Redis client as well:
         body:    String // the content of the cache
         touched: Number // last time cache was set (created or updated) as a Unix timestamp
         expire:  Number // the seconds cache entry lives (-1 if does not expire)
-        size:    Number // the size in bytes of the Entry
     }
     
 ## The ConstructorOPtions Object
