@@ -34,7 +34,23 @@ By default, redis-express-cache connects to Redis using localhost as host and no
         
 You can pass a Redis client as well:
 
-    require('express-redis-cache')({ client: RedisClient })
+    require('express-redis-cache')({ client: require('redis').createClient() })
+
+# Errors
+
+You can catch errors by adding a listener:
+
+    cache.on('error', function (error) {
+        // ...
+    });
+
+# Messages
+
+`express-redis-cache` logs some information at runtime. You can access them like this:
+
+    cache.on('message', function (message) {
+        // ...
+    });
     
 # Objects
 

@@ -56,11 +56,15 @@ domain.run(function () {
 
   /** Iniatilize express-redis-cache **/
 
-  var cache = require('../')({
-    host: host,
-    port: port,
-    prefix: prefix || package.config.prefix
-  });
+  var cache;
+
+  function connect () {
+    cache = require('../')({
+      host: host,
+      port: port,
+      prefix: prefix || package.config.prefix
+    });
+  }
 
   /** A function to pretty print a cache entry **/
 
@@ -119,7 +123,6 @@ domain.run(function () {
     case '-h':
     case '--help':
     case 'help':
-      cache.client.quit();
 
       console.log(' express-redis-cache v%s'.yellow, package.version);
       console.log();
@@ -160,6 +163,8 @@ domain.run(function () {
     **/
 
     case 'ls':
+
+      connect();
       
       cache.ls(domain.intercept(function (entries) {
         
@@ -184,6 +189,8 @@ domain.run(function () {
         throw new Error('Missing arguments');
       }
 
+      connect();
+
       cache.add(process.argv[3], process.argv[4], +process.argv[5], domain.intercept(function (name, entry) {
 
         cache.client.quit();
@@ -199,6 +206,9 @@ domain.run(function () {
     **/
 
     case 'del':
+
+      connect();
+
       cache.del(process.argv[3], domain.intercept(function (occ) {
 
         cache.client.quit();
@@ -212,6 +222,9 @@ domain.run(function () {
     **/
 
     case 'get':
+
+      connect();
+
       cache.get(process.argv[3], domain.intercept(function (entry) {
         
         cache.client.quit();

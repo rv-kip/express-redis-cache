@@ -145,7 +145,7 @@ async.parallel(
     async.series(
 
       [
-        ['ls', 'get', 'add', 'route'],
+        ['ls', 'get', 'add', 'route', 'client'],
         ['del'],
         ['expire']
       ]
