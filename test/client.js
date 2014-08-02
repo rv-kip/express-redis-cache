@@ -42,11 +42,10 @@ module.exports = function (cb) {
     var assert = require('./assert');
 
     var cacheClient = require('../')({
-      client: require('redis').createClient(22)
+      client: require('redis').createClient(self.options.port)
     });
 
     cacheClient.on('error', function (error) {
-      console.log(error.message);
       assert('it should not produce an error', typeof error === 'undefined');
     });
 

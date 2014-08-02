@@ -97,10 +97,10 @@ domain.run(function () {
         })());
 
       /** Object size in bytes **/
-      console.log('    %s       %s bytes ' + '%s MB'.grey,
+      console.log('    %s       %s bytes ' + '%s KB'.grey,
         'size'.yellow,
         require('../lib/sizeof')(entry),
-        (require('../lib/sizeof')(entry) / 1048576).toFixed(2));
+        (require('../lib/sizeof')(entry) / 1024).toFixed(2));
       
       /** Body length **/
       console.log('    %s       %s', 'body'.yellow, entry.body.length +
@@ -176,6 +176,26 @@ domain.run(function () {
         else {
           entries.forEach(formatEntry);
         }
+      
+      }));
+      break;
+
+    /**
+      SIZE
+    **/
+
+    case 'size':
+
+      connect();
+      
+      cache.size(domain.intercept(function (size) {
+        
+        cache.client.quit();
+
+        console.log('Size: %d bytes, %d KB, %d MB',
+          size,
+          (size / 1024).toFixed(2),
+          (size / (1024 * 1024)).toFixed(2));
       
       }));
       break;

@@ -124,6 +124,10 @@ Example:
 ## Delete a cache entry
     
     cache.del( String name, Function ( Error, Number deletedEntries ) )
+
+## Get cache size for all entries
+    
+    cache.size( Function ( Error, Number bytes ) )
     
 # Command line
 

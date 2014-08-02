@@ -108,6 +108,11 @@ module.exports = function (options) {
     index.route = function (name, expire) {
       return require('./lib/route').apply(this, [name, expire]);
     }.bind(index);
+
+    index.size = function (callback) {
+      return require('./lib/size').apply(this, [this.client, callback]);
+    };
+
   });
 
   return index;
