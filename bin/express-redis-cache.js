@@ -150,6 +150,10 @@ domain.run(function () {
       console.log('     express-redis-cache del favorite-movie'.magenta);
       console.log();
 
+      console.log('  size'.bold.cyan);
+      console.log('    Get cache size for all entries');
+      console.log();
+
       console.log(' NOTE'.bold.yellow);
       
       console.log(' express-redis-cache connects to Redis using localhost as default and Redis default port. You can override that using the options: --port <port> --host <host>.'.cyan);
