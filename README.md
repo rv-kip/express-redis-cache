@@ -83,13 +83,33 @@ You can catch errors by adding a listener:
     cache.route( String name?, Number expire? )
         
     
-If `name` is a string, it is a cache entry name. If it is null, the route's URI (`req.path`) will be used as the entry name.
+If `name` is a string, it is a cache entry name. If it is null, the route's URI (`req.originalUrl`) will be used as the entry name.
 
     app.get('/', cache.route('home'), require('./routes/'))
     // will get/set a cache entry named 'home'
     
     app.get('/about', cache.route(), require('./routes/'))
     // will get/set a cache entry named '/about'
+
+Optionally, you can get more naming control on defining `res.expressRedisCacheName`:
+
+    app.get('/user/:userid',
+        function (req, res, next) {
+            res.expressRedisCacheName = '/user/' + req.params.userid;
+            next();
+        },
+        cache.route(),
+        require('./routes/user')
+    );
+
+    app.post('/search',
+        function (req, res, next) {
+            res.expressRedisCacheName = '/search/' + req.body.tag;
+            next();
+        },
+        cache.route(),
+        require('./routes/user')
+    );
     
 ### Set an expiration date for the cache entry
 
