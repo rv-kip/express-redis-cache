@@ -74,7 +74,7 @@ module.exports = function (options) {
 
     var package = require('./package.json');
 
-    var client = options.client || require('redis').createClient(options.port);
+    var client = options.client || require('redis').createClient(options.port, options.host);
 
     client.on('error', function (error) {
       index.emit('error', error);
