@@ -5,22 +5,28 @@ A module to make Express interact with Redis (create, get, delete). You can auto
 
 # Install
 
+    npm install express-redis-cache
+    
+`express-redis-cache` ships with a CLI utility you can invoke from the console. In order to use it, install `express-redis-cache` globally (might require super user privileges):
+
     npm install -g express-redis-cache
     
 # Automatically cache a route
 
 Just use it as a middleware in your route.
 
-    var cache = require('express-redis-cache')();
+```js
+var cache = require('express-redis-cache')();
 
-    // replace
-    app.get('/',
-        function (req, res)  { ... });
-    
-    // by
-    app.get('/',
-        cache.route(),
-        function (req, res)  { ... });
+// replace
+app.get('/',
+    function (req, res)  { ... });
+
+// by
+app.get('/',
+    cache.route(),
+    function (req, res)  { ... });
+```
     
 This will check if there is a cache entry for this route. If not. it will cache it and serve the cache next time route is called.
 
@@ -28,29 +34,37 @@ This will check if there is a cache entry for this route. If not. it will cache 
 
 By default, redis-express-cache connects to Redis using localhost as host and nothing as port (using Redis default port). To use different port or host, declare them when you require express-redis-cache.
 
-    var cache = require('express-redis-cache')({
-        host: String, port: Number
-        });
+```js
+var cache = require('express-redis-cache')({
+    host: String, port: Number
+    });
+```
         
 You can pass a Redis client as well:
 
-    require('express-redis-cache')({ client: require('redis').createClient() })
+```js
+require('express-redis-cache')({ client: require('redis').createClient() })
+```
 
 # Errors
 
 You can catch errors by adding a listener:
 
-    cache.on('error', function (error) {
-        // ...
-    });
+```js
+cache.on('error', function (error) {
+    // ...
+});
+```
 
 # Messages
 
-`express-redis-cache` logs some information at runtime. You can access them like this:
+`express-redis-cache` logs some information at runtime. You can access it like this:
 
-    cache.on('message', function (message) {
-        // ...
-    });
+```js
+cache.on('message', function (message) {
+    // ...
+});
+```
     
 # Objects
 
