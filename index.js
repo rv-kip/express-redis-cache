@@ -2,115 +2,173 @@
 
   'use strict';
 
-  /**
+  var config = require('./package.json').config;
+
+  /**  ExpressRedisCache
    *
-   *  express-redis-cache
-   *  ###################
-   *
-   *  @function
-   *  @return {Object} emitter
-   *  @param {Object}   options - A list of options
-   *  @param {number}   [options.port=27017] - Redis daemon port
-   *  @param {string}   [options.host=locahost] - Redis daemon host
-   *  @param {string}   [options.prefix=null] - Prefix
-   *  @param {Redis}    [options.client=null] - a Redis client from `redis` npm module
-   *  @example expressRedisCache().on('');
-  **/
+   *  @class
+   *  @description This is a class
+   *  @extends EventEmitter
+   *  @arg {Object} options? - Options
+   */
 
-  function expressRedisCache (options) {
-    var index = {
-      FOREVER: -1,
+  function ExpressRedisCache (options) {
 
-      connected: false,
+    /** The request options
+     *
+     *  @type Object
+     */
 
-      _on: {
-      },
+    this.options = options || {};
 
-      on: function (event, then) {
-        if ( ! this._on[event] ) {
-          this._on[event] = [];
-        }
+    /** The entry name prefix 
+     *
+     *  @type String
+     */
 
-        this._on[event].push(then);
+    this.prefix = this.options.prefix || config.prefix;
 
-        return this;
-      },
+    /** The host to connect to (default host if null) 
+     *
+     *  @type String
+     */
 
-      off: function (event) {
-        if ( this._on[event] ) {
-          delete this._on[event];
-        }
+    this.host = this.options.host;
 
-        return this;
-      },
+    /** The port to connect to (default port if null) 
+     *
+     *  @type Number
+     */
 
-      emit: function (event, message) {
-        if ( Array.isArray(this._on[event]) ) {
-          this._on[event].forEach(function (then) {
-            then(message);
-          });
-        }
+    this.port = this.options.port;
+    
+    /** An alias to remove expiration when invoking a route
+     *  
+     *  var cache = new ExpressRedisCache();
+     *  cache.route('page', cache.FOREVER); // cache will not expire
+     *
+     *  @type number
+     */
+    
+    this.FOREVER = -1;
 
-        return this;
-      }
+    /** Whether or not express-redis-cache is connected to Redis
+     *  
+     *  @type Boolean
+     */
 
-    };
+    this.connected = false;
 
-    var domain = require('domain').create();
+    /** The Redis Client 
+     *
+     *  @type Object (preferably a client from the official Redis module)
+     */
 
-    domain.on('error', function (error) {
-      index.emit('error', error);
-    });
+    this.client = this.options.client || require('redis').createClient(this.port, this.host);
 
-    domain.run(function () {
-      options = options || {};
+    /** If client can emit */
 
-      var package = require('./package.json');
+    if ( this.client.on ) {
+      this.client.on('error', function (error) {
+        this.emit('error', error);
+      }.bind(this));
 
-      var client = options.client || require('redis').createClient(options.port);
-
-      client.on('error', function (error) {
-        index.emit('error', error);
-      });
-
-      client.on('connect', function () {
-        index.connected = true;
-        index.emit('message', 'OK connected to Redis');
-      });
-
-      index.options   = options;
-      index.client    = client;
-      index.prefix    = options.prefix || package.config.prefix;
-
-      index.ls = function (callback) {
-        return require('./lib/ls').apply(this, [this.client, callback]);
-      };
-
-      index.get = function (name, callback) {
-        return require('./lib/get').apply(this, [this.client, name, callback]);
-      };
-
-      index.add = function (name, body, expire, callback) {
-        return require('./lib/add').apply(this, [this.client, name, body, expire, callback]);
-      };
-
-      index.del = function (name, callback) {
-        return require('./lib/del').apply(this, [this.client, name, callback]);
-      };
-
-      index.route = function (name, expire) {
-        return require('./lib/route').apply(this, [name, expire]);
-      }.bind(index);
-
-      index.size = function (callback) {
-        return require('./lib/size').apply(this, [this.client, callback]);
-      };
-
-    });
-
-    return index;
+      this.client.on('connect', function () {
+        this.connected = true;
+        this.emit('connected', { host: this.host, port: this.port });
+        this.emit('message', 'OK connected to Redis');
+      }.bind(this));
+    }
   }
 
-  module.exports = expressRedisCache;
-  
+  /** Extend Event Emitter */
+
+  require('util').inherits(ExpressRedisCache, require('events').EventEmitter);
+
+  /**  List all cached entries in Redis
+   *
+   *  @method
+   *  @description List all cached entries in Redis
+   *  @return void{Object}
+   *  @arg {Object} arg - About arg 
+   */
+
+  ExpressRedisCache.prototype.ls = function (callback) {
+    return require('./lib/ls').apply(this, [this.client, callback]);
+  };
+
+  /**  js-comment
+   *
+   *  @method
+   *  @description This is a method
+   *  @return void{Object}
+   *  @arg {Object} arg - About arg 
+   */
+
+  ExpressRedisCache.prototype.get = function (name, callback) {
+    return require('./lib/get').apply(this, [this.client, name, callback]);
+  };
+
+  /**  js-comment
+   *
+   *  @method
+   *  @description This is a method
+   *  @return void{Object}
+   *  @arg {Object} arg - About arg 
+   */
+
+  ExpressRedisCache.prototype.add = function (name, body, expire, callback) {
+    return require('./lib/add').apply(this, [this.client, name, body, expire, callback]);
+  };
+
+  /**  js-comment
+   *
+   *  @method
+   *  @description This is a method
+   *  @return void{Object}
+   *  @arg {Object} arg - About arg 
+   */
+
+  ExpressRedisCache.prototype.del = function (name, callback) {
+    return require('./lib/del').apply(this, [this.client, name, callback]);
+  };
+
+  /**  js-comment
+   *
+   *  @method
+   *  @description This is a method
+   *  @return void{Object}
+   *  @arg {Object} arg - About arg 
+   */
+
+  ExpressRedisCache.prototype.route = function (name, expire) {
+    return require('./lib/route').apply(this, [name, expire]);
+  };
+
+  /**  js-comment
+   *
+   *  @method
+   *  @description This is a method
+   *  @return void{Object}
+   *  @arg {Object} arg - About arg 
+   */
+
+  ExpressRedisCache.prototype.size = function (callback) {
+    return require('./lib/size').apply(this, [this.client, callback]);
+  };
+
+  /**  js-comment
+   *
+   *  @function
+   *  @description This is a function
+   *  @return void{Object}
+   *  @arg {Object} arg - About arg 
+   */
+
+  ExpressRedisCache.init = function (options) {
+    return new ExpressRedisCache(options);
+  }
+
+  module.exports = ExpressRedisCache.init;
+
 })();
