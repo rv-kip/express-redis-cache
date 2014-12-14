@@ -99,7 +99,7 @@ var entry = {
 
 # The module
 
-The module exposes a function which instantiates a new instance of a class called [ExpressRedisCache](../blob/master/index.js).
+The module exposes a function which instantiates a new instance of a class called [ExpressRedisCache](master/index.js).
 
 ```js
 // This
@@ -118,13 +118,13 @@ var cache = require('express-redis-cache')(/** Object | Undefined */ options);
 
 Where `options` is an object that has the following properties:
 
-
-|       | host    | port  | prefix  | expire  | client |
-| ------------- |----------|-------|----------|--------|------|
-| **type**          | `String`    | `Number` | `String` | `Number` | `RedisClient` |
-| **required**      | `false`     |   `false` | `false` | `false`  | `false` |
-| **default**       | `undefined`  |    `undefined` | `require('express-redis-cache/package.json').config.prefix` | `undefined` | `require('redis').createClient({ host: cache.host, port: cache.port })` |
-| **description**   | Redis server host  |    Redis server port | Default prefix to append to entry names | Default life time of entries in seconds | A Redis client |
+|       |  Type   |  Required  |  Default  |  Description  |
+| ------------- |----------|-------|----------|--------|
+| **host**          | `String`    | `false` | `undefined` | Redis server host
+| **port**      | `Number`     |   `false` | `undefined` | Redis server port
+| **prefix**       | `String`  |    `false` | `require('express-redis-cache/package.json').config.prefix` | Default prefix (This will be prepended to all entry names) |
+| **expire**   | `Number`  |    `false` | `undefined` | Default life time of entries in seconds |
+| **client**   | `RedisClient`  |    `false` | `require('redis').createClient({ host: cache.host, port: cache.port })` | A Redis client |
 
 ## Route `cache.route()`
     
