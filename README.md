@@ -108,7 +108,7 @@ app.get('/', cache.route('home'), require('./routes/'))
 // the name of the enrty will be 'home'
 
 app.get('/about', cache.route(), require('./routes/'))
-// the name of the enrty will be
+// the name of the enrty will be '/about'
 ```
 
 Optionally, you can gain more naming control on defining `res.expressRedisCacheName`:
@@ -117,7 +117,7 @@ Optionally, you can gain more naming control on defining `res.expressRedisCacheN
 // Example with using parameters
 app.get('/user/:userid',
     function (req, res, next) {
-        res.expressRedisCacheName = '/user/' + req.params.userid;
+        res.expressRedisCacheName = '/user/' + req.params.userid; // name of the entry
         next();
     },
     cache.route(),
@@ -127,7 +127,7 @@ app.get('/user/:userid',
 // Example with using payload
 app.post('/search',
     function (req, res, next) {
-        res.expressRedisCacheName = '/search/' + req.body.tag;
+        res.expressRedisCacheName = '/search/' + req.body.tag; // name of the entry
         next();
     },
     cache.route(),
