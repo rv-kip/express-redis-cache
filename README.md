@@ -80,7 +80,27 @@ cache.on('message', function (message) {
         expire:  Number // the seconds cache entry lives (-1 if does not expire)
     }
     
-## The ConstructorOPtions Object
+## The ConstructorOptions Object
+
+This is the object passed as an argument to the constructor.
+
+```js
+Object.create('ConstructorOptions', {
+    
+    "host": {
+        "type": String,
+        "required": false,
+        "default": undefined,
+        "description": 'Redis server host'
+    },
+    
+   "port": {
+        type: Number,
+        required: false,
+        description: 'Redis server host'
+    },
+    
+    );
 
     Object ConstructorOPtions {
         host:   String?     // Redis Host
