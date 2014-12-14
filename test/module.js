@@ -12,7 +12,7 @@
 
   var prefix    =   'erct:';
   var host      =   'localhost';
-  var port      =   3700;
+  var port      =   6379;
 
   describe ( 'Module', function () {
 
@@ -21,10 +21,14 @@
       cache.should.be.a.function;
     });
 
-    it ( 'should return a new ExpressRedisCache', function () {
+    it ( 'should return a new ExpressRedisCache', function (done) {
       cache = cache({ prefix: prefix, host: host, port: port });
       cache.constructor.name.should.equal('ExpressRedisCache');
       cache.on('error', function (error) {
+        throw error;
+      });
+      cache.on('connected', function () {
+        done();
       });
     });
 
@@ -57,10 +61,10 @@
         .and.equal(-1);
     });
 
-    it ( 'should have a property connected which is a boolean and is false', function () {
+    it ( 'should have a property connected which is a boolean and is true', function () {
       cache.should.have.property('connected')
         .which.is.a.Boolean
-        .and.is.false;
+        .and.is.true;
     });
 
     it ( 'should have a property client which is a RedisClient', function () {

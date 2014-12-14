@@ -1,78 +1,66 @@
-/**
+(function () {
 
-  Basic smoke test for method cache.add()
-  #######################################
+  'use strict';
 
-  Called by `test/test.js`
+  var path      =   require('path');
+  var assert    =   require('assert');
 
-  # Abstract
+  var mocha     =   require('mocha');
+  var should    =   require('should');
 
-  Expecting `test/test.js` to call this file and bind it with a `(require('express-redis-cache')())` instance.
+  var prefix    =   'erct:';
+  var host      =   'localhost';
+  var port      =   6379;
 
-  This instance should have an array property called `newCaches` which represent the entries that have been created when `test/test.js` is called. We use these entries to verify we can perform a basic smoke-test on method `cache.add()`.
+  var _name     =   'test1';
+  var _body     =   'test1 test1 test1';
+  var _type     =   'text/plain';
 
-  The `newCaches` contain new entries to create for both asserting `cache.add()` and `cache.route()`. The ones to be asserted here have their names prefixed by `new_`
-
-
-**/
-
-module.exports = function (cb) {
-
-  var cache = this;
-
-  var domain = require('domain').create();
-
-  domain.on('error', function (error) {
-    cb(error);
+  var cache     =   require('../')({
+    prefix: prefix,
+    host: host,
+    port: port
   });
 
-  domain.run(function () {
-    
-    var assert = require('./assert');
+  describe ( 'add', function () {
 
-    require('async').parallel(
-      
-      /** For each new cache **/
-      cache.newCaches
+    var error, name, entry;
 
-        /** Only create the ones whose entry name begins by new_ **/
-        .filter(function (entry) {
-          return ( /^new_/.test(entry.name) );
-        })
+    it ( 'should be a function', function () {
+      cache.add.should.be.a.Function;
+    });
 
-        /** create a function to test cache.add for each new cache **/
-        .map(function (entry) {
-          
-          return function (next) {
+    it ( 'should callback', function (done) {
+      cache.add(_name, _body, _type, 15,
+        function ($error, $name, $entry) {
+          error = $error;
+          name = $name;
+          entry = $entry;
+          done();
+        });
+    });
 
-            var add = this;
+    it ( 'should not have error', function () {
+      should(error).be.undefined;
+    });
 
-            cache.add(add.name, add.body, add.expire, domain.intercept(function (name, cache) {
-              console.log();
-              console.log(' Testing cache.add'.bold.blue);
-              console.log();
+    it ( 'should have a name which is a string and match the request', function () {
+      name.should.be.a.String.and.equal(_name);
+    });
 
-              assert('Entry name should be ' + add.name, name === add.name);
+    it ( 'should have a entry which is an object', function () {
+      entry.should.be.an.Object;
+      console.log(entry);
+    });
 
-              cache.name = name;
+    it ( 'entry which has a property body which a string matching the request', function () {
+      entry.body.should.be.a.String.and.equal(_body);
+    });
 
-              require('./entry')(cache);
+    it ( 'entry which has a property type which a string matching the request', function () {
+      entry.type.should.be.a.String.and.equal(_type);
+    });
 
-              assert('It should have the text ' + add.body, cache.body === add.body);
-
-              next();
-            }));
-          }
-            .bind({
-              name:   entry.name,
-              body:   entry.entry.body,
-              expire: entry.entry.expire
-            });
-        }),
-
-      /** Test done **/
-      cb);
-
-          
   });
-};
+
+})();
