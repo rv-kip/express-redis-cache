@@ -38,6 +38,7 @@ Code base now strictly follows the following naming convention:
 - Class names are in upper camel case (ie, `function MyClass () {}`)
 - Function and method names are in lower camel case (ie, `function myFunction () {}`)
 - Variable names are in lower snake case (ie, `var my_var;`)
+- Upper cases for constants (even though we don't use the const keyword to declare them because it is not allowed in strict JavaScript) (ie, `var CONSTANT = 1`)
 
 The variables from the previous code who are not following the naming convention are marked as deprecated (you can still use them) and their equivalent with the correct naming have been introduced (we recomend you to use them instead). See the section **## Deprecated** below.
 
@@ -47,7 +48,7 @@ Still supported, but will issue a deprecation notice with a substitute. You can 
 
 ```js
 cache.on("deprecated", function (deprecated, substitute) {
-  throw new Error('Deprecated: ' + deprecated +'. Use ' + substitute + ' instead');
+  console.log('Deprecated: ' + deprecated +'. Use ' + substitute + ' instead');
 });
 ```
 
