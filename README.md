@@ -249,15 +249,19 @@ Feed a callback with an array of the cache entry names.
     
 ## `add` Add a new cache entry
     
-    cache.add( String name, String body, Number expire?, Function( Error, Entry ) )
+```js
+cache.add(/** String */ name, /** String */ body, /** String (optional) **/ type, /** Number (optional) */ expire, /** Function( Error, Entry ) */ callback )
+```
     
 Example:
 
 ```js
-cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), 60,
+cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), 'text/plain', 60,
     function (error, added) {
     });
 ```
+
+
 
 ## `del` Delete a cache entry
     
