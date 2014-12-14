@@ -118,13 +118,13 @@ var cache = require('express-redis-cache')(/** Object | Undefined */ options);
 
 Where `options` is an object that has the following properties:
 
-|   Option    |  Type   |  Required  |  Default  |  Description  |
+|   Option    |  Type   |  Default  |  Description  |
 | ------------- |----------|-------|----------|--------|
-| **host**          | `String`    | `false` | `undefined` | Redis server host
-| **port**      | `Number`     |   `false` | `undefined` | Redis server port
-| **prefix**       | `String`  |    `false` | `require('express-redis-cache/package.json').config.prefix` | Default prefix (This will be prepended to all entry names) |
-| **expire**   | `Number`  |    `false` | `undefined` | Default life time of entries in seconds |
-| **client**   | `RedisClient`  |    `false` | `require('redis').createClient({ host: cache.host, port: cache.port })` | A Redis client |
+| **host**          | `String`    | `undefined` | Redis server host
+| **port**      | `Number`     | `undefined` | Redis server port
+| **prefix**       | `String`  | `require('express-redis-cache/package.json').config.prefix` | Default prefix (This will be prepended to all entry names) |
+| **expire**   | `Number` | `undefined` | Default life time of entries in seconds |
+| **client**   | `RedisClient` | `require('redis').createClient({ host: cache.host, port: cache.port })` | A Redis client |
 
 ## Route `cache.route()`
     
