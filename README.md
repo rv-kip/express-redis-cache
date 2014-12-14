@@ -11,11 +11,12 @@ Easily cache pages of your app using Express and Redis. Could be used without Ex
 
     npm install -g express-redis-cache
     
-# Automatically cache a route
+# Usage
 
-Just use it as a middleware in your route.
+Just use it as a middleware in the stack of the route you want to cache.
 
 ```js
+var app = express();
 var cache = require('express-redis-cache')();
 
 // replace
@@ -87,20 +88,56 @@ This is the object passed as an argument to the constructor.
 ```js
 Object.create('ConstructorOptions', {
     
-    "host": {
-        "type": String,
-        "required": false,
-        "default": undefined,
-        "description": 'Redis server host'
-    },
-    
-   "port": {
-        type: Number,
-        required: false,
-        description: 'Redis server host'
-    },
-    
-    );
+  "host": {
+    "type": String,
+    "required": false,
+    "default": undefined,
+    "description": "Redis server host",
+    "example": function () { cache({ host: "my-host.com" }); }
+  },
+  
+ "port": {
+    "type": Number,
+    "required": false,
+    "default": undefined,
+    "description": "Redis server port",
+    "example": function () { cache({ port: 18000 }); }
+  },
+  
+  "prefix": {
+    "type": String,
+    "required": false,
+    "default": require("express-redis-cache/package.json").config.prefix,
+    "description": "Prefix to use for each entry name",
+    "example": function () {
+      cache({ prefix: "my-prefix" });
+      
+      // Using Express
+      app.get('/my-page',
+        // Cache will be saved as "my-prefix:my-page"
+        cache.route(),
+        function (req, res, next) {
+          res.send('Hey! I am a cool page!');
+        });
+        
+      // Using API
+      
+      cache.add('test-entry', 'The quick brown fox jumps over the lazy dog', 'text/plain', 6,
+        function (error, added) {});
+  },
+  
+  "expire": {
+    "type": Number,
+    "required": false,
+    "default": undefined,
+    "description": "Default lifetime in seconds of the cache",
+    "example": function () {
+      // Unless specified otherwise, new entries will be kept 5 minutes in Redis until destroyed
+      cache({ expire: (60*5) });
+      }
+  },
+  
+  );
 
     Object ConstructorOPtions {
         host:   String?     // Redis Host
