@@ -71,7 +71,7 @@ cache.on('message', function (message) {
 });
 ```
 
-# connected
+## connected
 
 Emitted when the client is connected to Redis server
 
