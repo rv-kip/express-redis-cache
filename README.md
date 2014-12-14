@@ -143,12 +143,54 @@ Where `options` is an object that has the following properties:
 | **client**   | `RedisClient` | `require('redis').createClient({ host: cache.host, port: cache.port })` | A Redis client |
 
 ## Route `cache.route()`
+
+This is the method to be used as an Express middleware.
     
 ```js
-cache.route(/*** String or Object or Undefined */ name, /*** Number or String or Undefined */ custom);
+cache.route(/*** Mixed */ name, /*** Mixed */ custom);
 ```
 
-### `@arg name`
+There are several way you can call `cache.route()`
+
+### Using URL path as the cache entry name
+
+If no name is specified (or name is set to true), `[req.originalUrl](http://expressjs.com/4x/api.html#req.originalUrl)` is used as the name of the entry, prepended by the default settings
+
+```js
+app.get('/about', cache.route(), require('./routes/about'));
+// entry will be saved as "{prefix}:/about"
+
+// You can also pass it as an object
+app.get('/about', cache.route({ name: true }), require('./routes/about'));
+```
+
+### Specify a name
+
+You can specify the entry name by passing it as a string as the first argument of `cache.route()` - or by passing an object with the property `name` being a script.
+
+```js
+app.get('/about', cache.route('about-page'), require('./routes/about'));
+// entry will be saved as "{prefix}:about-page"
+
+// You can also pass it as an object
+app.get('/about', cach.route({ name: 'about-page' }), require('./routes/about'));
+```
+
+### Overwrite default expiration time
+
+You can pass a custom expiration time in seconds as a number as either the first or the second argument of `cache.route()`. You can alsp pass an object with the property `expire` being a number.
+
+```js
+// as first argument as a number
+app.get('/about', cache.route(5000), require('./routes/about'));
+// entry will live 5000 secondes
+
+// as first number as an object
+app.get('/about', cache.route({ expire: 5000 }), require('./routes/about'));
+
+// You can also pass it as an object
+app.get('/about', cache().route({ name: true }), require('./routes/about'));
+```
     
 **If `name` is a string**, it will be used as the cache entry's name.
 
@@ -159,9 +201,33 @@ cache.route('entry-name'); // entry name will be {prefix}:entry-name
 **If `name` is undefined**, the route's URI (`req.originalUrl`) will be used as the entry name.
 
 ```js
-app.get('/about', cache.route(), require('./routes/'))
+app.get('/about', cache.route(), require('./routes/about'))
+// the name of the entry will be '{prefix}:/about'
+```
+
+**If `name` is a number**, this number will be used as the lifetime in seconds of the cache entry. This will overwrite default expiration lifetime (view `Constructor`).
+
+```js
+app.get('/about', cache.route(5000), require('./routes/about'))
+// the cache entry will live 5000 seconds
+```
+**If `name` is an object**, it.
+
+```js
+app.get('/about', cache.route({ name: "about-html", type: "text/html", prefix: false ), require('./routes/about'))
+// the cache entry will live 5000 seconds
+```
+
+### `@arg custom`
+
+**If `custom` is a number**, this number will be used as the lifetime in seconds of the cache entry. This will overwrite default expiration lifetime (view `Constructor`).
+
+```js
+app.get('/about', cache.route(), require('./routes/about'))
 // the name of the enrty will be '{prefix}:/about'
 ```
+
+**If `custom` is a string**, this string will be used as the type of in seconds of the cache entry. This will overwrite default expiration lifetime (view `Constructor`).
 
 ### Custom name
 
