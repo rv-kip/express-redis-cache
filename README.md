@@ -85,73 +85,94 @@ cache.on('connected', function () {
 });
 ```
     
-# Objects
+# Models
 
-## The Entry object
+## The Entry Model
 
-    Object Entry {
-        body:    String // the content of the cache
-        touched: Number // last time cache was set (created or updated) as a Unix timestamp
-        expire:  Number // the seconds cache entry lives (-1 if does not expire)
-    }
+A cache entry.
+
+```js
+new Entry ({
+    body:    String // the content of the cache
+    touched: Number // last time cache was set (created or updated) as a Unix timestamp
+    expire:  Number // the seconds cache entry lives (-1 if does not expire)
+})
+```
     
-## The ConstructorOptions Object
+## The Options Object
 
 This is the object passed as an argument to the constructor.
 
 ```js
-Object.create('ConstructorOptions', {
-    
+new Schema({
   "host": {
-    "type": String,
-    "required": false,
-    "default": undefined,
-    "description": "Redis server host",
-    "example": function () { cache({ host: "my-host.com" }); }
-  },
-  
- "port": {
-    "type": Number,
-    "required": false,
-    "default": undefined,
-    "description": "Redis server port",
-    "example": function () { cache({ port: 18000 }); }
-  },
-  
-  "prefix": {
-    "type": String,
-    "required": false,
-    "default": require("express-redis-cache/package.json").config.prefix,
-    "description": "Prefix to use for each entry name",
-    "example": function () {
-      cache({ prefix: "my-prefix" });
+    type: String,
+    required: false,
+    default: undefined,
+    description: "Redis server host",
+    example: function () {
+      /** Setter */
+      cache({ host: 'my-host.com' });
       
+      /** Getter */
+      console.log('host', cache.host);
+      }
+    },
+      
+  "port": {
+    type: Number,
+    required: false,
+    default: undefined,
+    description: "Redis server port",
+    example: function () {
+      /** Setter */
+      cache({ port: 18000 });
+      
+      /** Getter */
+      console.log('port', cache.port);
+      }
+    },
+      
+  "prefix": {
+    type: String,
+    required: false,
+    default: require("express-redis-cache/package.json").config.prefix,
+    description: "Default prefix to prepend to each entry name",
+    example: function () {
+      /** Setter */
+      cache({ prefix: "my-prefix" }); // initiate new client and set "my-prefix" as default prefix
+      
+      cache.prefix = "my-cool-prefix"; // client's default prefix changed at runtime
+      
+      /** Getter */
+      console.log('prefix', cache.prefix);
+  
       // Using Express
       app.get('/my-page',
-        // Cache will be saved as "my-prefix:my-page"
+        // Cache will be saved as "my-cool-prefix:my-page"
         cache.route(),
         function (req, res, next) {
           res.send('Hey! I am a cool page!');
         });
         
       // Using API
-      
+      // The entry will be saved under the name "my-cool-prefix:test-entry"
       cache.add('test-entry', 'The quick brown fox jumps over the lazy dog', 'text/plain', 6,
         function (error, added) {});
-  },
-  
-  "expire": {
-    "type": Number,
-    "required": false,
-    "default": undefined,
-    "description": "Default lifetime in seconds of the cache",
-    "example": function () {
-      // Unless specified otherwise, new entries will be kept 5 minutes in Redis until destroyed
-      cache({ expire: (60*5) });
-      }
-  },
-  
-  );
+        
+      // You can overwrite default prefix using an object
+      
+      // With Express
+      cache.route({ prefix: 'another-prefix' });
+      
+      // With API
+      cache.add({ name: 'test-entry', prefix: 'prefix-2' });
+      
+      // You can also choose not to use prefix. The snippet above could also be written as such:
+      cache.add({ name: 'prefix-2:test-entry', prefix: false });
+    },
+  }
+);
 ```
 
     Object ConstructorOPtions {
