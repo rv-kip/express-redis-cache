@@ -53,7 +53,7 @@ require('express-redis-cache')({ client: require('redis').createClient() })
 
 # Name of the entry
 
-By default, the cache entry name will be `default prefix`:`[req.originalUrl](http://expressjs.com/4x/api.html#req.originalUrl)`.
+By default, the cache entry name will be `default prefix`:[req.originalUrl](http://expressjs.com/4x/api.html#req.originalUrl).
 
 ```js
 app.get('/',
