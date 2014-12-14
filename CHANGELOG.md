@@ -27,7 +27,7 @@ No fixes have been made.
 
 ### Test
 
-We now use Mocha for testing instead of home-made testing framework
+We now use Mocha and should.js for testing instead of home-made testing framework
 
 ### Event Emitter
 
