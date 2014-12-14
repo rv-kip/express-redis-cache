@@ -65,6 +65,10 @@ cache.on('message', function (message) {
     // ...
 });
 ```
+
+# Other events
+
+- **connected** emitted when the client is connected to Redis server
     
 # Objects
 
@@ -99,46 +103,54 @@ cache.on('message', function (message) {
     
 If `name` is a string, it is a cache entry name. If it is null, the route's URI (`req.originalUrl`) will be used as the entry name.
 
-    app.get('/', cache.route('home'), require('./routes/'))
-    // will get/set a cache entry named 'home'
-    
-    app.get('/about', cache.route(), require('./routes/'))
-    // will get/set a cache entry named '/about'
+```js
+app.get('/', cache.route('home'), require('./routes/'))
+// will get/set a cache entry named 'home'
+
+app.get('/about', cache.route(), require('./routes/'))
+// will get/set a cache entry named '/about'
+```
 
 Optionally, you can get more naming control on defining `res.expressRedisCacheName`:
 
-    app.get('/user/:userid',
-        function (req, res, next) {
-            res.expressRedisCacheName = '/user/' + req.params.userid;
-            next();
-        },
-        cache.route(),
-        require('./routes/user')
-    );
+```js
+app.get('/user/:userid',
+    function (req, res, next) {
+        res.expressRedisCacheName = '/user/' + req.params.userid;
+        next();
+    },
+    cache.route(),
+    require('./routes/user')
+);
 
-    app.post('/search',
-        function (req, res, next) {
-            res.expressRedisCacheName = '/search/' + req.body.tag;
-            next();
-        },
-        cache.route(),
-        require('./routes/user')
-    );
+app.post('/search',
+    function (req, res, next) {
+        res.expressRedisCacheName = '/search/' + req.body.tag;
+        next();
+    },
+    cache.route(),
+    require('./routes/user')
+);
+```
     
 ### Set an expiration date for the cache entry
 
 The number of seconds the cache entry will live
 
-    cache.route('home', ( 60 * 5 ));
-    // cache will expire in 5 minutes
+```js
+cache.route('home', ( 60 * 5 ));
+// cache will expire in 5 minutes
+```
     
 If you don't define an expiration date in your route but have set a default one in your constructor, the latter will be used. If you want your cache entry not to expire even though you have set a default expiration date in your constructor, do like this:
 
-    cache.route('my-page', cache.FOREVER);
+```js
+cache.route('my-page', cache.FOREVER);
+```
 
 
 ## Get the list of all cache entries
-    
+
     cache.ls( Function ( Error, [Entry] ) )
     
 Feed a callback with an array of the cache entry names.
@@ -153,7 +165,9 @@ Feed a callback with an array of the cache entry names.
     
 Example:
 
-    cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), 60, console.log);
+```js
+cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), 60, console.log);
+```
 
 ## Delete a cache entry
     
@@ -169,8 +183,10 @@ We ship with a CLI. You can invoke it like this: `express-redis-cache`
 
 # Test
 
-    node test/test --host <redis-host> --port <redis-port>
+    mocha --host <redis-host> --port <redis-port>
 
     # or
 
     npm test --host=<redis-host> --port=<redis-port>
+
+Enjoy!
