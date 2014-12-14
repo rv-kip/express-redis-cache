@@ -168,7 +168,9 @@ Feed a callback with an array of the cache entry names.
 Example:
 
 ```js
-cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), 60, console.log);
+cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), 60,
+    function (error, added) {
+    });
 ```
 
 ## Delete a cache entry
