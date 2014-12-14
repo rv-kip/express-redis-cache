@@ -85,23 +85,39 @@ cache.on('connected', function () {
 });
 ```
     
-# Models
+# The Entry Model
 
-## The Entry Model
-
-A cache entry.
+This is the object synopsis we use to represent a cache entry:
 
 ```js
-new Entry ({
-    body:    String // the content of the cache
-    touched: Number // last time cache was set (created or updated) as a Unix timestamp
-    expire:  Number // the seconds cache entry lives (-1 if does not expire)
-})
+var entry = {
+  body:    String // the content of the cache
+  touched: Number // last time cache was set (created or updated) as a Unix timestamp
+  expire:  Number // the seconds cache entry lives (-1 if does not expire)
+};
 ```
-    
-## The Options Object
 
-This is the object passed as an argument to the constructor.
+# The module
+
+The module exposes a function which instantiates a new instance of a class called [ExpressRedisCache](../blob/master/index.js).
+
+```js
+// This
+var cache = require('express-redis-cache')({ /* ... */ });
+// is the same than
+var cache = new (require('express-redis-cache/lib/ExpressRedisCache'))({ /* ... */ });
+```
+
+# The constructor
+
+As stated above, call the function exposed by the module to create a new instance of `ExpressRedisCache`,
+
+```js
+var cache = require('express-redis-cache')(/** Object | Undefined */ options);
+```
+
+Where `options` is an object that has the following properties:
+
 
 |       | host    | port  | prefix  | expire  | client |
 | ------------- |----------|-------|----------|--------|------|
@@ -110,116 +126,36 @@ This is the object passed as an argument to the constructor.
 | **default**       | `undefined`  |    `undefined` | `require('express-redis-cache/package.json').config.prefix` | `undefined` | `require('redis').createClient({ host: cache.host, port: cache.port })` |
 | **description**   | Redis server host  |    Redis server port | Default prefix to append to entry names | Default life time of entries in seconds | A Redis client |
 
+## Route `cache.route()`
+    
 ```js
-new Schema({
-  "host": {
-    type: String,
-    required: false,
-    default: undefined,
-    description: "Redis server host",
-    example: function () {
-      /** Setter */
-      cache({ host: 'my-host.com' });
-      
-      /** Getter */
-      console.log('host', cache.host);
-      
-      // Host is not changable at runtime
-      // Create different clients instead:
-      
-      var cache = require('express-redis-cache');
-      var client1 = cache({ host: 'my.app.com', port: 6537 });
-      var client2 = cache({ host: 'cloud.my.app.com', port: 7433 });
-      
-      app.get('/1', client1.route(), function (req, res) { res.send('1'); });
-      app.get('/2', client2.route(), function (req, res) { res.send('2'); });
-      }
-    },
-      
-  "port": {
-    type: Number,
-    required: false,
-    default: undefined,
-    description: "Redis server port",
-    example: function () {
-      /** Setter */
-      cache({ port: 18000 });
-      
-      /** Getter */
-      console.log('port', cache.port);
-      }
-    },
-      
-  "prefix": {
-    type: String,
-    required: false,
-    default: require("express-redis-cache/package.json").config.prefix,
-    description: "Default prefix to prepend to each entry name",
-    example: function () {
-      /** Setter */
-      cache({ prefix: "my-prefix" }); // initiate new client and set "my-prefix" as default prefix
-      
-      cache.prefix = "my-cool-prefix"; // client's default prefix changed at runtime
-      
-      /** Getter */
-      console.log('prefix', cache.prefix);
-  
-      // Using Express
-      app.get('/my-page',
-        // Cache will be saved as "my-cool-prefix:my-page"
-        cache.route(),
-        function (req, res, next) {
-          res.send('Hey! I am a cool page!');
-        });
-        
-      // Using API
-      // The entry will be saved under the name "my-cool-prefix:test-entry"
-      cache.add('test-entry', 'The quick brown fox jumps over the lazy dog', 'text/plain', 6,
-        function (error, added) {});
-        
-      // You can overwrite default prefix using an object
-      
-      // With Express
-      cache.route({ prefix: 'another-prefix' });
-      
-      // With API
-      cache.add({ name: 'test-entry', prefix: 'prefix-2' });
-      
-      // You can also choose not to use prefix. The snippet above could also be written as such:
-      cache.add({ name: 'prefix-2:test-entry', prefix: false });
-    },
-  }
-);
+cache.route(/*** String or Object or Undefined */ name, /*** Number or Undefined */ expire);
 ```
 
-    Object ConstructorOPtions {
-        host:   String?     // Redis Host
-        port:   Number?     // Redis port
-        prefix: String?     // Cache entry name prefix,
-        expire: Number?     // Default expiration time in seconds
-        client: RedisClient // A Redis client of npm/redis
-    }
-
-# Commands
-
-## Constructor
-
-    cache( Object ConstructorOPtions? )
-
-## Route
+### `@arg name`
     
-    cache.route( String name?, Number expire? )
-        
-    
-If `name` is a string, it is a cache entry name. If it is null, the route's URI (`req.originalUrl`) will be used as the entry name.
+**If `name` is a string**, it will be used as the cache entry's name.
 
 ```js
-app.get('/', cache.route('home'), require('./routes/'))
-// the name of the enrty will be 'home'
+cache.route('entry-name'); // entry name will be {prefix}:entry-name
+```
 
+**If `name` is undefined**, the route's URI (`req.originalUrl`) will be used as the entry name.
+
+```js
 app.get('/about', cache.route(), require('./routes/'))
 // the name of the enrty will be '/about'
 ```
+
+**If `name` is an object**, the following properties are accepted and can be stacked:
+
+|       | type    | description  | example  | expire  | client |
+| ------------- |----------|-------|----------|--------|------|
+| **prefix**          | `String`    | Overwrite default prefix | `cache.route({ prefix: 'old' });` |
+| **expire**      | `Number`     |   Overwrite default expiration number (in seconds)  | `cache.route({ expire: 1000 })` |
+| **name**       | `String`  |    The entry's name | `cache.route({ name: 'contact-page' })` |
+
+### Custom name
 
 Optionally, you can gain more naming control on defining `res.expressRedisCacheName`:
 
