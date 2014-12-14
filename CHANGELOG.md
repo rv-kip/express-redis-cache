@@ -5,7 +5,7 @@ CHANGE LOG
 
 ## Disclaimer
 
-Even though we upate the major version in the semantic version, this version has been designed so there are **no breaking changes** and that clients may **safely upgrade** -- keeping in mind we ship `as-is`.
+Even though we updated the major version in the semantic version (from 0.0.x to 0.1.x), this version has been designed so there would be **no breaking changes** and that clients may **safely upgrade** -- keeping in mind we ship `as-is`.
 
 So why having incremented the major version then? Architectural changes have been made (view below) to redesign, normalize and standardize the codebase (better documentation, better syntax, better tests, etc.) - yet these changes should not have an impact for clients upgrading (no code change required on their side).
 
