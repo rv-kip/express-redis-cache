@@ -118,7 +118,7 @@ var cache = require('express-redis-cache')(/** Object | Undefined */ options);
 
 Where `options` is an object that has the following properties:
 
-|       |  Type   |  Required  |  Default  |  Description  |
+|   Option    |  Type   |  Required  |  Default  |  Description  |
 | ------------- |----------|-------|----------|--------|
 | **host**          | `String`    | `false` | `undefined` | Redis server host
 | **port**      | `Number`     |   `false` | `undefined` | Redis server port
