@@ -11,6 +11,10 @@ Easily cache pages of your app using Express and Redis. Could be used without Ex
 
     npm install -g express-redis-cache
     
+# Upgrade
+
+Read [this](https://github.com/co2-git/express-redis-cache/blob/master/CHANGELOG.md) if you are upgrading from 0.0.8 to 0.1.0,
+
 # Usage
 
 Just use it as a middleware in the stack of the route you want to cache.
