@@ -103,12 +103,12 @@ new Entry ({
 
 This is the object passed as an argument to the constructor.
 
-| *Property*      | host    | port  | prefix  |
-| ------------- |:--------:| -----:| --------:|
-| type          | String    | Number | String |
-| required      | false     |   false | false |
-| default       | undefined  |    undefined | require('express-redis-cache/package.json').config.prefix |
-| description   | Redis server host  |    Redis server port | Default prefix to append to entry names |
+|       | host    | port  | prefix  | expire  | client |
+| ------------- |----------|-------|----------|--------|------|
+| type          | String    | Number | String | Number | RedisClient |
+| required      | false     |   false | false | false  | false |
+| default       | undefined  |    undefined | require('express-redis-cache/package.json').config.prefix | undefined | require('redis').createClient({ host: cache.host, port: cache.port }) |
+| description   | Redis server host  |    Redis server port | Default prefix to append to entry names | Default life time of entries in seconds | A Redis client |
 
 ```js
 new Schema({
