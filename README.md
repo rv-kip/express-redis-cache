@@ -242,18 +242,15 @@ Feed a callback with an array of the cache entry names.
 ## `add` Add a new cache entry
     
 ```js
-cache.add(/** String */ name, /** String */ body, /** String (optional) **/ type, /** Number (optional) */ expire, /** Function( Error, Entry ) */ callback )
+cache.add(/** String */ name, /** String */ body, /** Object (optional) **/ options, /** Function( Error, Entry ) */ callback )
 ```
     
 Example:
 
 ```js
-cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), 'text/plain', 60,
-    function (error, added) {
-    });
+cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), { expire: 60 * 60 * 24 },
+    function (error, added) {});
 ```
-
-
 
 ## `del` Delete a cache entry
     
@@ -266,6 +263,28 @@ cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), 'text/p
 # Command line
 
 We ship with a CLI. You can invoke it like this: `express-redis-cache`
+
+## View cache entries
+
+```bash
+express-redis-cache ls
+```
+
+## Add cache entry
+
+```bash
+express-redis-cache add <name> <content>
+# Example: express-redis-cache add user1:favorite-quote "life is like a box of chocolates"
+# Output:
+```
+
+## Get single cache entry
+
+```bash
+express-redis-cache get <name>
+# Example: express-redis-cache get user1:favorite-quote
+# Output:
+```
 
 # Test
 
