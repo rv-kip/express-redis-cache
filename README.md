@@ -105,15 +105,16 @@ If `name` is a string, it is a cache entry name. If it is null, the route's URI 
 
 ```js
 app.get('/', cache.route('home'), require('./routes/'))
-// will get/set a cache entry named 'home'
+// the name of the enrty will be 'home'
 
 app.get('/about', cache.route(), require('./routes/'))
-// will get/set a cache entry named '/about'
+// the name of the enrty will be
 ```
 
-Optionally, you can get more naming control on defining `res.expressRedisCacheName`:
+Optionally, you can gain more naming control on defining `res.expressRedisCacheName`:
 
 ```js
+// Example with using parameters
 app.get('/user/:userid',
     function (req, res, next) {
         res.expressRedisCacheName = '/user/' + req.params.userid;
@@ -123,6 +124,7 @@ app.get('/user/:userid',
     require('./routes/user')
 );
 
+// Example with using payload
 app.post('/search',
     function (req, res, next) {
         res.expressRedisCacheName = '/search/' + req.body.tag;
@@ -145,7 +147,7 @@ cache.route('home', ( 60 * 5 ));
 If you don't define an expiration date in your route but have set a default one in your constructor, the latter will be used. If you want your cache entry not to expire even though you have set a default expiration date in your constructor, do like this:
 
 ```js
-cache.route('my-page', cache.FOREVER);
+cache.route('my-page', cache.FOREVER); // This entry will never expire
 ```
 
 
