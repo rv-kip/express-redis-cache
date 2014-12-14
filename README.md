@@ -51,6 +51,36 @@ You can pass a Redis client as well:
 require('express-redis-cache')({ client: require('redis').createClient() })
 ```
 
+# Name of the entry
+
+By default, the cache entry name will be `default prefix`:`[req.originalUrl](http://expressjs.com/4x/api.html#req.originalUrl)`.
+
+```js
+app.get('/',
+    cache.route(), // cache entry name is `cache.prefix + "/"`
+    function (req, res)  { ... });
+```
+
+You can specify another name like this:
+
+```js
+app.get('/',
+    cache.route('home'), // cache entry name is now `cache.prefix + "home"`
+    function (req, res)  { ... });
+```
+
+You can also use an object syntax:
+
+```js
+app.get('/',
+    cache.route({ name: true }), // cache entry name is `cache.prefix + "/"`
+    function (req, res)  { ... });
+    
+app.get('/',
+    cache.route({ name: 'home' }), // cache entry name is `cache.prefix + "home"`
+    function (req, res)  { ... });
+```
+
 # Events
 
 The module emits the following events:
