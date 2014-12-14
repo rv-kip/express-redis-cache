@@ -61,7 +61,7 @@ app.get('/',
     function (req, res)  { ... });
 ```
 
-You can specify another name like this:
+You can specify a custom name like this:
 
 ```js
 app.get('/',
@@ -78,6 +78,57 @@ app.get('/',
     
 app.get('/',
     cache.route({ name: 'home' }), // cache entry name is `cache.prefix + "home"`
+    function (req, res)  { ... });
+```
+
+# Prefix
+
+All entry names are prepended by a prefix. Prefix is set when calling the Constructor. To know the prefix:
+
+```js
+console.log('prefix', cache.prefix);
+```
+
+You can pass a custom prefix:
+
+```js
+app.get('/index.html',
+    cache.route('index', { prefix: 'test'  }), // force prefix to be "test", entry name will be "test:index"
+    function (req, res)  { ... });
+```
+
+You can also choose not to use prefixes:
+
+```js
+app.get('/index.html',
+    cache.route({ prefix: false  }), // no prefixing, entry name will be "/index.html"
+    function (req, res)  { ... });
+```
+
+# Expiration
+
+Unless specified otherwise when calling the Constructor, cache entries don't expire. To specify a lifetime in seconds:
+
+```js
+app.get('/index.html',
+    cache.route({ expire: 5000  }), // cache entry will live 5000 seconds
+    function (req, res)  { ... });
+    
+// You can also use the number sugar syntax
+cache.route(5000);
+// Or
+cache.route('index', 5000);
+// Or
+cache.route({ prefix: 'test' }, 5000);
+```
+
+# Content Type
+
+You can use `express-redis-cache` to cache HTML pages, CSS stylesheets, JSON objects, anything really. Content-types are saved along the cache body and are retrieved using `res._headers['content-type']`. If you want to overwrite that, you can pass a custom type.
+
+```js
+app.get('/index.html',
+    cache.route({ type: 'text/plain'  }), // force entry type to be "text/plain"
     function (req, res)  { ... });
 ```
 
@@ -171,179 +222,6 @@ Where `options` is an object that has the following properties:
 | **prefix**       | `String`  | `require('express-redis-cache/package.json').config.prefix` | Default prefix (This will be prepended to all entry names) |
 | **expire**   | `Number` | `undefined` | Default life time of entries in seconds |
 | **client**   | `RedisClient` | `require('redis').createClient({ host: cache.host, port: cache.port })` | A Redis client |
-
-## Route `cache.route()`
-
-This is the method to be used as an Express middleware.
-    
-```js
-cache.route(/*** Mixed */ name, /*** Mixed */ custom);
-```
-
-There are several way you can call `cache.route()`
-
-### Using URL path as the cache entry name
-
-If no name is specified (or name is set to true), `[req.originalUrl](http://expressjs.com/4x/api.html#req.originalUrl)` is used as the name of the entry, prepended by the default settings
-
-```js
-app.get('/about', cache.route(), require('./routes/about'));
-// entry will be saved as "{prefix}:/about"
-
-// You can also pass it as an object
-app.get('/about', cache.route({ name: true }), require('./routes/about'));
-```
-
-### Specify a name
-
-You can specify the entry name by passing it as a string as the first argument of `cache.route()` - or by passing an object with the property `name` being a script.
-
-```js
-app.get('/about', cache.route('about-page'), require('./routes/about'));
-// entry will be saved as "{prefix}:about-page"
-
-// You can also pass it as an object
-app.get('/about', cach.route({ name: 'about-page' }), require('./routes/about'));
-```
-
-### Overwrite default expiration time
-
-You can pass a custom expiration time in seconds as a number as either the first or the second argument of `cache.route()`. You can alsp pass an object with the property `expire` being a number.
-
-```js
-// as first argument as a number
-app.get('/about', cache.route(5000), require('./routes/about'));
-// entry will live 5000 secondes
-
-// as first number as an object
-app.get('/about', cache.route({ expire: 5000 }), require('./routes/about'));
-
-// You can also pass it as an object
-app.get('/about', cache().route({ name: true }), require('./routes/about'));
-```
-    
-**If `name` is a string**, it will be used as the cache entry's name.
-
-```js
-cache.route('entry-name'); // entry name will be {prefix}:entry-name
-```
-
-**If `name` is undefined**, the route's URI (`req.originalUrl`) will be used as the entry name.
-
-```js
-app.get('/about', cache.route(), require('./routes/about'))
-// the name of the entry will be '{prefix}:/about'
-```
-
-**If `name` is a number**, this number will be used as the lifetime in seconds of the cache entry. This will overwrite default expiration lifetime (view `Constructor`).
-
-```js
-app.get('/about', cache.route(5000), require('./routes/about'))
-// the cache entry will live 5000 seconds
-```
-**If `name` is an object**, it.
-
-```js
-app.get('/about', cache.route({ name: "about-html", type: "text/html", prefix: false ), require('./routes/about'))
-// the cache entry will live 5000 seconds
-```
-
-### `@arg custom`
-
-**If `custom` is a number**, this number will be used as the lifetime in seconds of the cache entry. This will overwrite default expiration lifetime (view `Constructor`).
-
-```js
-app.get('/about', cache.route(), require('./routes/about'))
-// the name of the enrty will be '{prefix}:/about'
-```
-
-**If `custom` is a string**, this string will be used as the type of in seconds of the cache entry. This will overwrite default expiration lifetime (view `Constructor`).
-
-### Custom name
-
-Optionally, you can gain more naming control on defining `res.express_redis_cache_name`:
-
-```js
-// Example with using parameters
-app.get('/user/:userid',
-    function (req, res, next) {
-        res.express_redis_cache_name = '/user/' + req.params.userid; // name of the entry
-        next();
-    },
-    cache.route(),
-    require('./routes/user')
-);
-
-// Example with using payload
-app.post('/search',
-    function (req, res, next) {
-        res.express_redis_cache_name = '/search/' + req.body.tag; // name of the entry
-        next();
-    },
-    cache.route(),
-    require('./routes/user')
-);
-```
-
-### Conditional caching
-
-You can also introduce a logic to decide if to use the cache:
-
-```js
-app.get('/',
-  
-  /** Pre function to decide if to use the cache */
-  
-  function (req, res, next) {
-    /** Dummy story: don't use the cache if user has cookie */
-    res.express_redis_cache_skip = !! req.signedCookies.user;
-    
-    /** Continue in stack */
-    next();
-    },
-    
-  /** Express-Redis-Cache middleware */
-  /** This will be skipped if user has cookie */
-  
-  cache.route(),
-  
-  /** The view middleware */
-  
-  function (req, res) {
-    res.render('index');
-    }
-    
-  );
-```
-
-### Set an expiration date for the cache entry
-
-The number of seconds the cache entry will live
-
-```js
-cache.route('home', ( 60 * 5 ));
-// cache will expire in 5 minutes
-```
-    
-If you don't define an expiration date in your route but have set a default one in your constructor, the latter will be used. If you want your cache entry not to expire even though you have set a default expiration date in your constructor, do like this:
-
-```js
-cache.route('my-page', cache.FOREVER); // This entry will never expire
-```
-
-### Overwrite default prefix with custom prefix
-
-```js
-cache.route('home', 'custom');
-// entry name will be "custom:home"
-```
-
-### Don't use prefix
-
-```js
-cache.route('home', false);
-// entry name will be "home"
-```
 
 # API
 
