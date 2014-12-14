@@ -103,11 +103,12 @@ new Entry ({
 
 This is the object passed as an argument to the constructor.
 
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+| *Property*      | host    | port  | prefix  |
+| ------------- |:--------:| -----:| --------:|
+| type          | String    | Number | String |
+| required      | false     |   false | false |
+| default       | undefined  |    undefined | require('express-redis-cache/package.json').config.prefix |
+| description   | Redis server host  |    Redis server port | Default prefix to append to entry names |
 
 ```js
 new Schema({
