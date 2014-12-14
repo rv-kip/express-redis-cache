@@ -129,7 +129,7 @@ Where `options` is an object that has the following properties:
 ## Route `cache.route()`
     
 ```js
-cache.route(/*** String or Object or Undefined */ name, /*** Number or Undefined */ expire);
+cache.route(/*** String or Object or Undefined */ name, /*** Number or String or Undefined */ custom);
 ```
 
 ### `@arg name`
@@ -144,26 +144,18 @@ cache.route('entry-name'); // entry name will be {prefix}:entry-name
 
 ```js
 app.get('/about', cache.route(), require('./routes/'))
-// the name of the enrty will be '/about'
+// the name of the enrty will be '{prefix}:/about'
 ```
-
-**If `name` is an object**, the following properties are accepted and can be stacked:
-
-|       | type    | description  | example  | expire  | client |
-| ------------- |----------|-------|----------|--------|------|
-| **prefix**          | `String`    | Overwrite default prefix | `cache.route({ prefix: 'old' });` |
-| **expire**      | `Number`     |   Overwrite default expiration number (in seconds)  | `cache.route({ expire: 1000 })` |
-| **name**       | `String`  |    The entry's name | `cache.route({ name: 'contact-page' })` |
 
 ### Custom name
 
-Optionally, you can gain more naming control on defining `res.expressRedisCacheName`:
+Optionally, you can gain more naming control on defining `res.express_redis_cache_name`:
 
 ```js
 // Example with using parameters
 app.get('/user/:userid',
     function (req, res, next) {
-        res.expressRedisCacheName = '/user/' + req.params.userid; // name of the entry
+        res.express_redis_cache_name = '/user/' + req.params.userid; // name of the entry
         next();
     },
     cache.route(),
@@ -173,7 +165,7 @@ app.get('/user/:userid',
 // Example with using payload
 app.post('/search',
     function (req, res, next) {
-        res.expressRedisCacheName = '/search/' + req.body.tag; // name of the entry
+        res.express_redis_cache_name = '/search/' + req.body.tag; // name of the entry
         next();
     },
     cache.route(),
@@ -227,18 +219,35 @@ If you don't define an expiration date in your route but have set a default one 
 cache.route('my-page', cache.FOREVER); // This entry will never expire
 ```
 
+### Overwrite default prefix with custom prefix
 
-## Get the list of all cache entries
+```js
+cache.route('home', 'custom');
+// entry name will be "custom:home"
+```
+
+### Don't use prefix
+
+```js
+cache.route('home', false);
+// entry name will be "home"
+```
+
+# API
+
+The `route` method is designed to integrate easily with Express. You can also define your own caching logics using the other methos of the API shown below.
+
+## `ls` Get the list of all cache entries
 
     cache.ls( Function ( Error, [Entry] ) )
     
 Feed a callback with an array of the cache entry names.
     
-## Get a single cache entry by name
+## `get` Get a single cache entry by name
     
     cache.get( String name, Function( Error, Entry ) )
     
-## Add a new cache entry
+## `add` Add a new cache entry
     
     cache.add( String name, String body, Number expire?, Function( Error, Entry ) )
     
@@ -250,11 +259,11 @@ cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), 60,
     });
 ```
 
-## Delete a cache entry
+## `del` Delete a cache entry
     
     cache.del( String name, Function ( Error, Number deletedEntries ) )
 
-## Get cache size for all entries
+## `size` Get cache size for all entries
     
     cache.size( Function ( Error, Number bytes ) )
     
