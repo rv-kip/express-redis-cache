@@ -47,17 +47,21 @@ You can pass a Redis client as well:
 require('express-redis-cache')({ client: require('redis').createClient() })
 ```
 
-# Errors
+# Events
+
+The module emits the following events:
+
+## error
 
 You can catch errors by adding a listener:
 
 ```js
 cache.on('error', function (error) {
-    // ...
+    throw new Error('Cache error!');
 });
 ```
 
-# Messages
+## message
 
 `express-redis-cache` logs some information at runtime. You can access it like this:
 
@@ -67,9 +71,15 @@ cache.on('message', function (message) {
 });
 ```
 
-# Other events
+# connected
 
-- **connected** emitted when the client is connected to Redis server
+Emitted when the client is connected to Redis server
+
+```js
+cache.on('connected', function () {
+    console.log('Ready to party!');
+});
+```
     
 # Objects
 
