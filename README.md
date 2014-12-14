@@ -138,6 +138,7 @@ Object.create('ConstructorOptions', {
   },
   
   );
+```
 
     Object ConstructorOPtions {
         host:   String?     // Redis Host
@@ -191,7 +192,38 @@ app.post('/search',
     require('./routes/user')
 );
 ```
+
+### Conditional caching
+
+You can also introduce a logic to decide if to use the cache:
+
+```js
+app.get('/',
+  
+  /** Pre function to decide if to use the cache */
+  
+  function (req, res, next) {
+    /** Dummy story: don't use the cache if user has cookie */
+    res.express_redis_cache_skip = !! req.signedCookies.user;
     
+    /** Continue in stack */
+    next();
+    },
+    
+  /** Express-Redis-Cache middleware */
+  /** This will be skipped if user has cookie */
+  
+  cache.route(),
+  
+  /** The view middleware */
+  
+  function (req, res) {
+    res.render('index');
+    }
+    
+  );
+```
+
 ### Set an expiration date for the cache entry
 
 The number of seconds the cache entry will live
