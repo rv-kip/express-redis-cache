@@ -76,4 +76,16 @@ res.expressRedisCacheName = "...";
 res.express_redis_cache_name = "...";
 ```
 
+### expressRedisCache
+
+Now use `use_express_redis_cache`
+
+```js
+// Replace
+if ( res.expressRedisCache ) {}
+
+// By
+if ( res.use_express_redis_cache ) {}
+```
+
 ## Removed
