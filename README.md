@@ -273,7 +273,7 @@ express-redis-cache ls
 ## Add cache entry
 
 ```bash
-express-redis-cache add <name> <content>
+express-redis-cache add $name $content
 # Example: express-redis-cache add user1:favorite-quote "life is like a box of chocolates"
 # Output:
 ```
@@ -281,8 +281,23 @@ express-redis-cache add <name> <content>
 ## Get single cache entry
 
 ```bash
-express-redis-cache get <name>
-# Example: express-redis-cache get user1:favorite-quote
+express-redis-cache get $name
+# Example: express-redis-cache get user1:*
+# Output:
+```
+
+## Delete cache entry
+
+```bash
+express-redis-cache del $name
+# Example: express-redis-cache del user1:*
+# Output:
+```
+
+## Get total cache size
+
+```bash
+express-redis-cache size
 # Output:
 ```
 
