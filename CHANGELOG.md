@@ -21,6 +21,8 @@ The code now emits a *deprecated* event when stumbling upon a deprecated part of
 
 ## Fixes
 
+No fixes have been made.
+
 ## Changed
 
 ### Test
