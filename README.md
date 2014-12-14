@@ -116,6 +116,16 @@ new Schema({
       
       /** Getter */
       console.log('host', cache.host);
+      
+      // Host is not changable at runtime
+      // Create different clients instead:
+      
+      var cache = require('express-redis-cache');
+      var client1 = cache({ host: 'my.app.com', port: 6537 });
+      var client2 = cache({ host: 'cloud.my.app.com', port: 7433 });
+      
+      app.get('/1', client1.route(), function (req, res) { res.send('1'); });
+      app.get('/2', client2.route(), function (req, res) { res.send('2'); });
       }
     },
       
