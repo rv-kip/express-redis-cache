@@ -7,7 +7,7 @@ CHANGE LOG
 
 ### Conditional caching
 
-We introduced the `(Boolean) res.express_redis_cache_skip` property which, if set to true, will not cache the route nor use the cache -- it will skip `cache.route()` altogether.
+We introduced the `(Boolean) res.express_redis_cache_skip` property which, if set to true, will not cache the route nor use the cache -- it will skip `cache.route()` altogether (see README for more info, look for Conditional caching).
 
 ## Fixes
 
