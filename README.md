@@ -1,7 +1,7 @@
 express-redis-cache
 ===================
 
-A module to make Express interact with Redis (create, get, delete). You can automatically cache all your most popular routes in Redis.
+Easily cache pages of your app using Express and Redis. Could be used without Express. 
 
 # Install
 
