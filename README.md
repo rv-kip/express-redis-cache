@@ -226,18 +226,38 @@ Where `options` is an object that has the following properties:
 # API
 
 The `route` method is designed to integrate easily with Express. You can also define your own caching logics using the other methos of the API shown below.
-
-## `ls` Get the list of all cache entries
-
-```js
-cache.ls(/** Function ( Error, [Entry] ) */ callback);
-```
-    
-Feed a callback with an array of the cache entry names.
     
 ## `get` Get a single cache entry by name
     
-    cache.get( String name, Function( Error, Entry ) )
+    cache.get( String name?, Function( Error, [Entry] ) );
+    
+To get all cache entries:
+
+```js
+cache.get(function (error, entries) {
+  if ( error ) throw error;
+  
+  entries.forEach(console.log.bind(console));
+});
+```
+
+To get a specific entry:
+
+```js
+cache.get('home', function (error, entries) {});
+```
+
+To get a specific entry for a given prefix:
+
+```js
+cache.get({ name: 'home', prefix: 'test' }, function (error, entries) {});
+```
+
+You can use wildcard:
+
+```js
+cache.get('user*', function (error, entries) {});
+```
     
 ## `add` Add a new cache entry
     
