@@ -84,6 +84,22 @@ cache.on('connected', function () {
     console.log('Ready to party!');
 });
 ```
+
+## deprecated
+
+Warning emitted when stumbled upon a deprecated part of the code
+
+```js
+cache.on('deprecated', function (deprecated) {
+    console.log('deprecated warning', {
+        type: deprecated.type,
+        name: deprecated.name,
+        substitute: deprecated.substitute,
+        file: deprecated.file,
+        line: deprecated.line
+    });
+});
+```
     
 # The Entry Model
 
@@ -239,7 +255,9 @@ The `route` method is designed to integrate easily with Express. You can also de
 
 ## `ls` Get the list of all cache entries
 
-    cache.ls( Function ( Error, [Entry] ) )
+```js
+cache.ls(/** Function ( Error, [Entry] ) */ callback);
+```
     
 Feed a callback with an array of the cache entry names.
     
