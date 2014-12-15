@@ -13,7 +13,7 @@ Easily cache pages of your app using Express and Redis. *Could be used without E
     
 # Upgrade
 
-Read [this](../CHANGELOG.md) if you are upgrading from 0.0.8 to 0.1.0,
+Read [this](../master/CHANGELOG.md) if you are upgrading from 0.0.8 to 0.1.0,
 
 # Usage
 
