@@ -1,7 +1,7 @@
 CHANGE LOG
 ==========
 
-# Changes between 0.0.8 and 0.1.0
+# Changes between 0.0.8 and 0.1.x
 
 ## Disclaimer
 
