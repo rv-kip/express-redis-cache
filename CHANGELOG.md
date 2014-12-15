@@ -89,3 +89,5 @@ if ( res.use_express_redis_cache ) {}
 ```
 
 ## Removed
+
+- the `ls` method have been removed both from API and CLI. Use `get` instead.
