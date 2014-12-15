@@ -370,10 +370,20 @@ express-redis-cache size
 
 # Test
 
-    mocha --host <redis-host> --port <redis-port>
+We use Mocha and Should for the tests. You can invoke tests like this:
 
-    # or
+    npm test
 
-    npm test --host=<redis-host> --port=<redis-port>
+## Test environments
+
+You can specify the following environments before running your tests:
+
+```bash
+export EX_RE_CA_HOST="";
+export EX_RE_CA_PORT="";
+export EX_RE_CA_PREFIX="";
+```
+
+---
 
 Enjoy!
