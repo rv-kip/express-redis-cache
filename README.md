@@ -86,6 +86,57 @@ app.get('/',
   function (req, res)  { ... });
 ```
 
+Also, you can use `res.express_redis_cache_name` to specify the name of the entry such as:
+
+```js
+app.get('/user/:userid',
+  
+  // middleware to define cache name
+  
+  function (req, res, next) {
+    // set cache name
+    res.express_redis_cache_name = 'user-' + req.params.userid;
+    next();
+    },
+
+  // cache middleware
+  
+  cache.route(),
+  
+  // content middleware
+  
+  function (req, res) {
+    res.render('user');
+    }
+    
+  );
+```
+
+# Conditional caching
+
+You can also use a previous middleware to set whether or not to use the cache by using `res.use_express_redis_cache`:
+
+```js
+
+app.get('/user',
+
+  // middleware to decide if using cache
+  
+  function (req, res, next) {
+    // Use only cache if user not signed in
+    res.use_express_redis_cache = ! req.signedCookies.user;
+    
+    next();
+    }.
+    
+  cache.route(), // this will be skipped if user is signed in
+  
+  function (req, res) {
+    res.render('user');
+    }
+  );
+```
+
 # Prefix
 
 All entry names are prepended by a prefix. Prefix is set when calling the Constructor. 
