@@ -1,7 +1,7 @@
 express-redis-cache
 ===================
 
-Easily cache pages of your app using Express and Redis. Could be used without Express. 
+Easily cache pages of your app using Express and Redis. *Could be used without Express too.*
 
 # Install
 
@@ -13,7 +13,7 @@ Easily cache pages of your app using Express and Redis. Could be used without Ex
     
 # Upgrade
 
-Read [this](https://github.com/co2-git/express-redis-cache/blob/master/CHANGELOG.md) if you are upgrading from 0.0.8 to 0.1.0,
+Read [this](../CHANGELOG.md) if you are upgrading from 0.0.8 to 0.1.0,
 
 # Usage
 
