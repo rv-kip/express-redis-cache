@@ -25,24 +25,24 @@ var cache = require('express-redis-cache')();
 
 // replace
 app.get('/',
-    function (req, res)  { ... });
+  function (req, res)  { ... });
 
 // by
 app.get('/',
-    cache.route(),
-    function (req, res)  { ... });
+  cache.route(),
+  function (req, res)  { ... });
 ```
     
 This will check if there is a cache entry for this route. If not. it will cache it and serve the cache next time route is called.
 
 # Redis connexion info
 
-By default, redis-express-cache connects to Redis using localhost as host and nothing as port (using Redis default port). To use different port or host, declare them when you require express-redis-cache.
+By default, `redis-express-cache` connects to Redis using localhost as host and nothing as port (using Redis default port 6379). To use different port or host, declare them when you require express-redis-cache.
 
 ```js
 var cache = require('express-redis-cache')({
-    host: String, port: Number
-    });
+  host: String, port: Number
+  });
 ```
         
 You can pass a Redis client as well:
@@ -51,68 +51,87 @@ You can pass a Redis client as well:
 require('express-redis-cache')({ client: require('redis').createClient() })
 ```
 
-# Name of the entry
+You can have several clients if you want to serve from more than one Redis server:
+
+```js
+var cache = require('express-redis-cache');
+var client1 = cache({ host: "...", port: "..." });
+var client2 = cache({ host: "...", port: "..." });
+...
+```
+
+# Name of the cache entry
 
 By default, the cache entry name will be `default prefix`:`name` where name's value defaults to  [req.originalUrl](http://expressjs.com/4x/api.html#req.originalUrl).
 
 ```js
 app.get('/',
-    cache.route(), // cache entry name is `cache.prefix + "/"`
-    function (req, res)  { ... });
+  cache.route(), // cache entry name is `cache.prefix + "/"`
+  function (req, res)  { ... });
 ```
 
 You can specify a custom name like this:
 
 ```js
 app.get('/',
-    cache.route('home'), // cache entry name is now `cache.prefix + "home"`
-    function (req, res)  { ... });
+  cache.route('home'), // cache entry name is now `cache.prefix + "home"`
+  function (req, res)  { ... });
 ```
 
-You can also use an object syntax:
+You can also use the object syntax:
 
 ```js
 app.get('/',
-    cache.route({ name: true }), // cache entry name is `cache.prefix + "/"`
-    function (req, res)  { ... });
-    
-app.get('/',
-    cache.route({ name: 'home' }), // cache entry name is `cache.prefix + "home"`
-    function (req, res)  { ... });
+  cache.route({ name: 'home' }), // cache entry name is `cache.prefix + "home"`
+  function (req, res)  { ... });
 ```
 
 # Prefix
 
-All entry names are prepended by a prefix. Prefix is set when calling the Constructor. To know the prefix:
+All entry names are prepended by a prefix. Prefix is set when calling the Constructor. 
+
+```js
+// Set default prefix to "test". All entry names will begin by "test:"
+var cache = require('express-redis-cache')({ prefix: 'test' });
+```
+
+To know the prefix:
 
 ```js
 console.log('prefix', cache.prefix);
 ```
 
-You can pass a custom prefix:
+You can pass a custom prefix when calling `route()`:
 
 ```js
 app.get('/index.html',
-    cache.route('index', { prefix: 'test'  }), // force prefix to be "test", entry name will be "test:index"
-    function (req, res)  { ... });
+  cache.route('index', { prefix: 'test'  }), // force prefix to be "test", entry name will be "test:index"
+  function (req, res)  { ... });
 ```
 
 You can also choose not to use prefixes:
 
 ```js
 app.get('/index.html',
-    cache.route({ prefix: false  }), // no prefixing, entry name will be "/index.html"
-    function (req, res)  { ... });
+  cache.route({ prefix: false  }), // no prefixing, entry name will be "/index.html"
+  function (req, res)  { ... });
 ```
 
 # Expiration
 
-Unless specified otherwise when calling the Constructor, cache entries don't expire. To specify a lifetime in seconds:
+Unless specified otherwise when calling the Constructor, cache entries don't expire. You can specify a default lifetime when calling the constructor:
+
+```js
+// Set default lifetime to 60 seconds for all entries
+var cache = require('express-redis-cache')({ expire: 60 });
+```
+
+You can overwrite the default lifetime when calling `route()`:
 
 ```js
 app.get('/index.html',
-    cache.route({ expire: 5000  }), // cache entry will live 5000 seconds
-    function (req, res)  { ... });
+  cache.route({ expire: 5000  }), // cache entry will live 5000 seconds
+  function (req, res)  { ... });
     
 // You can also use the number sugar syntax
 cache.route(5000);
@@ -128,8 +147,8 @@ You can use `express-redis-cache` to cache HTML pages, CSS stylesheets, JSON obj
 
 ```js
 app.get('/index.html',
-    cache.route({ type: 'text/plain'  }), // force entry type to be "text/plain"
-    function (req, res)  { ... });
+  cache.route({ type: 'text/plain'  }), // force entry type to be "text/plain"
+  function (req, res)  { ... });
 ```
 
 # Events
@@ -142,7 +161,7 @@ You can catch errors by adding a listener:
 
 ```js
 cache.on('error', function (error) {
-    throw new Error('Cache error!');
+  throw new Error('Cache error!');
 });
 ```
 
@@ -152,7 +171,7 @@ cache.on('error', function (error) {
 
 ```js
 cache.on('message', function (message) {
-    // ...
+  // ...
 });
 ```
 
@@ -162,7 +181,7 @@ Emitted when the client is connected to Redis server
 
 ```js
 cache.on('connected', function () {
-    console.log('Ready to party!');
+  // ....
 });
 ```
 
@@ -172,13 +191,13 @@ Warning emitted when stumbled upon a deprecated part of the code
 
 ```js
 cache.on('deprecated', function (deprecated) {
-    console.log('deprecated warning', {
-        type: deprecated.type,
-        name: deprecated.name,
-        substitute: deprecated.substitute,
-        file: deprecated.file,
-        line: deprecated.line
-    });
+  console.log('deprecated warning', {
+      type: deprecated.type,
+      name: deprecated.name,
+      substitute: deprecated.substitute,
+      file: deprecated.file,
+      line: deprecated.line
+  });
 });
 ```
     
@@ -191,12 +210,13 @@ var entry = {
   body:    String // the content of the cache
   touched: Number // last time cache was set (created or updated) as a Unix timestamp
   expire:  Number // the seconds cache entry lives (-1 if does not expire)
+  type: String // the content-type
 };
 ```
 
 # The module
 
-The module exposes a function which instantiates a new instance of a class called [ExpressRedisCache](master/index.js).
+The module exposes a function which instantiates a new instance of a class called [ExpressRedisCache](../master/index.js).
 
 ```js
 // This
@@ -227,9 +247,11 @@ Where `options` is an object that has the following properties:
 
 The `route` method is designed to integrate easily with Express. You can also define your own caching logics using the other methos of the API shown below.
     
-## `get` Get a single cache entry by name
+## `get` Get cache entries
     
-    cache.get( String name?, Function( Error, [Entry] ) );
+```js
+cache.get(/** Mixed (optional) */ query, /** Function( Error, [Entry] ) */ callback );
+```
     
 To get all cache entries:
 
@@ -264,21 +286,32 @@ cache.get('user*', function (error, entries) {});
 ```js
 cache.add(/** String */ name, /** String */ body, /** Object (optional) **/ options, /** Function( Error, Entry ) */ callback )
 ```
+
+Where options is an object that can have the following properties:
+
+- **expire** `Number` (lifetime of entry in seconds)
+- **type** `String` (the content-type)
     
 Example:
 
 ```js
-cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), { expire: 60 * 60 * 24 },
+cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), { expire: 60 * 60 * 24, type: 'json' },
     function (error, added) {});
 ```
 
 ## `del` Delete a cache entry
     
-    cache.del( String name, Function ( Error, Number deletedEntries ) )
+```js
+cache.del(/** String */ name, /** Function ( Error, Number deletions ) */ callback);
+```
+
+You can use wildcard (*) in name.
 
 ## `size` Get cache size for all entries
     
-    cache.size( Function ( Error, Number bytes ) )
+```js
+cache.size(/** Function ( Error, Number bytes ) */);
+```
     
 # Command line
 
@@ -293,9 +326,23 @@ express-redis-cache ls
 ## Add cache entry
 
 ```bash
-express-redis-cache add $name $content
-# Example: express-redis-cache add user1:favorite-quote "life is like a box of chocolates"
-# Output:
+express-redis-cache add $name $body $expire --type $type
+```
+
+### Examples
+
+```bash
+# Cache simple text
+express-redis-cache add "test" "This is a test";
+
+# Cache a file
+express-redis-cache add "home" "$(cat index.html)";
+
+# Cache a JSON object
+express-redis-cache add "user1:location" '{ "lat": 4.7453, "lng": -31.332 }' --type json;
+
+# Cache a text that will expire in one hour
+express-redis-cache add "offer" "everything 25% off for the next hour" $(( 60 * 60 ));
 ```
 
 ## Get single cache entry
