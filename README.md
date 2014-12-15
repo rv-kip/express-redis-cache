@@ -86,6 +86,28 @@ app.get('/',
   function (req, res)  { ... });
 ```
 
+Also, you can use `res.express_redis_cache_name` to specify the name of the entry such as:
+
+```js
+app.get('/user/:userid',
+  
+  // middleware to define cache name
+  
+  function (req, res, next) {
+    // set cache name
+    res.express_redis_cache_name = 'user-' + req.params.userid;
+    next();
+    },
+    
+  cache.route(),
+  
+  function (req, res) {
+    res.render('user');
+    }
+    
+  );
+```
+
 # Prefix
 
 All entry names are prepended by a prefix. Prefix is set when calling the Constructor. 
