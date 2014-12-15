@@ -8,6 +8,8 @@
   var mocha     =   require('mocha');
   var should    =   require('should');
 
+  var config    =   require('../../package.json').config;
+
   var prefix    =   'erct:';
   var host      =   'localhost';
   var port      =   6379;
@@ -16,7 +18,7 @@
   var _body     =   'test1 test1 test1';
   var _type     =   'text/plain';
 
-  var cache     =   require('../')({
+  var cache     =   require('../../')({
     prefix: prefix,
     host: host,
     port: port
@@ -31,7 +33,7 @@
     });
 
     it ( 'should callback', function (done) {
-      cache.add(_name, _body, _type, 15,
+      cache.add(_name, _body,
         function ($error, $name, $entry) {
           error = $error;
           name = $name;
@@ -50,15 +52,26 @@
 
     it ( 'should have a entry which is an object', function () {
       entry.should.be.an.Object;
-      console.log(entry);
     });
 
-    it ( 'entry which has a property body which a string matching the request', function () {
+    it ( ' - entry which has a property body which a string matching the request', function () {
       entry.body.should.be.a.String.and.equal(_body);
     });
 
-    it ( 'entry which has a property type which a string matching the request', function () {
-      entry.type.should.be.a.String.and.equal(_type);
+    it ( ' - entry which has a property type which a string matching default type', function () {
+      entry.type.should.be.a.String.and.equal(config.type);
+    });
+
+    it ( ' - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now', function () {
+      entry.touched.should.be.a.Number;
+
+      var date = new Date(entry.touched);
+
+      ( (Date.now() - date) ).should.be.below(2000);
+    });
+
+    it ( ' - entry which has a property expire which equals cache.expire', function () {
+      should(entry.expire).equal(cache.expire);
     });
 
   });

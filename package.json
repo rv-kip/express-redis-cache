@@ -7,13 +7,16 @@
     "express-redis-cache": "bin/express-redis-cache.js"
   },
   "scripts": {
-    "test": "node test/test.js"
+    "test": "mocha --check-leaks -R nyan test test/ExpressRedisCache"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/co2-git/express-redis-cache.git"
   },
-  "author": "francois vespa <francoisrvespa@gmail.com>",
+  "author": {
+    "name": "Francois Vespa",
+    "url": "https://github.com/co2-git"
+  },
   "contributors": [
     {
       "name": "faceair",
@@ -35,7 +38,8 @@
     "test": "test"
   },
   "config": {
-    "prefix": "erc:"
+    "prefix": "erc:",
+    "type": "text/html"
   },
   "devDependencies": {
     "gulp-shell": "~0.2.9",
