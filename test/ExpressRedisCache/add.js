@@ -21,7 +21,8 @@
   var cache     =   require('../../')({
     prefix: prefix,
     host: host,
-    port: port
+    port: port,
+    expire: 2
   });
 
   describe ( 'add', function () {
@@ -74,6 +75,15 @@
       should(entry.expire).equal(cache.expire);
     });
 
+    it ( 'should expire in ' + cache.expire + ' seconds', function (done) {
+      this.timeout(2500); // allow more time for this test
+      setTimeout(function(){
+        cache.get(_name, function (err, res) {
+          should(err).not.be.ok;
+          res.should.be.an.Array.and.have.a.lengthOf(0);
+          done();
+        });
+      }, cache.expire * 1000);
+    });
   });
-
 })();
