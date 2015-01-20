@@ -12,9 +12,8 @@ cache.on('error', function(error){
 var port = 3000;
 app.listen(port);
 console.log("Server listening on " + port);
-console.log("Server listening on " + port);
 
-// Serve simple page with timestamp
+// Serve simple page with timestamp cached for 5 seconds
 app.get('/',
   cache.route(),
   function (req, res)  {
