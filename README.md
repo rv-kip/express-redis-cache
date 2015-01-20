@@ -35,7 +35,7 @@ app.get('/',
     
 This will check if there is a cache entry for this route. If not. it will cache it and serve the cache next time route is called.
 
-# Redis connexion info
+# Redis connection info
 
 By default, `redis-express-cache` connects to Redis using localhost as host and nothing as port (using Redis default port 6379). To use different port or host, declare them when you require express-redis-cache.
 
@@ -59,6 +59,10 @@ var client1 = cache({ host: "...", port: "..." });
 var client2 = cache({ host: "...", port: "..." });
 ...
 ```
+## Redis Unavailability
+Should the redis become unavailable, the `express-redis-cache` object will emit errors but will not crash the app. Express.js requests during this time will be bypass cache and will return fresh data. 
+
+Once the redis recovers, the caching will begin working again. See example code.
 
 # Name of the cache entry
 
@@ -366,6 +370,13 @@ express-redis-cache del $name
 ```bash
 express-redis-cache size
 # Output:
+```
+# Example Code
+Run the example to see how the caching behaves. You can kill the `redis-server` and the application will respond with non-cached information.
+```
+npm install
+cd examples
+node example.js
 ```
 
 # Test
