@@ -375,7 +375,7 @@ express-redis-cache size
 Run the example to see how the caching behaves. You can kill the `redis-server` and the application will respond with non-cached information.
 ```
 npm install
-cd examples
+cd example
 node example.js
 ```
 
