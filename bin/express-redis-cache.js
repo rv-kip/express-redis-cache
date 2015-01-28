@@ -161,7 +161,7 @@ module.exports = (function () {
 
         console.log(' NOTE'.bold.yellow);
         
-        console.log(' express-redis-cache connects to Redis using localhost as default and Redis default port. You can override that using the options: --port <port> --host <host>. Dildo for --prefix <prefix>.'.cyan);
+        console.log(' express-redis-cache connects to Redis using localhost as default and Redis default port. You can override that using the options: --port <port> --host <host>. Ditto for --prefix <prefix>.'.cyan);
 
         console.log();
         

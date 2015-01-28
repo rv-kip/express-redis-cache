@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 
 /* ======== home  ======== */
 
-app.get('/',
+app.all('/',
 
 	cache.route(),
 
@@ -37,5 +37,5 @@ server.listen(app.get('port'), function () {
 });
 
 server.on('error', function (error) {
-  console.log({ 'server error': 'error' });
+  console.log({ 'server error': error });
 });

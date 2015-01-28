@@ -31,10 +31,11 @@
       });
 
       spawn.on('exit', function (status) {
-        throw new Error('Server exit with status ' + status);
+        console.log('Express Server exit with status ' + status);
       });
 
       spawn.stdout.on('data', function (data) {
+        console.log(data.toString());
         if ( /express-redis-cache test server started on port/.test(data.toString()) ) {
 
           express_port = data.toString().split(' ').pop();
@@ -67,8 +68,9 @@
         });
     });
 
-    after(function () {
+    after(function (done) {
       process.kill(spawn.pid);
+      done();
     });
 
   });
