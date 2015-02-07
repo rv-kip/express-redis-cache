@@ -62,7 +62,7 @@ var client2 = cache({ host: "...", port: "..." });
 ## Redis Unavailability
 Should the redis become unavailable, the `express-redis-cache` object will emit errors but will not crash the app. Express.js requests during this time will be bypass cache and will return fresh data. 
 
-Once the redis recovers, the caching will begin working again. See example code.
+Once the redis recovers, the caching will begin working again. See example code in the `/example` folder.
 
 # Name of the cache entry
 
@@ -232,13 +232,25 @@ cache.on('message', function (message) {
 
 ## connected
 
-Emitted when the client is connected to Redis server
+Emitted when the client is connected (or re-connected) to Redis server
 
 ```js
 cache.on('connected', function () {
   // ....
 });
 ```
+
+## disconnected
+
+Emitted when the client is disconnected from Redis server. When (and if) it reconnects, it will emit a 'connected' event again
+
+```js
+cache.on('disconnected', function () {
+  // ....
+});
+```
+
+**Note** You can get the connexion status at any time by getting the property `cache.connected` which returns a boolean (true = connected, false = disconnected).
 
 ## deprecated
 
