@@ -52,5 +52,50 @@
     });
 
   });
+
+  describe ( 'del with wilcard', function () {
+
+    var error, deletions;
+
+    before(function (done) {
+
+      var parallel = [0, 1, 2, 3 ,4, 5].map(function (num) {
+      
+        return function (done) {
+          cache.add('test-to-del.' + this.num, '-', done);
+        }.bind({ num: num });
+      
+      });
+
+      require('async').series(parallel, function (error) {
+        done(error);
+      });
+    });
+
+    it ( 'should be a function', function () {
+      cache.del.should.be.a.Function;
+    });
+
+    it ( 'should callback', function (done) {
+      cache.del('test-to-del.*', function ($error, $deletions) {
+        error = $error;
+        deletions = $deletions;
+        done();
+      });
+    });
+
+    it ( 'should not have error', function () {
+      should(error).be.undefined;
+    });
+
+    it ( 'should be a number', function () {
+      deletions.should.be.a.Number;
+    });
+
+    it ( 'should be a 1 or above', function () {
+      deletions.should.be.eql(6);
+    });
+
+  });
     
 })();

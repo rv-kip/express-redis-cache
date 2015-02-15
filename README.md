@@ -460,9 +460,10 @@ export EX_RE_CA_PREFIX="";
 
 # Contributors
 
-[faceair](https://github.com/faceair)
-[Ben Arwin](https://github.com/barwin)
-[Kip Gebhardt](https://github.com/rv-kip)
+- [faceair](https://github.com/faceair)
+- [barwin](https://github.com/barwin)
+- [rv-kip](https://github.com/rv-kip)
+- [amaurigabriel](https://github.com/amaurigabriel)
 
 ---
 

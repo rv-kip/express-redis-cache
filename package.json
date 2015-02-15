@@ -23,12 +23,16 @@
       "url": "https://github.com/faceair"
     },
     {
-      "name": "Ben Arwin",
+      "name": "barwin",
       "url": "https://github.com/barwin"
     },
     {
-      "name": "Kip Gebhardt",
+      "name": "rv-kip",
       "url": "https://github.com/rv-kip"
+    },
+    {
+      "name": "amaurigabriel",
+      "url": "https://github.com/amaurigabriel"
     }
   ],
   "license": "BSD",
