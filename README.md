@@ -458,6 +458,12 @@ export EX_RE_CA_PORT="";
 export EX_RE_CA_PREFIX="";
 ```
 
+# Contributors
+
+[faceair](https://github.com/faceair)
+[Ben Arwin](https://github.com/barwin)
+[Kip Gebhardt](https://github.com/rv-kip)
+
 ---
 
 Enjoy!
