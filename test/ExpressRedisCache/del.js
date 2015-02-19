@@ -60,11 +60,11 @@
     before(function (done) {
 
       var parallel = [0, 1, 2, 3 ,4, 5].map(function (num) {
-      
+
         return function (done) {
           cache.add('test-to-del.' + this.num, '-', done);
         }.bind({ num: num });
-      
+
       });
 
       require('async').series(parallel, function (error) {
@@ -97,5 +97,5 @@
     });
 
   });
-    
+
 })();

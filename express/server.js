@@ -6,8 +6,8 @@ var path = require('path');
 
 var express       = require('express');
 var app           = express();
-
-var cache					=	require('../')();
+var cache		  =	require('../')();
+var moment        = require('moment');
 
 app.set('port', process.env.PORT || 3027);
 
@@ -19,6 +19,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 /* ======== home  ======== */
+
+// Cache the time for 3 seconds as
+// { timestamp: 1424309866 }
+app.all('/3sec',
+    cache.route({expire: 3000}),
+    function (req, res){
+        res.set({'Content-Type': 'text/json'});
+        res.json({ timestamp: moment().unix()});
+    }
+);
 
 app.all('/',
 

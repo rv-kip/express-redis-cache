@@ -39,7 +39,6 @@
   "dependencies": {
     "async": "~0.9.0",
     "colors": "~0.6.2",
-    "moment": "~2.7.0",
     "redis": "^0.11.0"
   },
   "directories": {
@@ -55,6 +54,7 @@
     "request": "~2.37.0",
     "express": "~4.9.5",
     "mocha": "~2.0.1",
-    "should": "~4.4.1"
+    "should": "~4.4.1",
+    "moment": "^2.7.0"
   }
 }

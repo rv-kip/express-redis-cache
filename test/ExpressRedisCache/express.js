@@ -1,5 +1,5 @@
 (function () {
-  
+
   'use strict';
 
   var path      =   require('path');
@@ -8,6 +8,7 @@
   var mocha     =   require('mocha');
   var should    =   require('should');
   var request   =   require('request');
+  var util      =   require('util');
 
   var config    =   require('../../package.json').config;
 
@@ -16,8 +17,8 @@
   var port      =   6379;
 
   var spawn,
-    express_port,
-    home;
+      express_port,
+      home;
 
   describe ( 'test with small express server', function () {
 
@@ -38,12 +39,11 @@
         console.log(data.toString());
         if ( /express-redis-cache test server started on port/.test(data.toString()) ) {
 
-          express_port = data.toString().split(' ').pop();
+          express_port = data.toString().split(' ').pop().trim();
 
           done();
       }
       });
-
     });
 
     it ( 'should have a / route', function (done) {
@@ -68,6 +68,38 @@
         });
     });
 
+    it ( '/3sec route should return a json object', function (done) {
+      var url = 'http://localhost:' + express_port + "/3sec";
+      request(url,
+        function (error, response, body) {
+          if ( error ) {
+            throw error;
+          }
+          var p_body = JSON.parse(body);
+          p_body.should.have.property('timestamp');
+          done();
+        });
+    });
+
+    it ( '/3sec route expire after 3 seconds', function (done) {
+      this.timeout(3000);
+      var url = 'http://localhost:' + express_port + "/3sec";
+      request(url,
+        function (error, response, body) {
+          if ( error ) {
+            throw error;
+          }
+          var p_body = JSON.parse(body),
+              timestamp = p_body.timestamp,
+              now_timestamp = Math.floor(Date.now() / 1000);
+
+          timestamp.should.be.above(now_timestamp - 3);
+          done();
+        });
+    });
+
+
+    this.timeout(100000);
     after(function (done) {
       process.kill(spawn.pid);
       done();
