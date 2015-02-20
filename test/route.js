@@ -8,13 +8,12 @@
   var mocha     =   require('mocha');
   var should    =   require('should');
 
-  var config    =   require('../../package.json').config;
 
   var prefix    =   'erct';
   var host      =   'localhost';
   var port      =   6379;
 
-  var cache     =   require('../../')({
+  var cache     =   require('../')({
     prefix: prefix,
     host: host,
     port: port
@@ -31,7 +30,7 @@
   /** Emulate res **/
   var res = {
     send: function (body) {
-      
+
     },
     _headers: {
       'content-type': 'text/plain'
@@ -163,7 +162,7 @@ module.exports = function (cb) {
     require('async').parallel(
       /* for each new cache **/
       cache.newCaches
-        
+
         /** if it is  a route cache */
         .filter(function (entry) {
           return !!( /^\/route_/.test(entry.name) );
@@ -204,7 +203,7 @@ module.exports = function (cb) {
             assert('it should be a function', typeof router === 'function');
 
             /** Emulate a HTTP request **/
-            
+
             router.apply(cache, [req, res, next]);
 
           }.bind(entry);

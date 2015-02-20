@@ -6,7 +6,7 @@ var path = require('path');
 
 var express       = require('express');
 var app           = express();
-var cache		  =	require('../')();
+var cache		      =	require('../')({host: "localhost", port: 6379});
 var moment        = require('moment');
 
 app.set('port', process.env.PORT || 3027);
@@ -26,7 +26,8 @@ app.all('/3sec',
     cache.route({expire: 3000}),
     function (req, res){
         res.set({'Content-Type': 'text/json'});
-        res.json({ timestamp: moment().unix()});
+        var timestamp = { timestamp: moment().unix()};
+        res.json(timestamp);
     }
 );
 

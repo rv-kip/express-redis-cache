@@ -7,13 +7,11 @@
   var mocha     =   require('mocha');
   var should    =   require('should');
 
-  var config    =   require('../../package.json').config;
-
   var prefix    =   'erct';
   var host      =   'localhost';
   var port      =   6379;
 
-  var cache     =   require('../../')({
+  var cache     =   require('../')({
     prefix: prefix,
     host: host,
     port: port
@@ -40,7 +38,7 @@
     });
 
     it ( 'should not have error', function () {
-      should(error).be.undefined;
+      should(error).be.null;
     });
 
     it ( 'should be a number', function () {
@@ -85,7 +83,7 @@
     });
 
     it ( 'should not have error', function () {
-      should(error).be.undefined;
+      should(error).be.null;
     });
 
     it ( 'should be a number', function () {
