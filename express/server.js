@@ -6,7 +6,14 @@ var path = require('path');
 
 var express       = require('express');
 var app           = express();
-var cache		      =	require('../')({host: "localhost", port: 6379});
+
+var cache_options = {
+  host      : "localhost",
+  port      : 6379,
+  expire    : 3
+};
+
+var cache		      =	require('../')(cache_options);
 var moment        = require('moment');
 
 app.set('port', process.env.PORT || 3027);
@@ -20,17 +27,40 @@ app.use(bodyParser.json());
 
 /* ======== home  ======== */
 
-// Cache the time for 3 seconds as
+function handle_timestamp (req, res) {
+  res.set({'Content-Type': 'text/json'});
+  var timestamp = { timestamp: moment().unix()};
+  return res.json(timestamp);
+}
+
+// Cache the time for 1 second as
 // { timestamp: 1424309866 }
-app.all('/3sec',
-    cache.route({expire: 3000}),
-    function (req, res){
-        res.set({'Content-Type': 'text/json'});
-        var timestamp = { timestamp: moment().unix()};
-        res.json(timestamp);
-    }
+app.all('/1sec',
+    cache.route({expire: 1}),
+    handle_timestamp
 );
 
+app.all('/default_expire',
+    cache.route(),
+    handle_timestamp
+);
+
+app.all('/never_expire',
+    cache.route({expire: -1}),
+    handle_timestamp
+);
+
+app.all('/delete_never_expire',
+    function(req, res) {
+      cache.del("/never_expire", function(err, count){
+        if (err) {
+          return res.send(500);
+        }
+        return res.send("count:" + count);
+      });
+
+    }
+);
 app.all('/',
 
 	cache.route(),
