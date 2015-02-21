@@ -7,9 +7,17 @@ var path = require('path');
 var express       = require('express');
 var app           = express();
 
+app.set('port', process.env.PORT || 3027);
+
+/* ======== cache  ======== */
+
 var cache					=	require('../')();
 
-app.set('port', process.env.PORT || 3027);
+cache.on('error', function (error) {
+  console.log('cache error', {
+    message: error.message
+  });
+});
 
 /* ======== body parser  ======== */
 
@@ -25,7 +33,7 @@ app.all('/',
 	cache.route(),
 
 	function (req, res) {
-  	res.sendFile(require('path').join(__dirname, 'index.html'));
+  	res.send('Now is ' + new Date());
 	});
 
 /* ======== server  ======== */
