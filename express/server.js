@@ -8,12 +8,10 @@ var express       = require('express');
 var app           = express();
 
 var cache_options = {
-  host      : "localhost",
-  port      : 6379,
-  expire    : 3
+  expire      : 3
 };
 
-var cache		      =	require('../')(cache_options);
+var cache         = require('../')(cache_options);
 var moment        = require('moment');
 
 app.set('port', process.env.PORT || 3027);
@@ -63,11 +61,11 @@ app.all('/delete_never_expire',
 );
 app.all('/',
 
-	cache.route(),
+  cache.route(),
 
-	function (req, res) {
-  	res.sendFile(require('path').join(__dirname, 'index.html'));
-	});
+  function (req, res) {
+    res.sendFile(require('path').join(__dirname, 'index.html'));
+  });
 
 /* ======== server  ======== */
 
