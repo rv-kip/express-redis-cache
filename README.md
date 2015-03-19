@@ -37,11 +37,11 @@ This will check if there is a cache entry for this route. If not. it will cache 
 
 # Redis connection info
 
-By default, `redis-express-cache` connects to Redis using localhost as host and nothing as port (using Redis default port 6379). To use different port or host, declare them when you require express-redis-cache.
+By default, `redis-express-cache` connects to Redis using localhost as host and nothing as port (using Redis default port 6379). To use different port or host, declare them when you require express-redis-cache. If your Redis server requires password, use the `auth_pass` option.
 
 ```js
 var cache = require('express-redis-cache')({
-  host: String, port: Number
+  host: String, port: Number, auth_pass: REDIS_PASSWORD
   });
 ```
         
@@ -464,6 +464,8 @@ export EX_RE_CA_PREFIX="";
 - [barwin](https://github.com/barwin)
 - [rv-kip](https://github.com/rv-kip)
 - [amaurigabriel](https://github.com/amaurigabriel)
+- [benmcmeen](https://github.com/benmcmeen)
+- [pwmckenna](https://github.com/pwmckenna)
 
 ---
 
