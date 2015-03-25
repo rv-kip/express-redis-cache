@@ -80,6 +80,13 @@
       setTimeout(function(){
         cache.get(_name, function (err, res) {
           should(err).not.be.ok;
+          res.should.be.an.Array.and.have.a.lengthOf(1);
+          done();
+        });
+      }, (cache.expire - 1) * 1000);
+      setTimeout(function(){
+        cache.get(_name, function (err, res) {
+          should(err).not.be.ok;
           res.should.be.an.Array.and.have.a.lengthOf(0);
           done();
         });
