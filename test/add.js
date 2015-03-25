@@ -8,7 +8,7 @@
   var mocha     =   require('mocha');
   var should    =   require('should');
 
-  var config    =   require('../../package.json').config;
+  var config    =   require('../package.json').config;
 
   var prefix    =   'erct:';
   var host      =   'localhost';
@@ -18,7 +18,7 @@
   var _body     =   'test1 test1 test1';
   var _type     =   'text/plain';
 
-  var cache     =   require('../../')({
+  var cache     =   require('../')({
     prefix: prefix,
     host: host,
     port: port,
@@ -44,7 +44,7 @@
     });
 
     it ( 'should not have error', function () {
-      should(error).be.undefined;
+      should(error).be.null;
     });
 
     it ( 'should have a name which is a string and match the request', function () {

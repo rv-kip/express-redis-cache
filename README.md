@@ -464,6 +464,8 @@ export EX_RE_CA_PREFIX="";
 - [barwin](https://github.com/barwin)
 - [rv-kip](https://github.com/rv-kip)
 - [amaurigabriel](https://github.com/amaurigabriel)
+- [benmcmeen](https://github.com/benmcmeen)
+- [pwmckenna](https://github.com/pwmckenna)
 
 ---
 
