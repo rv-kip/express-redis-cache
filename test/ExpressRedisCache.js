@@ -67,6 +67,12 @@
         .and.is.true;
     });
 
+    it ( 'should have a property expire which is a number and equals FOREVER', function () {
+      cache.should.have.property('expire')
+        .which.is.a.Number
+        .and.equal(cache.FOREVER);
+    });
+
     it ( 'should have a property client which is a RedisClient', function () {
       cache.should.have.property('client')
         .which.is.an.Object;
