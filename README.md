@@ -6,11 +6,11 @@ Easily cache pages of your app using Express and Redis. *Could be used without E
 # Install
 
     npm install express-redis-cache
-    
+
 `express-redis-cache` ships with a CLI utility you can invoke from the console. In order to use it, install `express-redis-cache` globally (might require super user privileges):
 
     npm install -g express-redis-cache
-    
+
 # Upgrade
 
 Read [this](../master/CHANGELOG.md) if you are upgrading from 0.0.8 to 0.1.x,
@@ -32,7 +32,7 @@ app.get('/',
   cache.route(),
   function (req, res)  { ... });
 ```
-    
+
 This will check if there is a cache entry for this route. If not. it will cache it and serve the cache next time route is called.
 
 # Redis connection info
@@ -44,7 +44,7 @@ var cache = require('express-redis-cache')({
   host: String, port: Number, auth_pass: REDIS_PASSWORD
   });
 ```
-        
+
 You can pass a Redis client as well:
 
 ```js
@@ -60,7 +60,7 @@ var client2 = cache({ host: "...", port: "..." });
 ...
 ```
 ## Redis Unavailability
-Should the redis become unavailable, the `express-redis-cache` object will emit errors but will not crash the app. Express.js requests during this time will be bypass cache and will return fresh data. 
+Should the redis become unavailable, the `express-redis-cache` object will emit errors but will not crash the app. Express.js requests during this time will be bypass cache and will return fresh data.
 
 Once the redis recovers, the caching will begin working again. See example code in the `/example` folder.
 
@@ -94,9 +94,9 @@ Also, you can use `res.express_redis_cache_name` to specify the name of the entr
 
 ```js
 app.get('/user/:userid',
-  
+
   // middleware to define cache name
-  
+
   function (req, res, next) {
     // set cache name
     res.express_redis_cache_name = 'user-' + req.params.userid;
@@ -104,15 +104,15 @@ app.get('/user/:userid',
     },
 
   // cache middleware
-  
+
   cache.route(),
-  
+
   // content middleware
-  
+
   function (req, res) {
     res.render('user');
     }
-    
+
   );
 ```
 
@@ -125,16 +125,16 @@ You can also use a previous middleware to set whether or not to use the cache by
 app.get('/user',
 
   // middleware to decide if using cache
-  
+
   function (req, res, next) {
     // Use only cache if user not signed in
     res.use_express_redis_cache = ! req.signedCookies.user;
-    
+
     next();
     }.
-    
+
   cache.route(), // this will be skipped if user is signed in
-  
+
   function (req, res) {
     res.render('user');
     }
@@ -143,7 +143,7 @@ app.get('/user',
 
 # Prefix
 
-All entry names are prepended by a prefix. Prefix is set when calling the Constructor. 
+All entry names are prepended by a prefix. Prefix is set when calling the Constructor.
 
 ```js
 // Set default prefix to "test". All entry names will begin by "test:"
@@ -187,7 +187,7 @@ You can overwrite the default lifetime when calling `route()`:
 app.get('/index.html',
   cache.route({ expire: 5000  }), // cache entry will live 5000 seconds
   function (req, res)  { ... });
-    
+
 // You can also use the number sugar syntax
 cache.route(5000);
 // Or
@@ -195,6 +195,24 @@ cache.route('index', 5000);
 // Or
 cache.route({ prefix: 'test' }, 5000);
 ```
+
+You can also provide a hash of status code / expiration values if you for example want to retry much sooner in failure cases (403/404/500/etc). Status ranges can be specified via `4xx`/`5xx`. You must provide a default value (`xxx`). The most specific rule will be used. For example, if the status code is 200, and there are expirations set for 200, 2xx, and xxx, the expiration for 200 will be used.
+
+```js
+app.get('/index'html',
+  cache.route({
+    expire: {
+      200: 5000,
+      4xx: 10,
+      403: 5000,
+      5xx: 10,
+      xxx: 1
+    }
+  }),
+  function (req, res)  { ... });
+```
+
+You can also specify
 
 # Content Type
 
@@ -267,7 +285,7 @@ cache.on('deprecated', function (deprecated) {
   });
 });
 ```
-    
+
 # The Entry Model
 
 This is the object synopsis we use to represent a cache entry:
@@ -313,19 +331,19 @@ Where `options` is an object that has the following properties:
 # API
 
 The `route` method is designed to integrate easily with Express. You can also define your own caching logics using the other methos of the API shown below.
-    
+
 ## `get` Get cache entries
-    
+
 ```js
 cache.get(/** Mixed (optional) */ query, /** Function( Error, [Entry] ) */ callback );
 ```
-    
+
 To get all cache entries:
 
 ```js
 cache.get(function (error, entries) {
   if ( error ) throw error;
-  
+
   entries.forEach(console.log.bind(console));
 });
 ```
@@ -347,9 +365,9 @@ You can use wildcard:
 ```js
 cache.get('user*', function (error, entries) {});
 ```
-    
+
 ## `add` Add a new cache entry
-    
+
 ```js
 cache.add(/** String */ name, /** String */ body, /** Object (optional) **/ options, /** Function( Error, Entry ) */ callback )
 ```
@@ -358,7 +376,7 @@ Where options is an object that can have the following properties:
 
 - **expire** `Number` (lifetime of entry in seconds)
 - **type** `String` (the content-type)
-    
+
 Example:
 
 ```js
@@ -367,7 +385,7 @@ cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), { expir
 ```
 
 ## `del` Delete a cache entry
-    
+
 ```js
 cache.del(/** String */ name, /** Function ( Error, Number deletions ) */ callback);
 ```
@@ -375,11 +393,11 @@ cache.del(/** String */ name, /** Function ( Error, Number deletions ) */ callba
 You can use wildcard (*) in name.
 
 ## `size` Get cache size for all entries
-    
+
 ```js
 cache.size(/** Function ( Error, Number bytes ) */);
 ```
-    
+
 # Command line
 
 We ship with a CLI. You can invoke it like this: `express-redis-cache`

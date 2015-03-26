@@ -29,6 +29,7 @@
 
   /** Emulate res **/
   var res = {
+    statusCode: 200,
     send: function (body) {
 
     },
@@ -184,6 +185,7 @@ module.exports = function (cb) {
 
             /** Emulate res **/
             var res = {
+              statusCode: 200,
               send: function (body) {
                 assert('it should be the same message', body === entry.body);
 
