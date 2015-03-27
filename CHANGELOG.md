@@ -17,7 +17,7 @@ We introduced the `(Boolean) res.express_redis_cache_skip` property which, if se
 
 ### Deprecated event
 
-The code now emits a *deprecated* event when stumbling upon a deprecated part of the code. View below for more info. 
+The code now emits a *deprecated* event when stumbling upon a deprecated part of the code. View below for more info.
 
 ## Fixes
 
