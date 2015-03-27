@@ -75,8 +75,9 @@
       should(entry.expire).equal(cache.expire);
     });
 
-    it ( 'should expire in ' + cache.expire + ' seconds', function (done) {
+    it ( 'should have cached the content', function (done) {
       this.timeout(2500); // allow more time for this test
+
       setTimeout(function(){
         cache.get(_name, function (err, res) {
           should(err).not.be.ok;
@@ -84,6 +85,11 @@
           done();
         });
       }, (cache.expire - 1) * 1000);
+    });
+
+    it ( 'should expire in ' + cache.expire + ' seconds', function (done) {
+      this.timeout(2500); // allow more time for this test
+
       setTimeout(function(){
         cache.get(_name, function (err, res) {
           should(err).not.be.ok;
