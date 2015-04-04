@@ -196,6 +196,24 @@ cache.route('index', 5000);
 cache.route({ prefix: 'test' }, 5000);
 ```
 
+You can also provide a hash of status code / expiration values if you for example want to retry much sooner in failure cases (403/404/500/etc). Status ranges can be specified via `4xx`/`5xx`. You must provide a default value (`xxx`). The most specific rule will be used. For example, if the status code is 200, and there are expirations set for 200, 2xx, and xxx, the expiration for 200 will be used.
+
+```js
+app.get('/index'html',
+  cache.route({
+    expire: {
+      200: 5000,
+      4xx: 10,
+      403: 5000,
+      5xx: 10,
+      xxx: 1
+    }
+  }),
+  function (req, res)  { ... });
+```
+
+You can also specify
+
 # Content Type
 
 You can use `express-redis-cache` to cache HTML pages, CSS stylesheets, JSON objects, anything really. Content-types are saved along the cache body and are retrieved using `res._headers['content-type']`. If you want to overwrite that, you can pass a custom type.
