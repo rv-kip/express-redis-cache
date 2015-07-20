@@ -1,12 +1,6 @@
 express-redis-cache
 ===
 
-# PROJECT NO MORE MAINTAINED
-
-This project is no more maintained as of June 16th 2015. Use at your own risk! **Let me know if you want to maintain it so I can transfer you ownership of the NPM repo.**
-
----
-
 Easily cache pages of your app using Express and Redis. *Could be used without Express too.*
 
 # Install
