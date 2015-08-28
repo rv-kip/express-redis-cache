@@ -6,9 +6,9 @@ var should    =   require('should');
 var request   =   require('request');
 var util      =   require('util');
 
-var prefix    =   'erct:';
-var host      =   'localhost';
-var port      =   6379;
+var prefix    =   process.env.EX_RE_CA_PREFIX || 'erct:';
+var host      =   process.env.EX_RE_CA_HOST || 'localhost';
+var port      =   process.env.EX_RE_CA_PORT || 6379;
 
 var spawn,
     express_port,
