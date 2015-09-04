@@ -11,7 +11,10 @@ app.set('port', process.env.PORT || 3027);
 
 /* ======== cache  ======== */
 var cache_options = {
-  expire      : 3
+  expire      : 3,
+  host        : process.env.EX_RE_CA_HOST || 'localhost',
+  port        : process.env.EX_RE_CA_PORT || 6379,
+  prefix      : process.env.EX_RE_CA_PREFIX || 'erct:'
 };
 
 var cache         = require('../')(cache_options);
