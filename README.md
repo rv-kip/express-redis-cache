@@ -199,7 +199,7 @@ cache.route({ prefix: 'test' }, 5000);
 You can also provide a hash of status code / expiration values if you for example want to retry much sooner in failure cases (403/404/500/etc). Status ranges can be specified via `4xx`/`5xx`. You must provide a default value (`xxx`). The most specific rule will be used. For example, if the status code is 200, and there are expirations set for 200, 2xx, and xxx, the expiration for 200 will be used.
 
 ```js
-app.get('/index'html',
+app.get('/index.html',
   cache.route({
     expire: {
       200: 5000,
@@ -484,6 +484,7 @@ export EX_RE_CA_PREFIX="";
 - [amaurigabriel](https://github.com/amaurigabriel)
 - [benmcmeen](https://github.com/benmcmeen)
 - [pwmckenna](https://github.com/pwmckenna)
+- [mattberther](https://github.com/mattberther)
 
 ---
 
