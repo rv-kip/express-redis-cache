@@ -1,6 +1,6 @@
 {
   "name": "express-redis-cache",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "A module to make Express interact with Redis (create, get, delete). You can automatically cache all your most popular routes in Redis.",
   "main": "index.js",
   "bin": {
@@ -41,6 +41,10 @@
     {
       "name": "pwmckenna",
       "url": "https://github.com/pwmckenna"
+    },
+    {
+      "name": "ramanpreetnara",
+      "url": "https://github.com/ramanpreetnara"
     }
   ],
   "license": "BSD",
