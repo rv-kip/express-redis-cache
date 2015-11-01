@@ -485,6 +485,7 @@ export EX_RE_CA_PREFIX="";
 - [benmcmeen](https://github.com/benmcmeen)
 - [pwmckenna](https://github.com/pwmckenna)
 - [mattberther](https://github.com/mattberther)
+- [ramanpreetnara](https://github.com/ramanpreetnara)
 
 ---
 
