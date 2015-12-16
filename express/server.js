@@ -7,9 +7,24 @@ var path = require('path');
 var express       = require('express');
 var app           = express();
 
-var cache					=	require('../')();
-
 app.set('port', process.env.PORT || 3027);
+
+/* ======== cache  ======== */
+var cache_options = {
+  expire      : 3,
+  host        : process.env.EX_RE_CA_HOST || 'localhost',
+  port        : process.env.EX_RE_CA_PORT || 6379,
+  prefix      : process.env.EX_RE_CA_PREFIX || 'erct:'
+};
+
+var cache         = require('../')(cache_options);
+var moment        = require('moment');
+
+cache.on('error', function (error) {
+  console.log('cache error', {
+    message: error.message
+  });
+});
 
 /* ======== body parser  ======== */
 
@@ -20,12 +35,46 @@ app.use(bodyParser.json());
 
 /* ======== home  ======== */
 
+function handle_timestamp (req, res) {
+  res.set({'Content-Type': 'text/json'});
+  var timestamp = { timestamp: moment().unix()};
+  return res.json(timestamp);
+}
+
+// Cache the time for 1 second as
+// { timestamp: 1424309866 }
+app.all('/1sec',
+    cache.route({expire: 1}),
+    handle_timestamp
+);
+
+app.all('/default_expire',
+    cache.route(),
+    handle_timestamp
+);
+
+app.all('/never_expire',
+    cache.route({expire: -1}),
+    handle_timestamp
+);
+
+app.all('/delete_never_expire',
+    function(req, res) {
+      cache.del("/never_expire", function(err, count){
+        if (err) {
+          return res.send(500);
+        }
+        return res.send("count:" + count);
+      });
+
+    }
+);
 app.all('/',
 
-	cache.route(),
+  cache.route(),
 
 	function (req, res) {
-  	res.sendFile(require('path').join(__dirname, 'index.html'));
+  	res.send('Now is ' + new Date());
 	});
 
 /* ======== server  ======== */

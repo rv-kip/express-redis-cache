@@ -8,17 +8,17 @@
   var mocha     =   require('mocha');
   var should    =   require('should');
 
-  var config    =   require('../../package.json').config;
+  var config    =   require('../package.json').config;
 
-  var prefix    =   'erct:';
-  var host      =   'localhost';
-  var port      =   6379;
+  var prefix    =   process.env.EX_RE_CA_PREFIX || 'erct:';
+  var host      =   process.env.EX_RE_CA_HOST || 'localhost';
+  var port      =   process.env.EX_RE_CA_PORT || 6379;
 
   var _name     =   'test1';
   var _body     =   'test1 test1 test1';
   var _type     =   'text/plain';
 
-  var cache     =   require('../../')({
+  var cache     =   require('../')({
     prefix: prefix,
     host: host,
     port: port,
@@ -44,7 +44,7 @@
     });
 
     it ( 'should not have error', function () {
-      should(error).be.undefined;
+      should(error).be.null;
     });
 
     it ( 'should have a name which is a string and match the request', function () {
@@ -75,8 +75,21 @@
       should(entry.expire).equal(cache.expire);
     });
 
+    it ( 'should have cached the content', function (done) {
+      this.timeout(2500); // allow more time for this test
+
+      setTimeout(function(){
+        cache.get(_name, function (err, res) {
+          should(err).not.be.ok;
+          res.should.be.an.Array.and.have.a.lengthOf(1);
+          done();
+        });
+      }, (cache.expire - 1) * 1000);
+    });
+
     it ( 'should expire in ' + cache.expire + ' seconds', function (done) {
       this.timeout(2500); // allow more time for this test
+
       setTimeout(function(){
         cache.get(_name, function (err, res) {
           should(err).not.be.ok;

@@ -1,13 +1,13 @@
 {
   "name": "express-redis-cache",
-  "version": "0.1.7",
+  "version": "0.1.9",
   "description": "A module to make Express interact with Redis (create, get, delete). You can automatically cache all your most popular routes in Redis.",
   "main": "index.js",
   "bin": {
     "express-redis-cache": "bin/express-redis-cache.js"
   },
   "scripts": {
-    "test": "mocha --check-leaks -R nyan test test/ExpressRedisCache"
+    "test": "mocha --check-leaks -R nyan test"
   },
   "repository": {
     "type": "git",
@@ -23,20 +23,35 @@
       "url": "https://github.com/faceair"
     },
     {
-      "name": "Ben Arwin",
+      "name": "barwin",
       "url": "https://github.com/barwin"
     },
     {
-      "name": "Kip Gebhardt",
+      "name": "rv-kip",
       "url": "https://github.com/rv-kip"
+    },
+    {
+      "name": "amaurigabriel",
+      "url": "https://github.com/amaurigabriel"
+    },
+    {
+      "name": "benmcmeen",
+      "url": "https://github.com/benmcmeen"
+    },
+    {
+      "name": "pwmckenna",
+      "url": "https://github.com/pwmckenna"
+    },
+    {
+      "name": "ramanpreetnara",
+      "url": "https://github.com/ramanpreetnara"
     }
   ],
   "license": "BSD",
   "dependencies": {
     "async": "~0.9.0",
-    "colors": "~0.6.2",
-    "moment": "~2.7.0",
-    "redis": "^0.11.0"
+    "colors": "^1.0.3",
+    "redis": "^0.12.1"
   },
   "directories": {
     "test": "test"
@@ -46,11 +61,12 @@
     "type": "text/html"
   },
   "devDependencies": {
-    "body-parser": "~1.5.0",
-    "method-override": "~2.1.1",
-    "request": "~2.37.0",
-    "express": "~4.9.5",
-    "mocha": "~2.0.1",
-    "should": "~4.4.1"
+    "body-parser": "~1.12.0",
+    "method-override": "~2.3.1",
+    "request": "~2.53.0",
+    "express": "~4.11.2",
+    "mocha": "~2.1.0",
+    "should": "~5.0.0",
+    "moment": "^2.9.0"
   }
 }
