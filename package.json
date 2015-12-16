@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/co2-git/express-redis-cache.git"
+    "url": "https://github.com/rv-kip/express-redis-cache.git"
   },
   "author": {
     "name": "Francois Vespa",
