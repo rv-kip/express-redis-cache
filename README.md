@@ -1,6 +1,8 @@
 express-redis-cache
 ===
 
+[![Build Status](https://travis-ci.org/rv-kip/express-redis-cache.svg?branch=master)](https://travis-ci.org/rv-kip/express-redis-cache)
+
 Easily cache pages of your app using Express and Redis. *Could be used without Express too.*
 
 # Install
