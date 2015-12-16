@@ -30,7 +30,7 @@
     var error, name, entry;
 
     it ( 'should be a function', function () {
-      cache.add.should.be.a.Function;
+      cache.add.should.be.a.Function();
     });
 
     it ( 'should callback', function (done) {
@@ -48,23 +48,26 @@
     });
 
     it ( 'should have a name which is a string and match the request', function () {
-      name.should.be.a.String.and.equal(_name);
+      name.should.be.a.String();
+      name.should.equal(_name);
     });
 
     it ( 'should have a entry which is an object', function () {
-      entry.should.be.an.Object;
+      entry.should.be.an.Object();
     });
 
     it ( ' - entry which has a property body which a string matching the request', function () {
-      entry.body.should.be.a.String.and.equal(_body);
+      entry.body.should.be.a.String();
+      entry.body.should.equal(_body);
     });
 
     it ( ' - entry which has a property type which a string matching default type', function () {
-      entry.type.should.be.a.String.and.equal(config.type);
+      entry.type.should.be.a.String();
+      entry.type.should.equal(config.type);
     });
 
     it ( ' - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now', function () {
-      entry.touched.should.be.a.Number;
+      entry.touched.should.be.a.Number();
 
       var date = new Date(entry.touched);
 
@@ -81,7 +84,8 @@
       setTimeout(function(){
         cache.get(_name, function (err, res) {
           should(err).not.be.ok;
-          res.should.be.an.Array.and.have.a.lengthOf(1);
+          res.should.be.an.Array();
+          res.should.have.a.lengthOf(1);
           done();
         });
       }, (cache.expire - 1) * 1000);
@@ -93,7 +97,8 @@
       setTimeout(function(){
         cache.get(_name, function (err, res) {
           should(err).not.be.ok;
-          res.should.be.an.Array.and.have.a.lengthOf(0);
+          res.should.be.an.Array();
+          res.should.have.a.lengthOf(0);
           done();
         });
       }, cache.expire * 1000);

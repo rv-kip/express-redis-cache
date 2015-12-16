@@ -1,6 +1,6 @@
 {
   "name": "express-redis-cache",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "A module to make Express interact with Redis (create, get, delete). You can automatically cache all your most popular routes in Redis.",
   "main": "index.js",
   "bin": {
@@ -49,9 +49,9 @@
   ],
   "license": "BSD",
   "dependencies": {
-    "async": "~0.9.0",
-    "colors": "^1.0.3",
-    "redis": "^0.12.1"
+    "async": "~1.5.0",
+    "colors": "^1.1.2",
+    "redis": "^2.4.2"
   },
   "directories": {
     "test": "test"
@@ -61,12 +61,12 @@
     "type": "text/html"
   },
   "devDependencies": {
-    "body-parser": "~1.12.0",
-    "method-override": "~2.3.1",
-    "request": "~2.53.0",
-    "express": "~4.11.2",
-    "mocha": "~2.1.0",
-    "should": "~5.0.0",
-    "moment": "^2.9.0"
+    "body-parser": "~1.14.1",
+    "method-override": "~2.3.5",
+    "request": "~2.67.0",
+    "express": "~4.13.3",
+    "mocha": "~2.3.4",
+    "should": "~8.0.1",
+    "moment": "^2.10.6"
   }
 }

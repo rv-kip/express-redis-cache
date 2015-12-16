@@ -11,7 +11,7 @@
   var prefix    =   process.env.EX_RE_CA_PREFIX || 'erct:';
   var host      =   process.env.EX_RE_CA_HOST || 'localhost';
   var port      =   process.env.EX_RE_CA_PORT || 6379;
-  
+
   var cache     =   require('../')({
     prefix: prefix,
     host: host,
@@ -47,12 +47,12 @@
     var middleware, error, results;
 
     it ( 'should be a function', function () {
-      cache.route.should.be.a.Function;
+      cache.route.should.be.a.Function();
     });
 
     it ( 'should return a function', function () {
       middleware = cache.route(_name, _expire);
-      middleware.should.be.a.Function;
+      middleware.should.be.a.Function();
     });
 
     describe('On Calling the route', function () {
@@ -85,23 +85,21 @@
 
         it ( 'should be have a property "body" which is a string and equals the sent text', function () {
           results.forEach(function (entry) {
-            entry.should.have.property('body')
-              .which.is.a.String
-              .and.equal('hello folks!');
+            entry.should.have.property('body').which.is.a.String();
+            entry.body.should.equal('hello folks!');
           });
         });
 
         it ( 'should be have a property "type" which is a string and equals the sent type', function () {
           results.forEach(function (entry) {
-            entry.should.have.property('type')
-              .which.is.a.String
-              .and.equal(res._headers['content-type']);
+            entry.should.have.property('type').which.is.a.String();
+            entry.type.should.equal(res._headers['content-type']);
           });
         });
 
         it ( ' - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now', function () {
           results.forEach(function (entry) {
-            Number(entry.touched).should.be.a.Number;
+            Number(entry.touched).should.be.a.Number();
 
             var date = new Date(Number(entry.touched));
 
@@ -114,13 +112,9 @@
             should(+entry.expire).equal(_expire);
           });
         });
-
       });
-
     });
-
   });
-
 })();
 
 /**
