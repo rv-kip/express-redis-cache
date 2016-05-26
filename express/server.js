@@ -36,7 +36,7 @@ app.use(bodyParser.json());
 /* ======== home  ======== */
 
 function handle_timestamp (req, res) {
-  res.set({'Content-Type': 'text/json'});
+  res.set({'Content-Type': 'application/json'});
   var timestamp = { timestamp: moment().unix()};
   return res.json(timestamp);
 }
@@ -88,3 +88,5 @@ server.listen(app.get('port'), function () {
 server.on('error', function (error) {
   console.log({ 'server error': error });
 });
+
+module.exports = app;

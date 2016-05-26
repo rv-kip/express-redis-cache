@@ -30,7 +30,10 @@
   var res = {
     statusCode: 200,
     send: function (body) {
-
+      this.socket.write(body);
+    },
+    socket: {
+      write: function () {}
     },
     _headers: {
       'content-type': 'text/plain'
