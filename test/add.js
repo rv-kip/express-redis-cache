@@ -43,6 +43,18 @@
         });
     });
 
+    it ( 'should allow for zero expiration', function(done) {
+      cache.add(_name, _body, { expire: 0 },
+        function($error, $name, $entry) {
+          var resp;
+          if($entry.expire !== 0) {
+            var resp = new Error('entry.expire should be 0. It is '+$entry.expire);
+          }
+          done(resp);
+        }
+      );
+    });
+
     it ( 'should not have error', function () {
       should(error).be.null;
     });
