@@ -55,6 +55,7 @@
   "dependencies": {
     "async": "~1.5.0",
     "colors": "^1.1.2",
+    "on-finished": "^2.3.0",
     "redis": "^2.4.2"
   },
   "directories": {
@@ -66,11 +67,12 @@
   },
   "devDependencies": {
     "body-parser": "~1.14.1",
-    "method-override": "~2.3.5",
-    "request": "~2.67.0",
     "express": "~4.13.3",
+    "method-override": "~2.3.5",
     "mocha": "~2.3.4",
+    "moment": "^2.10.6",
+    "request": "~2.67.0",
     "should": "~8.0.1",
-    "moment": "^2.10.6"
+    "supertest": "^1.2.0"
   }
 }
