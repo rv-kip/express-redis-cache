@@ -73,6 +73,51 @@
       });
     });
 
+    it ( 'should support wildcard gets', function (done) {
+      cache.add('wildkey1', 'abc',
+        function ($error, $name, $entry) {
+          cache.add('wildkey2', 'def',
+            function ($error, $name, $entry) {
+              cache.get('wildkey*', function ($error, $results) {
+                $results.should.be.an.Array;
+                $results.should.have.a.lengthOf(2);
+                done();
+              });
+            });
+        });
+    });
+
+    it ( 'should support specific gets without calling keys', function (done) {
+
+      // wrap the call to keys, so we can see if it's called
+      var callCount = 0;
+      var wrap = function(fn){
+        return function(){
+          console.log('What!?');
+          callCount++;
+          return fn.apply(this, arguments);
+        };
+      };
+
+      cache.client.keys = wrap(cache.client.keys);
+
+      cache.add('wildkey1', 'abc',
+        function ($error, $name, $entry) {
+          cache.add('wildkey2', 'def',
+            function ($error, $name, $entry) {
+              cache.get('wildkey1', function ($error, $results) {
+                try {
+                  $results.should.be.an.Array;
+                  $results.should.have.a.lengthOf(1);
+                  callCount.should.equal(0);
+                  done();
+                } catch (e) {
+                  done(e);
+                }
+              });
+            });
+        });
+    });
   });
 
 })();
