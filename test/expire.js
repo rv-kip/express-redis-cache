@@ -81,11 +81,11 @@
     })
 
     it ( 'should return the specified value for all status codes', function () {
-      createExpirationPolicy(-1)(200).should.equal(-1);
-      createExpirationPolicy(1)(300).should.equal(1);
-      createExpirationPolicy(22)(403).should.equal(22)
-      createExpirationPolicy(333)(404).should.equal(333)
-      createExpirationPolicy(4444)(500).should.equal(4444)
+      createExpirationPolicy(-1)(null, { statusCode: 200 }).should.equal(-1);
+      createExpirationPolicy(1)(null, { statusCode: 300 }).should.equal(1);
+      createExpirationPolicy(22)(null, { statusCode: 403 }).should.equal(22);
+      createExpirationPolicy(333)(null, { statusCode: 404 }).should.equal(333);
+      createExpirationPolicy(4444)(null, { statusCode: 500 }).should.equal(4444);
     });
 
     it ( 'should return the appropriate value for status codes', function () {
@@ -102,17 +102,17 @@
         '5xx': 5,
         '500': 500
       });
-      policy(500).should.equal(500);
-      policy(501).should.equal(5);
-      policy(404).should.equal(404);
-      policy(403).should.equal(403);
-      policy(400).should.equal(400);
-      policy(480).should.equal(4);
-      policy(200).should.equal(200);
-      policy(201).should.equal(2);
-      policy(100).should.equal(100);
-      policy(101).should.equal(1);
-      policy(300).should.equal(-1);
+      policy(null, { statusCode: 500 }).should.equal(500);
+      policy(null, { statusCode: 501 }).should.equal(5);
+      policy(null, { statusCode: 404 }).should.equal(404);
+      policy(null, { statusCode: 403 }).should.equal(403);
+      policy(null, { statusCode: 400 }).should.equal(400);
+      policy(null, { statusCode: 480 }).should.equal(4);
+      policy(null, { statusCode: 200 }).should.equal(200);
+      policy(null, { statusCode: 201 }).should.equal(2);
+      policy(null, { statusCode: 100 }).should.equal(100);
+      policy(null, { statusCode: 101 }).should.equal(1);
+      policy(null, { statusCode: 300 }).should.equal(-1);
     });
 
     it ( 'should treat status code keys as case insensitive', function () {
@@ -120,8 +120,8 @@
         '1XX': 1,
         'xXx': 55
       });
-      policy(101).should.equal(1);
-      policy(200).should.equal(55);
+      policy(null, { statusCode: 101 }).should.equal(1);
+      policy(null, { statusCode: 200 }).should.equal(55);
     });
   });
 })();
