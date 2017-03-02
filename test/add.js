@@ -17,6 +17,7 @@
   var _name     =   'test1';
   var _body     =   'test1 test1 test1';
   var _type     =   'text/plain';
+  var _status   =   404;
 
   var cache     =   require('../')({
     prefix: prefix,
@@ -27,18 +28,19 @@
 
   describe ( 'add', function () {
 
-    var error, name, entry;
+    var error, name, entry, status;
 
     it ( 'should be a function', function () {
       cache.add.should.be.a.Function();
     });
 
     it ( 'should callback', function (done) {
-      cache.add(_name, _body,
+      cache.add(_name, _body, { statusCode: _status }, 
         function ($error, $name, $entry) {
           error = $error;
           name = $name;
           entry = $entry;
+          status = $entry.statusCode
           done();
         });
     });
@@ -62,6 +64,11 @@
     it ( 'should have a name which is a string and match the request', function () {
       name.should.be.a.String();
       name.should.equal(_name);
+    });
+
+    it ( 'should have a status which is a number and match the request', function () {
+      status.should.be.a.Number();
+      status.should.equal(_status);
     });
 
     it ( 'should have a entry which is an object', function () {

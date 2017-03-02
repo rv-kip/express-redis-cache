@@ -28,7 +28,7 @@
 
   /** Emulate res **/
   var res = {
-    statusCode: 200,
+    statusCode: '404',
     send: function (body) {
 
     },
@@ -94,6 +94,13 @@
           results.forEach(function (entry) {
             entry.should.have.property('type').which.is.a.String();
             entry.type.should.equal(res._headers['content-type']);
+          });
+        });
+
+        it ( 'should be have a property "statusCode" which is a number and equals the sent statusCode', function () {
+          results.forEach(function (entry) {
+            entry.should.have.property('statusCode').which.is.a.String();
+            entry.statusCode.should.equal(res.statusCode);
           });
         });
 
