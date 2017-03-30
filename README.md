@@ -214,6 +214,26 @@ app.get('/index.html',
   function (req, res)  { ... });
 ```
 
+Also, you can use `res.express_redis_cache_expire` to change expiration:
+
+```js
+app.post('/expensive-query-service',
+  function (req, res, next) {
+    // set expiration
+    res.express_redis_cache_expire = 20; // (for example: req.body.expire - user defined expiration from request)
+    next();
+  },
+
+  // cache middleware
+  cache.route(), // cache.route(15) will override express_redis_cache_expire to this value (15)
+
+  // content middleware
+  function (req, res) {
+    res.render('query result');
+  }
+);
+```
+
 You can also specify
 
 # Content Type
