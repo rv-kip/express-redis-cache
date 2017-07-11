@@ -4,6 +4,7 @@
 
   var path      =   require('path');
   var assert    =   require('assert');
+  var util      =   require('util')
 
   var mocha     =   require('mocha');
   var should    =   require('should');
@@ -47,7 +48,7 @@
   };
 
   var reset = function (done) {
-    res = Object.assign({}, resTemplate);
+    res = util._extend({}, resTemplate)
     cache.del('*', function () {
       done();
     })
