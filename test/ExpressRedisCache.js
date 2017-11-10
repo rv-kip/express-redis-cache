@@ -52,19 +52,9 @@
       cache.port.should.equal(port);
     });
 
-    it ( 'should have a property FOREVER which is a number and equals -1', function () {
-      cache.should.have.property('FOREVER').which.is.a.Number();
-      cache.FOREVER.should.equal(-1);
-    });
-
     it ( 'should have a property connected which is a boolean and is true', function () {
       cache.should.have.property('connected').which.is.a.Boolean();
       cache.connected.should.be.true;
-    });
-
-    it ( 'should have a property expire which is a number and equals FOREVER', function () {
-      cache.should.have.property('expire').which.is.a.Number();
-      cache.expire.should.equal(cache.FOREVER);
     });
 
     it ( 'should have a property client which is a RedisClient', function () {
