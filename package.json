@@ -71,7 +71,7 @@
   "devDependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
-    "mocha": "^4.0.1",
+    "mocha": "~2.3.4",
     "moment": "^2.10.6",
     "request": "^2.83.0",
     "should": "^13.2.1"
