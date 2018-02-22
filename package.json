@@ -49,11 +49,15 @@
     {
       "name": "mdbox",
       "url": "https://github.com/mdbox"
+    },
+    {
+      "name": "dam1",
+      "url": "https://github.com/dam1"
     }
   ],
-  "license": "BSD",
+  "license": "MIT",
   "dependencies": {
-    "async": "~1.5.0",
+    "async": "^2.6.0",
     "colors": "^1.1.2",
     "redis": "^2.4.2"
   },
@@ -65,12 +69,11 @@
     "type": "text/html"
   },
   "devDependencies": {
-    "body-parser": "~1.14.1",
-    "method-override": "~2.3.5",
-    "request": "~2.67.0",
-    "express": "~4.13.3",
-    "mocha": "~2.3.4",
-    "should": "~8.0.1",
-    "moment": "^2.10.6"
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mocha": "^5.0.1",
+    "moment": "^2.10.6",
+    "request": "^2.83.0",
+    "should": "^13.2.1"
   }
 }
