@@ -1,6 +1,6 @@
 (function () {
 
-  'use strict';
+
 
   var path      =   require('path');
   var assert    =   require('assert');
@@ -11,7 +11,7 @@
   var prefix    =   process.env.EX_RE_CA_PREFIX || 'erct:';
   var host      =   process.env.EX_RE_CA_HOST || 'localhost';
   var port      =   process.env.EX_RE_CA_PORT || 6379;
-  
+
   var _name     =   'test1';
   var _body     =   'test1 test1 test1';
   var _type     =   'text/plain';
