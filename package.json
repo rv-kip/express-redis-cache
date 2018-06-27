@@ -7,7 +7,7 @@
     "express-redis-cache": "bin/express-redis-cache.js"
   },
   "scripts": {
-    "test": "mocha --check-leaks -R nyan test"
+    "test": "mocha --exit --check-leaks -R nyan test"
   },
   "repository": {
     "type": "git",
