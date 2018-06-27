@@ -1,5 +1,7 @@
 (function () {
 
+  'use strict';
+
   var path      =   require('path');
   var assert    =   require('assert');
 

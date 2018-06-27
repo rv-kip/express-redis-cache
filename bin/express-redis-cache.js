@@ -2,7 +2,7 @@
 
 module.exports = (function () {
 
-
+  'use strict';
 
   require('colors');
 
