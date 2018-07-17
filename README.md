@@ -199,6 +199,39 @@ cache.route('index', 5000);
 cache.route({ prefix: 'test' }, 5000);
 ```
 
+Also, you can use `res.express_redis_cache_expire` to specify the expiration of the entry such as:
+
+```js
+app.get('/statistic/:range',
+
+  // middleware to define cache expiration
+
+  function (req, res, next) {
+    const dayInSeconds = 86400;
+    const rangeExpirationMappings = {
+        "past-year": dayInSeconds * 30, // Expires in 1 month
+        "past-month": dayInSeconds * 7, // Expires in 7 days
+        "past-week":  dayInSeconds // Expires in 1 day
+    }
+    // set cache expiration
+    if ( rangeExpirationMappings[req.params.range] ) {
+        res.express_redis_cache_expire = rangeExpirationMappings[req.params.range];
+    }
+    next();
+    },
+
+  // cache middleware
+
+  cache.route(),
+
+  // content middleware
+
+  function (req, res) {
+    res.render('stats');
+    }
+
+  );
+```
 You can also provide a hash of status code / expiration values if you for example want to retry much sooner in failure cases (403/404/500/etc). Status ranges can be specified via `4xx`/`5xx`. You must provide a default value (`xxx`). The most specific rule will be used. For example, if the status code is 200, and there are expirations set for 200, 2xx, and xxx, the expiration for 200 will be used.
 
 ```js
