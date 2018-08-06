@@ -1,18 +1,14 @@
-(function () {
-
-  'use strict';
-
-  var path      =   require('path');
-  var assert    =   require('assert');
-
-  var mocha     =   require('mocha');
-  var should    =   require('should');
+import should from 'should';
+import Domain from 'domain';
+import async from 'async';
+import assert from 'assert';
+import ERC from '../dist';
 
   var prefix    =   process.env.EX_RE_CA_PREFIX || 'erct:';
   var host      =   process.env.EX_RE_CA_HOST || 'localhost';
   var port      =   process.env.EX_RE_CA_PORT || 6379;
 
-  var cache     =   require('../')({
+  var cache = new ERC({
     prefix: prefix,
     host: host,
     port: port
@@ -191,7 +187,6 @@
       });
     });
   });
-})();
 
 /**
 
@@ -217,19 +212,14 @@ module.exports = function (cb) {
 
   var cache = this;
 
-  var domain = require('domain').create();
-
-  var cacheEntry = '/path';
+  var domain = Domain.create();
 
   domain.on('error', function (error) {
     cb(error);
   });
 
   domain.run(function () {
-
-    var assert = require('./assert');
-
-    require('async').parallel(
+    async.parallel(
       /* for each new cache **/
       cache.newCaches
 
