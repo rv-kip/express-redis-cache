@@ -1,18 +1,7 @@
-// var path      =   require('path');
-var assert    =   require('assert');
-
-var mocha     =   require('mocha');
-var should    =   require('should');
-var request   =   require('request');
-var util      =   require('util');
-
-var prefix    =   process.env.EX_RE_CA_PREFIX || 'erct:';
-var host      =   process.env.EX_RE_CA_HOST || 'localhost';
-var port      =   process.env.EX_RE_CA_PORT || 6379;
+import request from 'request';
 
 var spawn,
-    express_port,
-    home;
+  express_port;
 
 describe ( 'test with small express server', function () {
 
@@ -42,7 +31,7 @@ describe ( 'test with small express server', function () {
 
   it ( 'should have a / route', function (done) {
     request('http://localhost:' + express_port,
-      function (error, response, body) {
+      function (error, response) {
         if ( error ) {
           throw error;
         }
@@ -53,7 +42,7 @@ describe ( 'test with small express server', function () {
 
   it ( 'should not have /foobar route', function (done) {
     request('http://localhost:' + express_port + "/foobar",
-      function (error, response, body) {
+      function (error, response) {
         if ( error ) {
           throw error;
         }
