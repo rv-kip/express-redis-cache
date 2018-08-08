@@ -8,8 +8,15 @@
         "ecmaVersion": 6,
         "sourceType": "module"
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "prettier",
+        "prettier/standard"
+    ],
+    "plugins": [
+        "prettier"
+    ],
     "rules": {
+        "prettier/prettier": "error",
         "no-console": 0
     }
 }
