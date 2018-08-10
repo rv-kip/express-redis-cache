@@ -36,7 +36,7 @@ describe("add", () => {
     cache.add(_name, _body, { expire: 0 }, (err, $name, $entry) => {
       let resp;
       if ($entry.expire !== 0) {
-        resp = new Error("entry.expire should be 0. It is " + $entry.expire);
+        resp = new Error(`entry.expire should be 0. It is ${$entry.expire}`);
       }
       done(resp);
     });
@@ -88,7 +88,7 @@ describe("add", () => {
     });
   });
 
-  it("should expire in " + cache.expire + " seconds", function(done) {
+  it(`should expire in ${cache.expire} seconds`, function(done) {
     this.timeout(2500); // allow more time for this test
 
     setTimeout(() => {

@@ -13,7 +13,7 @@ describe("test with small express server", () => {
     });
 
     spawn.on("exit", status => {
-      console.log("Express Server exit with status " + status);
+      console.log(`Express Server exit with status ${status}`);
     });
 
     spawn.stdout.on("data", data => {
@@ -36,7 +36,7 @@ describe("test with small express server", () => {
   });
 
   it("should have a / route", done => {
-    request("http://localhost:" + express_port, (error, response) => {
+    request(`http://localhost:${express_port}`, (error, response) => {
       if (error) {
         throw error;
       }
@@ -46,20 +46,17 @@ describe("test with small express server", () => {
   });
 
   it("should not have /foobar route", done => {
-    request(
-      "http://localhost:" + express_port + "/foobar",
-      (error, response) => {
-        if (error) {
-          throw error;
-        }
-        response.statusCode.should.equal(404);
-        done();
+    request(`http://localhost:${express_port}/foobar`, (error, response) => {
+      if (error) {
+        throw error;
       }
-    );
+      response.statusCode.should.equal(404);
+      done();
+    });
   });
 
   it("/1sec route should return json with a timestamp property", done => {
-    let url = "http://localhost:" + express_port + "/1sec";
+    let url = `http://localhost:${express_port}/1sec`;
     request(url, (error, response, body) => {
       if (error) {
         throw error;
@@ -78,7 +75,7 @@ describe("test with small express server", () => {
   });
 
   it("/default_expire route should return json with a timestamp property", done => {
-    let url = "http://localhost:" + express_port + "/default_expire";
+    let url = `http://localhost:${express_port}/default_expire`;
     request(url, (error, response, body) => {
       if (error) {
         throw error;
@@ -97,7 +94,7 @@ describe("test with small express server", () => {
   });
 
   it("/never_expire route should return json with a timestamp property", done => {
-    let url = "http://localhost:" + express_port + "/never_expire";
+    let url = `http://localhost:${express_port}/never_expire`;
     request(url, (error, response, body) => {
       if (error) {
         throw error;
@@ -117,7 +114,7 @@ describe("test with small express server", () => {
 
   it("/1sec route data should expire after 1 seconds", done => {
     setTimeout(() => {
-      let url = "http://localhost:" + express_port + "/1sec";
+      let url = `http://localhost:${express_port}/1sec`;
       request(url, (error, response, body) => {
         if (error) {
           throw error;
@@ -142,7 +139,7 @@ describe("test with small express server", () => {
   it("/default_expire route data should expire after 3 seconds", function(done) {
     this.timeout(4000); // allow 5 secs to execute
     setTimeout(() => {
-      let url = "http://localhost:" + express_port + "/default_expire";
+      let url = `http://localhost:${express_port}/default_expire`;
       request(url, (error, response, body) => {
         if (error) {
           throw error;
@@ -167,7 +164,7 @@ describe("test with small express server", () => {
   it("/never_expire route data should not expire after 3 seconds", function(done) {
     this.timeout(4000); // allow 5 secs to execute
     setTimeout(() => {
-      let url = "http://localhost:" + express_port + "/never_expire";
+      let url = `http://localhost:${express_port}/never_expire`;
       request(url, (error, response, body) => {
         if (error) {
           throw error;
@@ -190,7 +187,7 @@ describe("test with small express server", () => {
   });
 
   it("/never_expire/delete route data should be deleted", done => {
-    let url = "http://localhost:" + express_port + "/delete_never_expire";
+    let url = `http://localhost:${express_port}/delete_never_expire`;
     request(url, (error, response, body) => {
       if (error) {
         throw error;

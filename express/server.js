@@ -55,7 +55,7 @@ app.all("/delete_never_expire", (req, res) => {
     if (err) {
       return res.send(500);
     }
-    return res.send("count:" + count);
+    return res.send(`count:${count}`);
   });
 });
 app.all(
@@ -64,7 +64,7 @@ app.all(
   cache.route(),
 
   (req, res) => {
-    res.send("Now is " + new Date());
+    res.send(`Now is ${new Date()}`);
   }
 );
 
@@ -74,7 +74,7 @@ let server = require("http").createServer(app);
 
 server.listen(app.get("port"), () => {
   console.log(
-    "express-redis-cache test server started on port " + app.get("port")
+    `express-redis-cache test server started on port ${app.get("port")}`
   );
 });
 
