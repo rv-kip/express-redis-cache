@@ -208,7 +208,7 @@ describe("test with small express server", function() {
   });
 
   after(function(done) {
-    process.kill(spawn.pid, 0);
+    process.kill(spawn.pid);
     done();
   });
 });
