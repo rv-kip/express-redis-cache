@@ -5,11 +5,11 @@ module.exports = (function() {
 
   require("colors");
 
-  var pkg = require("../package.json");
+  let pkg = require("../package.json");
 
   /** Get configuration from command line if any **/
 
-  var port,
+  let port,
     host,
     prefix,
     skip = [];
@@ -33,7 +33,7 @@ module.exports = (function() {
 
   /** Iniatilize express-redis-cache **/
 
-  var cache;
+  let cache;
 
   function connect() {
     cache = require("../")({
@@ -59,9 +59,9 @@ module.exports = (function() {
 
   function formatEntry(entry) {
     try {
-      var moment = require("moment");
+      let moment = require("moment");
 
-      var iso = new Date(+entry.touched).toISOString();
+      let iso = new Date(+entry.touched).toISOString();
 
       /** Name **/
       console.log("  " + entry.name.blue.bold);
@@ -83,7 +83,7 @@ module.exports = (function() {
           } else {
             var expire = +entry.touched + (+entry.expire || 0) * 1000;
 
-            var iso2 = new Date(expire).toISOString();
+            let iso2 = new Date(expire).toISOString();
 
             return moment(iso2, moment.ISO_8601).fromNow();
           }

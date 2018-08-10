@@ -2,9 +2,9 @@ import should from "should";
 import async from "async";
 import ERC from "../dist";
 
-var prefix = process.env.EX_RE_CA_PREFIX || "erct:";
-var host = process.env.EX_RE_CA_HOST || "localhost";
-var port = process.env.EX_RE_CA_PORT || 6379;
+let prefix = process.env.EX_RE_CA_PREFIX || "erct:";
+let host = process.env.EX_RE_CA_HOST || "localhost";
+let port = process.env.EX_RE_CA_PORT || 6379;
 
 const cache = new ERC({
   prefix: prefix,
@@ -13,7 +13,7 @@ const cache = new ERC({
 });
 
 describe("del", function() {
-  var error, deletions;
+  let error, deletions;
 
   before(function(done) {
     cache.add("test-to-del", "-", done);
@@ -45,10 +45,10 @@ describe("del", function() {
 });
 
 describe("del with wilcard", function() {
-  var error, deletions;
+  let error, deletions;
 
   before(function(done) {
-    var parallel = [0, 1, 2, 3, 4, 5].map(function(num) {
+    let parallel = [0, 1, 2, 3, 4, 5].map(function(num) {
       return function(done) {
         cache.add("test-to-del." + this.num, "-", done);
       }.bind({ num: num });

@@ -1,6 +1,16 @@
 CHANGE LOG
 ==========
 
+# Changes between 1.x.x and 2.0.0
+
+## Disclaimer
+
+This major version has been reworked to avoid breaking changes but some edge-cases may exist.
+
+## New Features
+
+????
+
 # Changes between 0.0.8 and 0.1.x
 
 ## Disclaimer

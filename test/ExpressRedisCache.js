@@ -1,9 +1,9 @@
 import ERC from "../dist";
 
-var cache;
-var prefix = process.env.EX_RE_CA_PREFIX || "erct:";
-var host = process.env.EX_RE_CA_HOST || "localhost";
-var port = process.env.EX_RE_CA_PORT || 6379;
+let cache;
+let prefix = process.env.EX_RE_CA_PREFIX || "erct:";
+let host = process.env.EX_RE_CA_HOST || "localhost";
+let port = process.env.EX_RE_CA_PORT || 6379;
 
 describe("Module", function() {
   it("should be a function", function() {

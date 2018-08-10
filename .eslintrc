@@ -17,6 +17,7 @@
     ],
     "rules": {
         "prettier/prettier": "error",
+        "no-var": 1,
         "no-console": 0
     }
 }

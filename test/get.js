@@ -1,18 +1,18 @@
 import should from "should";
 import ERC from "../dist";
 
-var prefix = process.env.EX_RE_CA_PREFIX || "erct:";
-var host = process.env.EX_RE_CA_HOST || "localhost";
-var port = process.env.EX_RE_CA_PORT || 6379;
+let prefix = process.env.EX_RE_CA_PREFIX || "erct:";
+let host = process.env.EX_RE_CA_HOST || "localhost";
+let port = process.env.EX_RE_CA_PORT || 6379;
 
-var cache = new ERC({
+let cache = new ERC({
   prefix: prefix,
   host: host,
   port: port
 });
 
 describe("get", function() {
-  var error, results;
+  let error, results;
 
   it("should be a function", function() {
     cache.get.should.be.a.Function;
@@ -74,8 +74,8 @@ describe("get", function() {
 
   it("should support specific gets without calling keys", function(done) {
     // wrap the call to keys, so we can see if it's called
-    var callCount = 0;
-    var wrap = function(fn) {
+    let callCount = 0;
+    let wrap = function(fn) {
       return function() {
         console.log("What!?");
         callCount++;
