@@ -10,6 +10,7 @@
     "prepare": "npm run build",
     "build": "babel lib -d dist",
     "test": "npm run build && mocha --exit --compilers js:@babel/register -R nyan test",
+    "debug": "npm run build && mocha --inspect-brk --exit --compilers js:@babel/register -R nyan test",
     "docs": "jsdoc -c jsdoc.json"
   },
   "repository": {
