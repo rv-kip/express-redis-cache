@@ -11,7 +11,7 @@ cache.on("error", error => {
 
 let port = 3000;
 app.listen(port);
-console.log("Server listening on http://localhost:" + port);
+console.log(`Server listening on http://localhost:${port}`);
 
 // Serve simple page with timestamp cached for 5 seconds
 app.get("/:skip_cache?", cache.route(), (req, res) => {
@@ -21,5 +21,5 @@ app.get("/:skip_cache?", cache.route(), (req, res) => {
   }
 
   let currTime = new Date();
-  res.send("Date and time: " + currTime);
+  res.send(`Date and time: ${currTime}`);
 });

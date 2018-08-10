@@ -64,7 +64,7 @@ module.exports = (function() {
       let iso = new Date(+entry.touched).toISOString();
 
       /** Name **/
-      console.log("  " + entry.name.blue.bold);
+      console.log(`  ${entry.name.blue.bold}`);
 
       /** Touched **/
       console.log(
@@ -92,7 +92,7 @@ module.exports = (function() {
 
       /** Object size in bytes **/
       console.log(
-        "    %s       %s bytes " + "%s KB".grey,
+        `    %s       %s bytes ${"%s KB".grey}`,
         "size".yellow,
         require("../lib/sizeof")(entry),
         (require("../lib/sizeof")(entry) / 1024).toFixed(2)
@@ -102,7 +102,7 @@ module.exports = (function() {
       console.log(
         "    %s       %s",
         "body".yellow,
-        entry.body.length + " characters"
+        `${entry.body.length} characters`
       );
     } catch (error) {
       return console.log("  Not readable".red, entry, error);

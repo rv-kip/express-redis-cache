@@ -14,7 +14,7 @@ let cache = new ERC({
   port: port
 });
 
-let _name = "test-route" + process.pid;
+let _name = `test-route${process.pid}`;
 let _expire = 60;
 
 /** Emulate req **/
