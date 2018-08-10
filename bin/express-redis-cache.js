@@ -183,7 +183,7 @@ module.exports = (function() {
     case "ls":
       connect();
 
-      cache.ls(function(entries) {
+      cache.get(function(err, entries) {
         cache.client.quit();
 
         if (!entries.length) {
