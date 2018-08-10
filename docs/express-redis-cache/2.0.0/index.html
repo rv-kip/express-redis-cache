@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="ExpressRedisCache.html">ExpressRedisCache</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ExpressRedisCache.html#.del">del</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ExpressRedisCache.html#.route">route</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ExpressRedisCache.html#add">add</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ExpressRedisCache.html#del">del</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ExpressRedisCache.html#get">get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ExpressRedisCache.html#route">route</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ExpressRedisCache.html#size">size</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>express-redis-cache</h1><p><a href="https://travis-ci.org/rv-kip/express-redis-cache"><img src="https://travis-ci.org/rv-kip/express-redis-cache.svg?branch=master" alt="Build Status"></a>
+<a href="https://david-dm.org/rv-kip/express-redis-cache"><img src="https://david-dm.org/rv-kip/express-redis-cache/status.svg" alt="dependencies Status"></a></p>
+<p>Easily cache pages of your app using Express and Redis. <em>Could be used without Express too.</em></p>
+<h1>Install</h1><pre class="prettyprint source"><code>npm install express-redis-cache</code></pre><p><code>express-redis-cache</code> ships with a CLI utility you can invoke from the console. In order to use it, install <code>express-redis-cache</code> globally (might require super user privileges):</p>
+<pre class="prettyprint source"><code>npm install -g express-redis-cache</code></pre><h1>Upgrade</h1><p>Read <a href="../master/CHANGELOG.md">this</a> if you are upgrading from 0.0.8 to 0.1.x,</p>
+<h1>Usage</h1><p>Just use it as a middleware in the stack of the route you want to cache.</p>
+<pre class="prettyprint source lang-js"><code>var app = express();
+var cache = require('express-redis-cache')();
+
+// replace
+app.get('/',
+  function (req, res)  { ... });
+
+// by
+app.get('/',
+  cache.route(),
+  function (req, res)  { ... });</code></pre><p>This will check if there is a cache entry for this route. If not. it will cache it and serve the cache next time route is called.</p>
+<h1>Redis connection info</h1><p>By default, <code>redis-express-cache</code> connects to Redis using localhost as host and nothing as port (using Redis default port 6379). To use different port or host, declare them when you require express-redis-cache. If your Redis server requires password, use the <code>auth_pass</code> option.</p>
+<pre class="prettyprint source lang-js"><code>var cache = require('express-redis-cache')({
+  host: String, port: Number, auth_pass: REDIS_PASSWORD
+  });</code></pre><p>You can pass a Redis client as well:</p>
+<pre class="prettyprint source lang-js"><code>require('express-redis-cache')({ client: require('redis').createClient() })</code></pre><p>You can have several clients if you want to serve from more than one Redis server:</p>
+<pre class="prettyprint source lang-js"><code>var cache = require('express-redis-cache');
+var client1 = cache({ host: &quot;...&quot;, port: &quot;...&quot; });
+var client2 = cache({ host: &quot;...&quot;, port: &quot;...&quot; });
+...</code></pre><h2>Redis Unavailability</h2><p>Should the redis become unavailable, the <code>express-redis-cache</code> object will emit errors but will not crash the app. Express.js requests during this time will be bypass cache and will return fresh data.</p>
+<p>Once the redis recovers, the caching will begin working again. See example code in the <code>/example</code> folder.</p>
+<h1>Name of the cache entry</h1><p>By default, the cache entry name will be <code>default prefix</code>:<code>name</code> where name's value defaults to  <a href="http://expressjs.com/4x/api.html#req.originalUrl">req.originalUrl</a>.</p>
+<pre class="prettyprint source lang-js"><code>app.get('/',
+  cache.route(), // cache entry name is `cache.prefix + &quot;/&quot;`
+  function (req, res)  { ... });</code></pre><p>You can specify a custom name like this:</p>
+<pre class="prettyprint source lang-js"><code>app.get('/',
+  cache.route('home'), // cache entry name is now `cache.prefix + &quot;home&quot;`
+  function (req, res)  { ... });</code></pre><p>You can also use the object syntax:</p>
+<pre class="prettyprint source lang-js"><code>app.get('/',
+  cache.route({ name: 'home' }), // cache entry name is `cache.prefix + &quot;home&quot;`
+  function (req, res)  { ... });</code></pre><p>Also, you can use <code>res.express_redis_cache_name</code> to specify the name of the entry such as:</p>
+<pre class="prettyprint source lang-js"><code>app.get('/user/:userid',
+
+  // middleware to define cache name
+
+  function (req, res, next) {
+    // set cache name
+    res.express_redis_cache_name = 'user-' + req.params.userid;
+    next();
+    },
+
+  // cache middleware
+
+  cache.route(),
+
+  // content middleware
+
+  function (req, res) {
+    res.render('user');
+    }
+
+  );</code></pre><h1>Conditional caching</h1><p>You can also use a previous middleware to set whether or not to use the cache by using <code>res.use_express_redis_cache</code>:</p>
+<pre class="prettyprint source lang-js"><code>
+app.get('/user',
+
+  // middleware to decide if using cache
+
+  function (req, res, next) {
+    // Use only cache if user not signed in
+    res.use_express_redis_cache = ! req.signedCookies.user;
+
+    next();
+    }.
+
+  cache.route(), // this will be skipped if user is signed in
+
+  function (req, res) {
+    res.render('user');
+    }
+  );</code></pre><h1>Prefix</h1><p>All entry names are prepended by a prefix. Prefix is set when calling the Constructor.</p>
+<pre class="prettyprint source lang-js"><code>// Set default prefix to &quot;test&quot;. All entry names will begin by &quot;test:&quot;
+var cache = require('express-redis-cache')({ prefix: 'test' });</code></pre><p>To know the prefix:</p>
+<pre class="prettyprint source lang-js"><code>console.log('prefix', cache.prefix);</code></pre><p>You can pass a custom prefix when calling <code>route()</code>:</p>
+<pre class="prettyprint source lang-js"><code>app.get('/index.html',
+  cache.route('index', { prefix: 'test'  }), // force prefix to be &quot;test&quot;, entry name will be &quot;test:index&quot;
+  function (req, res)  { ... });</code></pre><p>You can also choose not to use prefixes:</p>
+<pre class="prettyprint source lang-js"><code>app.get('/index.html',
+  cache.route({ prefix: false  }), // no prefixing, entry name will be &quot;/index.html&quot;
+  function (req, res)  { ... });</code></pre><h1>Expiration</h1><p>Unless specified otherwise when calling the Constructor, cache entries don't expire. You can specify a default lifetime when calling the constructor:</p>
+<pre class="prettyprint source lang-js"><code>// Set default lifetime to 60 seconds for all entries
+var cache = require('express-redis-cache')({ expire: 60 });</code></pre><p>You can overwrite the default lifetime when calling <code>route()</code>:</p>
+<pre class="prettyprint source lang-js"><code>app.get('/index.html',
+  cache.route({ expire: 5000  }), // cache entry will live 5000 seconds
+  function (req, res)  { ... });
+
+// You can also use the number sugar syntax
+cache.route(5000);
+// Or
+cache.route('index', 5000);
+// Or
+cache.route({ prefix: 'test' }, 5000);</code></pre><p>You can also provide a hash of status code / expiration values if you for example want to retry much sooner in failure cases (403/404/500/etc). Status ranges can be specified via <code>4xx</code>/<code>5xx</code>. You must provide a default value (<code>xxx</code>). The most specific rule will be used. For example, if the status code is 200, and there are expirations set for 200, 2xx, and xxx, the expiration for 200 will be used.</p>
+<pre class="prettyprint source lang-js"><code>app.get('/index.html',
+  cache.route({
+    expire: {
+      200: 5000,
+      4xx: 10,
+      403: 5000,
+      5xx: 10,
+      xxx: 1
+    }
+  }),
+  function (req, res)  { ... });</code></pre><p>You can also specify</p>
+<h1>Content Type</h1><p>You can use <code>express-redis-cache</code> to cache HTML pages, CSS stylesheets, JSON objects, anything really. Content-types are saved along the cache body and are retrieved using <code>res._headers['content-type']</code>. If you want to overwrite that, you can pass a custom type.</p>
+<pre class="prettyprint source lang-js"><code>app.get('/index.html',
+  cache.route({ type: 'text/plain'  }), // force entry type to be &quot;text/plain&quot;
+  function (req, res)  { ... });</code></pre><h1>Events</h1><p>The module emits the following events:</p>
+<h2>error</h2><p>You can catch errors by adding a listener:</p>
+<pre class="prettyprint source lang-js"><code>cache.on('error', function (error) {
+  throw new Error('Cache error!');
+});</code></pre><h2>message</h2><p><code>express-redis-cache</code> logs some information at runtime. You can access it like this:</p>
+<pre class="prettyprint source lang-js"><code>cache.on('message', function (message) {
+  // ...
+});</code></pre><h2>connected</h2><p>Emitted when the client is connected (or re-connected) to Redis server</p>
+<pre class="prettyprint source lang-js"><code>cache.on('connected', function () {
+  // ....
+});</code></pre><h2>disconnected</h2><p>Emitted when the client is disconnected from Redis server. When (and if) it reconnects, it will emit a 'connected' event again</p>
+<pre class="prettyprint source lang-js"><code>cache.on('disconnected', function () {
+  // ....
+});</code></pre><p><strong>Note</strong> You can get the connexion status at any time by getting the property <code>cache.connected</code> which returns a boolean (true = connected, false = disconnected).</p>
+<h2>deprecated</h2><p>Warning emitted when stumbled upon a deprecated part of the code</p>
+<pre class="prettyprint source lang-js"><code>cache.on('deprecated', function (deprecated) {
+  console.log('deprecated warning', {
+      type: deprecated.type,
+      name: deprecated.name,
+      substitute: deprecated.substitute,
+      file: deprecated.file,
+      line: deprecated.line
+  });
+});</code></pre><h1>The Entry Model</h1><p>This is the object synopsis we use to represent a cache entry:</p>
+<pre class="prettyprint source lang-js"><code>var entry = {
+  body:    String // the content of the cache
+  touched: Number // last time cache was set (created or updated) as a Unix timestamp
+  expire:  Number // the seconds cache entry lives (-1 if does not expire)
+  type: String // the content-type
+};</code></pre><h1>The module</h1><p>The module exposes a function which instantiates a new instance of a class called <a href="../master/index.js">ExpressRedisCache</a>.</p>
+<pre class="prettyprint source lang-js"><code>// This
+var cache = require('express-redis-cache')({ /* ... */ });
+// is the same than
+var cache = new (require('express-redis-cache/lib/ExpressRedisCache'))({ /* ... */ });</code></pre><h1>The constructor</h1><p>As stated above, call the function exposed by the module to create a new instance of <code>ExpressRedisCache</code>,</p>
+<pre class="prettyprint source lang-js"><code>var cache = require('express-redis-cache')(/** Object | Undefined */ options);</code></pre><p>Where <code>options</code> is an object that has the following properties:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>host</strong></td>
+<td><code>String</code></td>
+<td><code>undefined</code></td>
+<td>Redis server host</td>
+</tr>
+<tr>
+<td><strong>port</strong></td>
+<td><code>Number</code></td>
+<td><code>undefined</code></td>
+<td>Redis server port</td>
+</tr>
+<tr>
+<td><strong>prefix</strong></td>
+<td><code>String</code></td>
+<td><code>require('express-redis-cache/package.json').config.prefix</code></td>
+<td>Default prefix (This will be prepended to all entry names)</td>
+</tr>
+<tr>
+<td><strong>expire</strong></td>
+<td><code>Number</code></td>
+<td><code>undefined</code></td>
+<td>Default life time of entries in seconds</td>
+</tr>
+<tr>
+<td><strong>client</strong></td>
+<td><code>RedisClient</code></td>
+<td><code>require('redis').createClient({ host: cache.host, port: cache.port })</code></td>
+<td>A Redis client</td>
+</tr>
+</tbody>
+</table>
+<h1>API</h1><p>The <code>route</code> method is designed to integrate easily with Express. You can also define your own caching logics using the other methos of the API shown below.</p>
+<h2><code>get</code> Get cache entries</h2><pre class="prettyprint source lang-js"><code>cache.get(/** Mixed (optional) */ query, /** Function( Error, [Entry] ) */ callback );</code></pre><p>To get all cache entries:</p>
+<pre class="prettyprint source lang-js"><code>cache.get(function (error, entries) {
+  if ( error ) throw error;
+
+  entries.forEach(console.log.bind(console));
+});</code></pre><p>To get a specific entry:</p>
+<pre class="prettyprint source lang-js"><code>cache.get('home', function (error, entries) {});</code></pre><p>To get a specific entry for a given prefix:</p>
+<pre class="prettyprint source lang-js"><code>cache.get({ name: 'home', prefix: 'test' }, function (error, entries) {});</code></pre><p>You can use wildcard:</p>
+<pre class="prettyprint source lang-js"><code>cache.get('user*', function (error, entries) {});</code></pre><h2><code>add</code> Add a new cache entry</h2><pre class="prettyprint source lang-js"><code>cache.add(/** String */ name, /** String */ body, /** Object (optional) **/ options, /** Function( Error, Entry ) */ callback )</code></pre><p>Where options is an object that can have the following properties:</p>
+<ul>
+<li><strong>expire</strong> <code>Number</code> (lifetime of entry in seconds)</li>
+<li><strong>type</strong> <code>String</code> (the content-type)</li>
+</ul>
+<p>Example:</p>
+<pre class="prettyprint source lang-js"><code>cache.add('user:info', JSON.stringify({ id: 1, email: 'john@doe.com' }), { expire: 60 * 60 * 24, type: 'json' },
+    function (error, added) {});</code></pre><h2><code>del</code> Delete a cache entry</h2><pre class="prettyprint source lang-js"><code>cache.del(/** String */ name, /** Function ( Error, Number deletions ) */ callback);</code></pre><p>You can use wildcard (*) in name.</p>
+<h2><code>size</code> Get cache size for all entries</h2><pre class="prettyprint source lang-js"><code>cache.size(/** Function ( Error, Number bytes ) */);</code></pre><h1>Command line</h1><p>We ship with a CLI. You can invoke it like this: <code>express-redis-cache</code></p>
+<h2>View cache entries</h2><pre class="prettyprint source lang-bash"><code>express-redis-cache ls</code></pre><h2>Add cache entry</h2><pre class="prettyprint source lang-bash"><code>express-redis-cache add $name $body $expire --type $type</code></pre><h3>Examples</h3><pre class="prettyprint source lang-bash"><code># Cache simple text
+express-redis-cache add &quot;test&quot; &quot;This is a test&quot;;
+
+# Cache a file
+express-redis-cache add &quot;home&quot; &quot;$(cat index.html)&quot;;
+
+# Cache a JSON object
+express-redis-cache add &quot;user1:location&quot; '{ &quot;lat&quot;: 4.7453, &quot;lng&quot;: -31.332 }' --type json;
+
+# Cache a text that will expire in one hour
+express-redis-cache add &quot;offer&quot; &quot;everything 25% off for the next hour&quot; $(( 60 * 60 ));</code></pre><h2>Get single cache entry</h2><pre class="prettyprint source lang-bash"><code>express-redis-cache get $name
+# Example: express-redis-cache get user1:*
+# Output:</code></pre><h2>Delete cache entry</h2><pre class="prettyprint source lang-bash"><code>express-redis-cache del $name
+# Example: express-redis-cache del user1:*
+# Output:</code></pre><h2>Get total cache size</h2><pre class="prettyprint source lang-bash"><code>express-redis-cache size
+# Output:</code></pre><h1>Example Code</h1><p>Run the example to see how the caching behaves. You can kill the <code>redis-server</code> and the application will respond with non-cached information.</p>
+<pre class="prettyprint source"><code>npm install
+cd example
+node example.js</code></pre><h1>Test</h1><p>We use Mocha and Should for the tests. You can invoke tests like this:</p>
+<pre class="prettyprint source"><code>npm test</code></pre><h2>Test environments</h2><p>You can specify the following environments before running your tests:</p>
+<pre class="prettyprint source lang-bash"><code>export EX_RE_CA_HOST=&quot;&quot;;
+export EX_RE_CA_PORT=&quot;&quot;;
+export EX_RE_CA_PREFIX=&quot;&quot;;</code></pre><h1>Contributors</h1><ul>
+<li><a href="https://github.com/faceair">faceair</a></li>
+<li><a href="https://github.com/barwin">barwin</a></li>
+<li><a href="https://github.com/rv-kip">rv-kip</a></li>
+<li><a href="https://github.com/amaurigabriel">amaurigabriel</a></li>
+<li><a href="https://github.com/benmcmeen">benmcmeen</a></li>
+<li><a href="https://github.com/pwmckenna">pwmckenna</a></li>
+<li><a href="https://github.com/mattberther">mattberther</a></li>
+<li><a href="https://github.com/ramanpreetnara">ramanpreetnara</a></li>
+</ul>
+<hr>
+<p>Enjoy!</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Aug 10 2018 14:37:11 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
