@@ -11,12 +11,17 @@ cache.on('error', function(error){
 
 var port = 3000;
 app.listen(port);
-console.log("Server listening on " + port);
+console.log("Server listening on http://localhost:" + port);
 
 // Serve simple page with timestamp cached for 5 seconds
-app.get('/',
+app.get('/:skip_cache?',
   cache.route(),
   function (req, res)  {
+  	if (req.params.skip_cache) {
+  		res.use_express_redis_cache = false;
+  		console.log ("Cache disabled on this request");
+  	}
+
     var currTime = new Date();
     res.send("Date and time: " + currTime);
 });

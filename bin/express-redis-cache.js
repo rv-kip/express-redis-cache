@@ -102,7 +102,7 @@ module.exports = (function () {
           'size'.yellow,
           require('../lib/sizeof')(entry),
           (require('../lib/sizeof')(entry) / 1024).toFixed(2));
-        
+
         /** Body length **/
         console.log('    %s       %s', 'body'.yellow, entry.body.length +
           ' characters');
@@ -115,7 +115,7 @@ module.exports = (function () {
     /** Switch action **/
 
     switch ( process.argv[2] ) {
-      
+
       /**
         HELP
       **/
@@ -131,7 +131,7 @@ module.exports = (function () {
         console.log();
         console.log(' Commands:');
         console.log();
-        
+
         console.log('  add <name> <content> <expire> --type=<type>'.bold.yellow);
         console.log('    Add a new cache entry');
         console.log('     # Cache simple text');
@@ -149,7 +149,7 @@ module.exports = (function () {
         console.log('     # Get all cache entries for default prefix');
         console.log('     express-redis-cache get'.cyan);
         console.log();
-        
+
         console.log('  del <name>'.bold.yellow);
         console.log('    Delete a cache entry');
         console.log('     express-redis-cache del favorite-movie'.cyan);
@@ -160,11 +160,11 @@ module.exports = (function () {
         console.log();
 
         console.log(' NOTE'.bold.yellow);
-        
+
         console.log(' express-redis-cache connects to Redis using localhost as default and Redis default port. You can override that using the options: --port <port> --host <host>. Ditto for --prefix <prefix>.'.cyan);
 
         console.log();
-        
+
         break;
 
       /**
@@ -174,9 +174,9 @@ module.exports = (function () {
       case 'ls':
 
         connect();
-        
+
         cache.ls(domain.intercept(function (entries) {
-          
+
           cache.client.quit();
 
           if ( ! entries.length ) {
@@ -185,7 +185,7 @@ module.exports = (function () {
           else {
             entries.forEach(formatEntry);
           }
-        
+
         }));
         break;
 
@@ -196,16 +196,16 @@ module.exports = (function () {
       case 'size':
 
         connect();
-        
+
         cache.size(domain.intercept(function (size) {
-          
+
           cache.client.quit();
 
           console.log('Size: %d bytes, %d KB, %d MB',
             size,
             (size / 1024).toFixed(2),
             (size / (1024 * 1024)).toFixed(2));
-        
+
         }));
         break;
 
@@ -261,7 +261,7 @@ module.exports = (function () {
           entries.forEach(function (entry) {
             formatEntry(entry);
           });
-        
+
         }));
         break;
     }

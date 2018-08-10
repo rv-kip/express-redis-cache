@@ -8,13 +8,11 @@
   var mocha     =   require('mocha');
   var should    =   require('should');
 
-  var config    =   require('../../package.json').config;
+  var prefix    =   process.env.EX_RE_CA_PREFIX || 'erct:';
+  var host      =   process.env.EX_RE_CA_HOST || 'localhost';
+  var port      =   process.env.EX_RE_CA_PORT || 6379;
 
-  var prefix    =   'erct';
-  var host      =   'localhost';
-  var port      =   6379;
-
-  var cache     =   require('../../')({
+  var cache     =   require('../')({
     prefix: prefix,
     host: host,
     port: port
@@ -30,8 +28,9 @@
 
   /** Emulate res **/
   var res = {
+    statusCode: 200,
     send: function (body) {
-      
+
     },
     _headers: {
       'content-type': 'text/plain'
@@ -48,12 +47,12 @@
     var middleware, error, results;
 
     it ( 'should be a function', function () {
-      cache.route.should.be.a.Function;
+      cache.route.should.be.a.Function();
     });
 
     it ( 'should return a function', function () {
       middleware = cache.route(_name, _expire);
-      middleware.should.be.a.Function;
+      middleware.should.be.a.Function();
     });
 
     describe('On Calling the route', function () {
@@ -86,23 +85,21 @@
 
         it ( 'should be have a property "body" which is a string and equals the sent text', function () {
           results.forEach(function (entry) {
-            entry.should.have.property('body')
-              .which.is.a.String
-              .and.equal('hello folks!');
+            entry.should.have.property('body').which.is.a.String();
+            entry.body.should.equal('hello folks!');
           });
         });
 
         it ( 'should be have a property "type" which is a string and equals the sent type', function () {
           results.forEach(function (entry) {
-            entry.should.have.property('type')
-              .which.is.a.String
-              .and.equal(res._headers['content-type']);
+            entry.should.have.property('type').which.is.a.String();
+            entry.type.should.equal(res._headers['content-type']);
           });
         });
 
         it ( ' - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now', function () {
           results.forEach(function (entry) {
-            Number(entry.touched).should.be.a.Number;
+            Number(entry.touched).should.be.a.Number();
 
             var date = new Date(Number(entry.touched));
 
@@ -115,13 +112,85 @@
             should(+entry.expire).equal(_expire);
           });
         });
-
       });
+    });
+  });
+  describe ( 'binaryroute', function () {
 
+    var middleware, error, results;
+
+    it ( 'should be a function', function () {
+      cache.route.should.be.a.Function();
     });
 
-  });
+    it ( 'should return a function', function () {
+      middleware = cache.route({name: 'binary', expire: _expire, binary: true});
+      middleware.should.be.a.Function();
+    });
 
+    describe('On Calling the route', function () {
+
+      it ( 'should call next', function (done) {
+        middleware(
+          req,
+          res,
+          function (error) {
+            if ( error ) {
+              throw error;
+            }
+
+            res.send(new Buffer('hello folks!', 'binary'));
+            done();
+          });
+      });
+
+      it ( 'should have created the cache entry', function (done) {
+        cache.get('binary', function (error, $results) {
+          if ( error ) {
+            throw error;
+          }
+          $results.length.should.be.above(0);
+          results = $results;
+          done();
+        });
+      });
+
+      describe ( 'cache entry', function () {
+
+        it ( 'should be have a property "body" which is a base64 string and decodes to sent text', function () {
+          results.forEach(function (entry) {
+            entry.should.have.property('body').which.is.a.String();
+            entry.body.should.equal('aGVsbG8gZm9sa3Mh'); //aGVsbG8gZm9sa3Mh = 'hello folks!' in base64
+            var decodedString = new Buffer(entry.body, 'base64').toString('utf8');
+            decodedString.should.equal('hello folks!');
+          });
+        });
+
+        it ( 'should be have a property "type" which is a string and equals the sent type', function () {
+          results.forEach(function (entry) {
+            entry.should.have.property('type').which.is.a.String();
+            entry.type.should.equal(res._headers['content-type']);
+          });
+        });
+
+        it ( ' - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now', function () {
+          results.forEach(function (entry) {
+            Number(entry.touched).should.be.a.Number();
+
+            var date = new Date(Number(entry.touched));
+
+            ( (Date.now() - date) ).should.be.below(2000);
+          });
+        });
+
+        it ( ' - entry which has a property expire which equals sent expire', function () {
+          results.forEach(function (entry) {
+            should(+entry.expire).equal(_expire);
+          });
+        });
+      });
+    });
+  });
 })();
 
 /**
@@ -163,7 +232,7 @@ module.exports = function (cb) {
     require('async').parallel(
       /* for each new cache **/
       cache.newCaches
-        
+
         /** if it is  a route cache */
         .filter(function (entry) {
           return !!( /^\/route_/.test(entry.name) );
@@ -185,6 +254,7 @@ module.exports = function (cb) {
 
             /** Emulate res **/
             var res = {
+              statusCode: 200,
               send: function (body) {
                 assert('it should be the same message', body === entry.body);
 
@@ -204,7 +274,7 @@ module.exports = function (cb) {
             assert('it should be a function', typeof router === 'function');
 
             /** Emulate a HTTP request **/
-            
+
             router.apply(cache, [req, res, next]);
 
           }.bind(entry);
