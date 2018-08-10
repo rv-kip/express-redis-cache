@@ -21,7 +21,7 @@ let cache_options = {
 let cache = new ERC(cache_options);
 let moment = require("moment");
 
-cache.on("error", function(error) {
+cache.on("error", error => {
   console.log("cache error", {
     message: error.message
   });
@@ -50,8 +50,8 @@ app.all("/default_expire", cache.route(), handle_timestamp);
 
 app.all("/never_expire", cache.route({ expire: -1 }), handle_timestamp);
 
-app.all("/delete_never_expire", function(req, res) {
-  cache.del("/never_expire", function(err, count) {
+app.all("/delete_never_expire", (req, res) => {
+  cache.del("/never_expire", (err, count) => {
     if (err) {
       return res.send(500);
     }
@@ -63,7 +63,7 @@ app.all(
 
   cache.route(),
 
-  function(req, res) {
+  (req, res) => {
     res.send("Now is " + new Date());
   }
 );
@@ -72,12 +72,12 @@ app.all(
 
 let server = require("http").createServer(app);
 
-server.listen(app.get("port"), function() {
+server.listen(app.get("port"), () => {
   console.log(
     "express-redis-cache test server started on port " + app.get("port")
   );
 });
 
-server.on("error", function(error) {
+server.on("error", error => {
   console.log({ "server error": error });
 });

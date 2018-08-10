@@ -36,21 +36,21 @@ let next = function() {
   // res.send(entry.body);
 };
 
-describe("route", function() {
+describe("route", () => {
   let middleware, error, results;
 
-  it("should be a function", function() {
+  it("should be a function", () => {
     cache.route.should.be.a.Function();
   });
 
-  it("should return a function", function() {
+  it("should return a function", () => {
     middleware = cache.route(_name, _expire);
     middleware.should.be.a.Function();
   });
 
-  describe("On Calling the route", function() {
-    it("should call next", function(done) {
-      middleware(req, res, function(error) {
+  describe("On Calling the route", () => {
+    it("should call next", done => {
+      middleware(req, res, error => {
         if (error) {
           throw error;
         }
@@ -59,8 +59,8 @@ describe("route", function() {
       });
     });
 
-    it("should have created the cache entry", function(done) {
-      cache.get(_name, function(error, $results) {
+    it("should have created the cache entry", done => {
+      cache.get(_name, (error, $results) => {
         if (error) {
           throw error;
         }
@@ -70,23 +70,23 @@ describe("route", function() {
       });
     });
 
-    describe("cache entry", function() {
-      it('should be have a property "body" which is a string and equals the sent text', function() {
-        results.forEach(function(entry) {
+    describe("cache entry", () => {
+      it('should be have a property "body" which is a string and equals the sent text', () => {
+        results.forEach(entry => {
           entry.should.have.property("body").which.is.a.String();
           entry.body.should.equal("hello folks!");
         });
       });
 
-      it('should be have a property "type" which is a string and equals the sent type', function() {
-        results.forEach(function(entry) {
+      it('should be have a property "type" which is a string and equals the sent type', () => {
+        results.forEach(entry => {
           entry.should.have.property("type").which.is.a.String();
           entry.type.should.equal(res._headers["content-type"]);
         });
       });
 
-      it(" - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now", function() {
-        results.forEach(function(entry) {
+      it(" - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now", () => {
+        results.forEach(entry => {
           Number(entry.touched).should.be.a.Number();
 
           let date = new Date(Number(entry.touched));
@@ -95,29 +95,29 @@ describe("route", function() {
         });
       });
 
-      it(" - entry which has a property expire which equals sent expire", function() {
-        results.forEach(function(entry) {
+      it(" - entry which has a property expire which equals sent expire", () => {
+        results.forEach(entry => {
           should(+entry.expire).equal(_expire);
         });
       });
     });
   });
 });
-describe("binaryroute", function() {
+describe("binaryroute", () => {
   let middleware, error, results;
 
-  it("should be a function", function() {
+  it("should be a function", () => {
     cache.route.should.be.a.Function();
   });
 
-  it("should return a function", function() {
+  it("should return a function", () => {
     middleware = cache.route({ name: "binary", expire: _expire, binary: true });
     middleware.should.be.a.Function();
   });
 
-  describe("On Calling the route", function() {
-    it("should call next", function(done) {
-      middleware(req, res, function(error) {
+  describe("On Calling the route", () => {
+    it("should call next", done => {
+      middleware(req, res, error => {
         if (error) {
           throw error;
         }
@@ -127,8 +127,8 @@ describe("binaryroute", function() {
       });
     });
 
-    it("should have created the cache entry", function(done) {
-      cache.get("binary", function(error, $results) {
+    it("should have created the cache entry", done => {
+      cache.get("binary", (error, $results) => {
         if (error) {
           throw error;
         }
@@ -138,9 +138,9 @@ describe("binaryroute", function() {
       });
     });
 
-    describe("cache entry", function() {
-      it('should be have a property "body" which is a base64 string and decodes to sent text', function() {
-        results.forEach(function(entry) {
+    describe("cache entry", () => {
+      it('should be have a property "body" which is a base64 string and decodes to sent text', () => {
+        results.forEach(entry => {
           entry.should.have.property("body").which.is.a.String();
           entry.body.should.equal("aGVsbG8gZm9sa3Mh"); //aGVsbG8gZm9sa3Mh = 'hello folks!' in base64
           let decodedString = Buffer.from(entry.body, "base64").toString(
@@ -150,15 +150,15 @@ describe("binaryroute", function() {
         });
       });
 
-      it('should be have a property "type" which is a string and equals the sent type', function() {
-        results.forEach(function(entry) {
+      it('should be have a property "type" which is a string and equals the sent type', () => {
+        results.forEach(entry => {
           entry.should.have.property("type").which.is.a.String();
           entry.type.should.equal(res._headers["content-type"]);
         });
       });
 
-      it(" - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now", function() {
-        results.forEach(function(entry) {
+      it(" - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now", () => {
+        results.forEach(entry => {
           Number(entry.touched).should.be.a.Number();
 
           let date = new Date(Number(entry.touched));
@@ -167,8 +167,8 @@ describe("binaryroute", function() {
         });
       });
 
-      it(" - entry which has a property expire which equals sent expire", function() {
-        results.forEach(function(entry) {
+      it(" - entry which has a property expire which equals sent expire", () => {
+        results.forEach(entry => {
           should(+entry.expire).equal(_expire);
         });
       });
@@ -204,11 +204,11 @@ module.exports = function(cb) {
     cache.newCaches
 
       /** if it is  a route cache */
-      .filter(function(entry) {
+      .filter(entry => {
         return !!/^\/route_/.test(entry.name);
       })
 
-      .map(function(entry) {
+      .map(entry => {
         return function(then) {
           let name = this.name;
           let entry = this.entry;

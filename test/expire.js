@@ -1,31 +1,31 @@
 import createExpirationPolicy from "../dist/ExpressRedisCache/expire";
 
-describe("expire", function() {
-  it("should be a function", function() {
+describe("expire", () => {
+  it("should be a function", () => {
     createExpirationPolicy.should.be.a.Function;
   });
 
-  it("should accept a number", function() {
+  it("should accept a number", () => {
     createExpirationPolicy(1).should.be.a.Function;
   });
 
-  it("should accept an object", function() {
+  it("should accept an object", () => {
     createExpirationPolicy({
       xxx: -1
     }).should.be.a.Function;
   });
 
-  it("should require an argument", function() {
+  it("should require an argument", () => {
     createExpirationPolicy.should.throw();
   });
 
-  it("should not accept a boolean", function() {
+  it("should not accept a boolean", () => {
     (function() {
       createExpirationPolicy(true);
     }.should.throw());
   });
 
-  it("should require a default (xxx) expiration", function() {
+  it("should require a default (xxx) expiration", () => {
     (function() {
       createExpirationPolicy({
         "1xx": 1,
@@ -34,7 +34,7 @@ describe("expire", function() {
     }.should.throw());
   });
 
-  it("should only accept two orders of wildcards", function() {
+  it("should only accept two orders of wildcards", () => {
     (function() {
       createExpirationPolicy({
         xxx: -1,
@@ -43,7 +43,7 @@ describe("expire", function() {
     }.should.throw());
   });
 
-  it("should only accept number values for status code specific values", function() {
+  it("should only accept number values for status code specific values", () => {
     (function() {
       createExpirationPolicy({
         xxx: -1,
@@ -52,7 +52,7 @@ describe("expire", function() {
     }.should.throw());
   });
 
-  it("should only accept valid status code keys", function() {
+  it("should only accept valid status code keys", () => {
     (function() {
       createExpirationPolicy({
         xxx: -1,
@@ -73,7 +73,7 @@ describe("expire", function() {
     }.should.throw());
   });
 
-  it("should return the specified value for all status codes", function() {
+  it("should return the specified value for all status codes", () => {
     createExpirationPolicy(-1)(null, { statusCode: 200 }).should.equal(-1);
     createExpirationPolicy(1)(null, { statusCode: 300 }).should.equal(1);
     createExpirationPolicy(22)(null, { statusCode: 403 }).should.equal(22);
@@ -81,7 +81,7 @@ describe("expire", function() {
     createExpirationPolicy(4444)(null, { statusCode: 500 }).should.equal(4444);
   });
 
-  it("should return the appropriate value for status codes", function() {
+  it("should return the appropriate value for status codes", () => {
     let policy = createExpirationPolicy({
       xxx: -1,
       "1xx": 1,
@@ -108,7 +108,7 @@ describe("expire", function() {
     policy(null, { statusCode: 300 }).should.equal(-1);
   });
 
-  it("should treat status code keys as case insensitive", function() {
+  it("should treat status code keys as case insensitive", () => {
     let policy = createExpirationPolicy({
       "1XX": 1,
       xXx: 55
