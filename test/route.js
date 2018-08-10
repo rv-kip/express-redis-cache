@@ -54,6 +54,7 @@ describe("route", () => {
         if (error) {
           throw error;
         }
+        res._headers["cache-control"].should.equal("max-age=60000");
         res.send("hello folks!");
         done();
       });
