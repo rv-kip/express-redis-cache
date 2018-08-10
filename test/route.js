@@ -122,7 +122,7 @@ describe("binaryroute", function() {
           throw error;
         }
 
-        res.send(new Buffer("hello folks!", "binary"));
+        res.send(Buffer.from("hello folks!").toString("base64"));
         done();
       });
     });
@@ -143,7 +143,9 @@ describe("binaryroute", function() {
         results.forEach(function(entry) {
           entry.should.have.property("body").which.is.a.String();
           entry.body.should.equal("aGVsbG8gZm9sa3Mh"); //aGVsbG8gZm9sa3Mh = 'hello folks!' in base64
-          var decodedString = new Buffer(entry.body, "base64").toString("utf8");
+          var decodedString = Buffer.from(entry.body, "base64").toString(
+            "utf8"
+          );
           decodedString.should.equal("hello folks!");
         });
       });
@@ -197,67 +199,59 @@ module.exports = function(cb) {
 
   var cache = this;
 
-  var domain = Domain.create();
+  async.parallel(
+    /* for each new cache **/
+    cache.newCaches
 
-  domain.on("error", function(error) {
-    cb(error);
-  });
+      /** if it is  a route cache */
+      .filter(function(entry) {
+        return !!/^\/route_/.test(entry.name);
+      })
 
-  domain.run(function() {
-    async.parallel(
-      /* for each new cache **/
-      cache.newCaches
+      .map(function(entry) {
+        return function(then) {
+          var name = this.name;
+          var entry = this.entry;
 
-        /** if it is  a route cache */
-        .filter(function(entry) {
-          return !!/^\/route_/.test(entry.name);
-        })
+          console.log();
+          console.log(" Testing cache.route".bold.blue, name, entry);
+          console.log();
 
-        .map(function(entry) {
-          return function(then) {
-            var name = this.name;
-            var entry = this.entry;
+          /** Emulate req **/
+          var req = {
+            path: name
+          };
 
-            console.log();
-            console.log(" Testing cache.route".bold.blue, name, entry);
-            console.log();
+          /** Emulate res **/
+          var res = {
+            statusCode: 200,
+            send: function(body) {
+              assert("it should be the same message", body === entry.body);
 
-            /** Emulate req **/
-            var req = {
-              path: name
-            };
+              then();
+            }
+          };
 
-            /** Emulate res **/
-            var res = {
-              statusCode: 200,
-              send: function(body) {
-                assert("it should be the same message", body === entry.body);
+          /** Emulate next **/
+          var next = function() {
+            assert(
+              "There should be a response variable",
+              !!res.expressRedisCache
+            );
 
-                then();
-              }
-            };
+            res.send(entry.body);
+          };
 
-            /** Emulate next **/
-            var next = function() {
-              assert(
-                "There should be a response variable",
-                !!res.expressRedisCache
-              );
+          var router = cache.route();
 
-              res.send(entry.body);
-            };
+          assert("it should be a function", typeof router === "function");
 
-            var router = cache.route();
+          /** Emulate a HTTP request **/
 
-            assert("it should be a function", typeof router === "function");
+          router.apply(cache, [req, res, next]);
+        }.bind(entry);
+      }),
 
-            /** Emulate a HTTP request **/
-
-            router.apply(cache, [req, res, next]);
-          }.bind(entry);
-        }),
-
-      cb
-    );
-  });
+    cb
+  );
 };
