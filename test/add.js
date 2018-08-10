@@ -2,12 +2,12 @@ import should from "should";
 import { config } from "../package.json";
 import ERC from "../dist";
 
-var prefix = process.env.EX_RE_CA_PREFIX || "erct:";
-var host = process.env.EX_RE_CA_HOST || "localhost";
-var port = process.env.EX_RE_CA_PORT || 6379;
+let prefix = process.env.EX_RE_CA_PREFIX || "erct:";
+let host = process.env.EX_RE_CA_HOST || "localhost";
+let port = process.env.EX_RE_CA_PORT || 6379;
 
-var _name = "test1";
-var _body = "test1 test1 test1";
+let _name = "test1";
+let _body = "test1 test1 test1";
 
 const cache = new ERC({
   prefix,
@@ -17,7 +17,7 @@ const cache = new ERC({
 });
 
 describe("add", function() {
-  var error, name, entry;
+  let error, name, entry;
 
   it("should be a function", function() {
     cache.add.should.be.a.Function();
@@ -34,7 +34,7 @@ describe("add", function() {
 
   it("should allow for zero expiration", function(done) {
     cache.add(_name, _body, { expire: 0 }, function(err, $name, $entry) {
-      var resp;
+      let resp;
       if ($entry.expire !== 0) {
         resp = new Error("entry.expire should be 0. It is " + $entry.expire);
       }
@@ -68,7 +68,7 @@ describe("add", function() {
   it(" - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now", function() {
     entry.touched.should.be.a.Number();
 
-    var date = new Date(entry.touched);
+    let date = new Date(entry.touched);
 
     (Date.now() - date).should.be.below(2000);
   });

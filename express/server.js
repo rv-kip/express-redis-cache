@@ -1,25 +1,25 @@
 #!/usr/bin/env node
 
-var path = require("path");
+let path = require("path");
 const ERC = require("../dist").default;
 
 /* ======== express  ======== */
 
-var express = require("express");
-var app = express();
+let express = require("express");
+let app = express();
 
 app.set("port", process.env.PORT || 3027);
 
 /* ======== cache  ======== */
-var cache_options = {
+let cache_options = {
   expire: 3,
   host: process.env.EX_RE_CA_HOST || "localhost",
   port: process.env.EX_RE_CA_PORT || 6379,
   prefix: process.env.EX_RE_CA_PREFIX || "erct:"
 };
 
-var cache = new ERC(cache_options);
-var moment = require("moment");
+let cache = new ERC(cache_options);
+let moment = require("moment");
 
 cache.on("error", function(error) {
   console.log("cache error", {
@@ -29,7 +29,7 @@ cache.on("error", function(error) {
 
 /* ======== body parser  ======== */
 
-var bodyParser = require("body-parser");
+let bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 
 function handle_timestamp(req, res) {
   res.set({ "Content-Type": "application/json" });
-  var timestamp = { timestamp: moment().unix() };
+  let timestamp = { timestamp: moment().unix() };
   return res.json(timestamp);
 }
 
@@ -70,7 +70,7 @@ app.all(
 
 /* ======== server  ======== */
 
-var server = require("http").createServer(app);
+let server = require("http").createServer(app);
 
 server.listen(app.get("port"), function() {
   console.log(

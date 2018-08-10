@@ -82,7 +82,7 @@ describe("expire", function() {
   });
 
   it("should return the appropriate value for status codes", function() {
-    var policy = createExpirationPolicy({
+    let policy = createExpirationPolicy({
       xxx: -1,
       "1xx": 1,
       "100": 100,
@@ -109,7 +109,7 @@ describe("expire", function() {
   });
 
   it("should treat status code keys as case insensitive", function() {
-    var policy = createExpirationPolicy({
+    let policy = createExpirationPolicy({
       "1XX": 1,
       xXx: 55
     });

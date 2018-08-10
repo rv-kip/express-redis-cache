@@ -1,7 +1,7 @@
 import request from "request";
 import child_process from "child_process";
 
-var spawn, express_port;
+let spawn, express_port;
 
 describe("test with small express server", function() {
   before(function(done) {
@@ -59,12 +59,12 @@ describe("test with small express server", function() {
   });
 
   it("/1sec route should return json with a timestamp property", function(done) {
-    var url = "http://localhost:" + express_port + "/1sec";
+    let url = "http://localhost:" + express_port + "/1sec";
     request(url, function(error, response, body) {
       if (error) {
         throw error;
       }
-      var p_body = JSON.parse(body);
+      let p_body = JSON.parse(body);
       // Some Mocha weirdness requires a try/catch
       // or an AssertionError will crash the mocha process on error
       try {
@@ -78,12 +78,12 @@ describe("test with small express server", function() {
   });
 
   it("/default_expire route should return json with a timestamp property", function(done) {
-    var url = "http://localhost:" + express_port + "/default_expire";
+    let url = "http://localhost:" + express_port + "/default_expire";
     request(url, function(error, response, body) {
       if (error) {
         throw error;
       }
-      var p_body = JSON.parse(body);
+      let p_body = JSON.parse(body);
       // Some Mocha weirdness requires a try/catch
       // or an AssertionError will crash the mocha process on error
       try {
@@ -97,12 +97,12 @@ describe("test with small express server", function() {
   });
 
   it("/never_expire route should return json with a timestamp property", function(done) {
-    var url = "http://localhost:" + express_port + "/never_expire";
+    let url = "http://localhost:" + express_port + "/never_expire";
     request(url, function(error, response, body) {
       if (error) {
         throw error;
       }
-      var p_body = JSON.parse(body);
+      let p_body = JSON.parse(body);
       // Some Mocha weirdness requires a try/catch
       // or an AssertionError will crash the mocha process on error
       try {
@@ -117,12 +117,12 @@ describe("test with small express server", function() {
 
   it("/1sec route data should expire after 1 seconds", function(done) {
     setTimeout(function() {
-      var url = "http://localhost:" + express_port + "/1sec";
+      let url = "http://localhost:" + express_port + "/1sec";
       request(url, function(error, response, body) {
         if (error) {
           throw error;
         }
-        var p_body = JSON.parse(body),
+        let p_body = JSON.parse(body),
           timestamp = p_body.timestamp,
           now_timestamp = Math.floor(Date.now() / 1000);
 
@@ -142,12 +142,12 @@ describe("test with small express server", function() {
   it("/default_expire route data should expire after 3 seconds", function(done) {
     this.timeout(4000); // allow 5 secs to execute
     setTimeout(function() {
-      var url = "http://localhost:" + express_port + "/default_expire";
+      let url = "http://localhost:" + express_port + "/default_expire";
       request(url, function(error, response, body) {
         if (error) {
           throw error;
         }
-        var p_body = JSON.parse(body),
+        let p_body = JSON.parse(body),
           timestamp = p_body.timestamp,
           now_timestamp = Math.floor(Date.now() / 1000);
 
@@ -167,12 +167,12 @@ describe("test with small express server", function() {
   it("/never_expire route data should not expire after 3 seconds", function(done) {
     this.timeout(4000); // allow 5 secs to execute
     setTimeout(function() {
-      var url = "http://localhost:" + express_port + "/never_expire";
+      let url = "http://localhost:" + express_port + "/never_expire";
       request(url, function(error, response, body) {
         if (error) {
           throw error;
         }
-        var p_body = JSON.parse(body),
+        let p_body = JSON.parse(body),
           timestamp = p_body.timestamp,
           now_timestamp = Math.floor(Date.now() / 1000);
 
@@ -190,7 +190,7 @@ describe("test with small express server", function() {
   });
 
   it("/never_expire/delete route data should be deleted", function(done) {
-    var url = "http://localhost:" + express_port + "/delete_never_expire";
+    let url = "http://localhost:" + express_port + "/delete_never_expire";
     request(url, function(error, response, body) {
       if (error) {
         throw error;

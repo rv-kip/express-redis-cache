@@ -4,26 +4,26 @@ import async from "async";
 import assert from "assert";
 import ERC from "../dist";
 
-var prefix = process.env.EX_RE_CA_PREFIX || "erct:";
-var host = process.env.EX_RE_CA_HOST || "localhost";
-var port = process.env.EX_RE_CA_PORT || 6379;
+let prefix = process.env.EX_RE_CA_PREFIX || "erct:";
+let host = process.env.EX_RE_CA_HOST || "localhost";
+let port = process.env.EX_RE_CA_PORT || 6379;
 
-var cache = new ERC({
+let cache = new ERC({
   prefix: prefix,
   host: host,
   port: port
 });
 
-var _name = "test-route" + process.pid;
-var _expire = 60;
+let _name = "test-route" + process.pid;
+let _expire = 60;
 
 /** Emulate req **/
-var req = {
+let req = {
   originalUrl: "/index"
 };
 
 /** Emulate res **/
-var res = {
+let res = {
   statusCode: 200,
   send: function(body) {},
   _headers: {
@@ -32,12 +32,12 @@ var res = {
 };
 
 /** Emulate next **/
-var next = function() {
+let next = function() {
   // res.send(entry.body);
 };
 
 describe("route", function() {
-  var middleware, error, results;
+  let middleware, error, results;
 
   it("should be a function", function() {
     cache.route.should.be.a.Function();
@@ -89,7 +89,7 @@ describe("route", function() {
         results.forEach(function(entry) {
           Number(entry.touched).should.be.a.Number();
 
-          var date = new Date(Number(entry.touched));
+          let date = new Date(Number(entry.touched));
 
           (Date.now() - date).should.be.below(2000);
         });
@@ -104,7 +104,7 @@ describe("route", function() {
   });
 });
 describe("binaryroute", function() {
-  var middleware, error, results;
+  let middleware, error, results;
 
   it("should be a function", function() {
     cache.route.should.be.a.Function();
@@ -143,7 +143,7 @@ describe("binaryroute", function() {
         results.forEach(function(entry) {
           entry.should.have.property("body").which.is.a.String();
           entry.body.should.equal("aGVsbG8gZm9sa3Mh"); //aGVsbG8gZm9sa3Mh = 'hello folks!' in base64
-          var decodedString = Buffer.from(entry.body, "base64").toString(
+          let decodedString = Buffer.from(entry.body, "base64").toString(
             "utf8"
           );
           decodedString.should.equal("hello folks!");
@@ -161,7 +161,7 @@ describe("binaryroute", function() {
         results.forEach(function(entry) {
           Number(entry.touched).should.be.a.Number();
 
-          var date = new Date(Number(entry.touched));
+          let date = new Date(Number(entry.touched));
 
           (Date.now() - date).should.be.below(2000);
         });
@@ -197,7 +197,7 @@ module.exports = function(cb) {
     throw new Error("Missing callback");
   }
 
-  var cache = this;
+  let cache = this;
 
   async.parallel(
     /* for each new cache **/
@@ -210,20 +210,20 @@ module.exports = function(cb) {
 
       .map(function(entry) {
         return function(then) {
-          var name = this.name;
-          var entry = this.entry;
+          let name = this.name;
+          let entry = this.entry;
 
           console.log();
           console.log(" Testing cache.route".bold.blue, name, entry);
           console.log();
 
           /** Emulate req **/
-          var req = {
+          let req = {
             path: name
           };
 
           /** Emulate res **/
-          var res = {
+          let res = {
             statusCode: 200,
             send: function(body) {
               assert("it should be the same message", body === entry.body);
@@ -233,7 +233,7 @@ module.exports = function(cb) {
           };
 
           /** Emulate next **/
-          var next = function() {
+          let next = function() {
             assert(
               "There should be a response variable",
               !!res.expressRedisCache
@@ -242,7 +242,7 @@ module.exports = function(cb) {
             res.send(entry.body);
           };
 
-          var router = cache.route();
+          let router = cache.route();
 
           assert("it should be a function", typeof router === "function");
 
