@@ -1,14 +1,15 @@
 import request from "request";
+import child_process from "child_process";
 
 var spawn, express_port;
 
 describe("test with small express server", function() {
   before(function(done) {
     this.timeout(5000);
-    spawn = require("child_process").spawn("express/server.js", [], {});
+    spawn = child_process.spawn("express/server.js", [], {});
 
     spawn.on("error", function(error) {
-      throw error;
+      console.error(error);
     });
 
     spawn.on("exit", function(status) {
@@ -27,6 +28,10 @@ describe("test with small express server", function() {
           .trim();
         done();
       }
+    });
+
+    spawn.stderr.on("data", data => {
+      console.log(`stderr: ${data}`);
     });
   });
 
@@ -203,7 +208,7 @@ describe("test with small express server", function() {
   });
 
   after(function(done) {
-    process.kill(spawn.pid);
+    process.kill(spawn.pid, 0);
     done();
   });
 });

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var path = require("path");
+const ERC = require("../dist").default;
 
 /* ======== express  ======== */
 
@@ -17,7 +18,7 @@ var cache_options = {
   prefix: process.env.EX_RE_CA_PREFIX || "erct:"
 };
 
-var cache = require("../")(cache_options);
+var cache = new ERC(cache_options);
 var moment = require("moment");
 
 cache.on("error", function(error) {
