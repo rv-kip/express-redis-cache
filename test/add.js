@@ -16,15 +16,15 @@ const cache = new ERC({
   expire: 2
 });
 
-describe("add", function() {
+describe("add", () => {
   let error, name, entry;
 
-  it("should be a function", function() {
+  it("should be a function", () => {
     cache.add.should.be.a.Function();
   });
 
-  it("should callback", function(done) {
-    cache.add(_name, _body, function($error, $name, $entry) {
+  it("should callback", done => {
+    cache.add(_name, _body, ($error, $name, $entry) => {
       error = $error;
       name = $name;
       entry = $entry;
@@ -32,8 +32,8 @@ describe("add", function() {
     });
   });
 
-  it("should allow for zero expiration", function(done) {
-    cache.add(_name, _body, { expire: 0 }, function(err, $name, $entry) {
+  it("should allow for zero expiration", done => {
+    cache.add(_name, _body, { expire: 0 }, (err, $name, $entry) => {
       let resp;
       if ($entry.expire !== 0) {
         resp = new Error("entry.expire should be 0. It is " + $entry.expire);
@@ -42,30 +42,30 @@ describe("add", function() {
     });
   });
 
-  it("should not have error", function() {
+  it("should not have error", () => {
     should(error).be.null;
   });
 
-  it("should have a name which is a string and match the request", function() {
+  it("should have a name which is a string and match the request", () => {
     name.should.be.a.String();
     name.should.equal(_name);
   });
 
-  it("should have a entry which is an object", function() {
+  it("should have a entry which is an object", () => {
     entry.should.be.an.Object();
   });
 
-  it(" - entry which has a property body which a string matching the request", function() {
+  it(" - entry which has a property body which a string matching the request", () => {
     entry.body.should.be.a.String();
     entry.body.should.equal(_body);
   });
 
-  it(" - entry which has a property type which a string matching default type", function() {
+  it(" - entry which has a property type which a string matching default type", () => {
     entry.type.should.be.a.String();
     entry.type.should.equal(config.type);
   });
 
-  it(" - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now", function() {
+  it(" - entry which has a property touched which is a number which, when resolved to date, is less than 2 seconds from now", () => {
     entry.touched.should.be.a.Number();
 
     let date = new Date(entry.touched);
@@ -73,13 +73,13 @@ describe("add", function() {
     (Date.now() - date).should.be.below(2000);
   });
 
-  it(" - entry which has a property expire which equals cache.expire", function() {
+  it(" - entry which has a property expire which equals cache.expire", () => {
     should(entry.expire).equal(cache.expire);
   });
 
-  it("should have cached the content", function(done) {
-    cache.add(_name, _body, { expire: -1 }, function() {
-      cache.get(_name, function(err, res) {
+  it("should have cached the content", done => {
+    cache.add(_name, _body, { expire: -1 }, () => {
+      cache.get(_name, (err, res) => {
         should(err).not.be.ok;
         res.should.be.an.Array();
         res.should.have.a.lengthOf(1);
@@ -91,8 +91,8 @@ describe("add", function() {
   it("should expire in " + cache.expire + " seconds", function(done) {
     this.timeout(2500); // allow more time for this test
 
-    setTimeout(function() {
-      cache.get(_name, function(err, res) {
+    setTimeout(() => {
+      cache.get(_name, (err, res) => {
         should(err).not.be.ok;
         res.should.be.an.Array();
         res.should.have.a.lengthOf(0);

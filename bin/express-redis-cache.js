@@ -14,7 +14,7 @@ module.exports = (function() {
     prefix,
     skip = [];
 
-  process.argv = process.argv.map(function(argv, i, all) {
+  process.argv = process.argv.map((argv, i, all) => {
     if (argv === "--prefix" && process.argv[i + 1]) {
       prefix = process.argv[i + 1];
       skip.push(i + 1);
@@ -44,13 +44,13 @@ module.exports = (function() {
 
     cache
 
-      .on("error", function(error) {
-        error.stack.split(/\n/).forEach(function(line) {
+      .on("error", error => {
+        error.stack.split(/\n/).forEach(line => {
           console.log(line.yellow);
         });
       })
 
-      .on("message", function(message) {
+      .on("message", message => {
         console.log(message.grey);
       });
   }
@@ -183,7 +183,7 @@ module.exports = (function() {
     case "ls":
       connect();
 
-      cache.get(function(err, entries) {
+      cache.get((err, entries) => {
         cache.client.quit();
 
         if (!entries.length) {
@@ -201,7 +201,7 @@ module.exports = (function() {
     case "size":
       connect();
 
-      cache.size(function(size) {
+      cache.size(size => {
         cache.client.quit();
 
         console.log(
@@ -228,7 +228,7 @@ module.exports = (function() {
         process.argv[3],
         process.argv[4],
         { expire: +process.argv[5] },
-        function(name, entry) {
+        (name, entry) => {
           cache.client.quit();
 
           entry.name = name;
@@ -245,7 +245,7 @@ module.exports = (function() {
     case "del":
       connect();
 
-      cache.del(process.argv[3], function(occ) {
+      cache.del(process.argv[3], occ => {
         cache.client.quit();
 
         console.log(" %d deletions", occ);
@@ -259,10 +259,10 @@ module.exports = (function() {
     case "get":
       connect();
 
-      cache.get(process.argv[3], function(entries) {
+      cache.get(process.argv[3], entries => {
         cache.client.quit();
 
-        entries.forEach(function(entry) {
+        entries.forEach(entry => {
           formatEntry(entry);
         });
       });

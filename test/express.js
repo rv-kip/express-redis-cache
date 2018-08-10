@@ -3,20 +3,20 @@ import child_process from "child_process";
 
 let spawn, express_port;
 
-describe("test with small express server", function() {
+describe("test with small express server", () => {
   before(function(done) {
     this.timeout(5000);
     spawn = child_process.spawn("express/server.js", [], {});
 
-    spawn.on("error", function(error) {
+    spawn.on("error", error => {
       console.error(error);
     });
 
-    spawn.on("exit", function(status) {
+    spawn.on("exit", status => {
       console.log("Express Server exit with status " + status);
     });
 
-    spawn.stdout.on("data", function(data) {
+    spawn.stdout.on("data", data => {
       console.log(data.toString());
       if (
         /express-redis-cache test server started on port/.test(data.toString())
@@ -35,8 +35,8 @@ describe("test with small express server", function() {
     });
   });
 
-  it("should have a / route", function(done) {
-    request("http://localhost:" + express_port, function(error, response) {
+  it("should have a / route", done => {
+    request("http://localhost:" + express_port, (error, response) => {
       if (error) {
         throw error;
       }
@@ -45,22 +45,22 @@ describe("test with small express server", function() {
     });
   });
 
-  it("should not have /foobar route", function(done) {
-    request("http://localhost:" + express_port + "/foobar", function(
-      error,
-      response
-    ) {
-      if (error) {
-        throw error;
+  it("should not have /foobar route", done => {
+    request(
+      "http://localhost:" + express_port + "/foobar",
+      (error, response) => {
+        if (error) {
+          throw error;
+        }
+        response.statusCode.should.equal(404);
+        done();
       }
-      response.statusCode.should.equal(404);
-      done();
-    });
+    );
   });
 
-  it("/1sec route should return json with a timestamp property", function(done) {
+  it("/1sec route should return json with a timestamp property", done => {
     let url = "http://localhost:" + express_port + "/1sec";
-    request(url, function(error, response, body) {
+    request(url, (error, response, body) => {
       if (error) {
         throw error;
       }
@@ -77,9 +77,9 @@ describe("test with small express server", function() {
     });
   });
 
-  it("/default_expire route should return json with a timestamp property", function(done) {
+  it("/default_expire route should return json with a timestamp property", done => {
     let url = "http://localhost:" + express_port + "/default_expire";
-    request(url, function(error, response, body) {
+    request(url, (error, response, body) => {
       if (error) {
         throw error;
       }
@@ -96,9 +96,9 @@ describe("test with small express server", function() {
     });
   });
 
-  it("/never_expire route should return json with a timestamp property", function(done) {
+  it("/never_expire route should return json with a timestamp property", done => {
     let url = "http://localhost:" + express_port + "/never_expire";
-    request(url, function(error, response, body) {
+    request(url, (error, response, body) => {
       if (error) {
         throw error;
       }
@@ -115,10 +115,10 @@ describe("test with small express server", function() {
     });
   });
 
-  it("/1sec route data should expire after 1 seconds", function(done) {
-    setTimeout(function() {
+  it("/1sec route data should expire after 1 seconds", done => {
+    setTimeout(() => {
       let url = "http://localhost:" + express_port + "/1sec";
-      request(url, function(error, response, body) {
+      request(url, (error, response, body) => {
         if (error) {
           throw error;
         }
@@ -141,9 +141,9 @@ describe("test with small express server", function() {
 
   it("/default_expire route data should expire after 3 seconds", function(done) {
     this.timeout(4000); // allow 5 secs to execute
-    setTimeout(function() {
+    setTimeout(() => {
       let url = "http://localhost:" + express_port + "/default_expire";
-      request(url, function(error, response, body) {
+      request(url, (error, response, body) => {
         if (error) {
           throw error;
         }
@@ -166,9 +166,9 @@ describe("test with small express server", function() {
 
   it("/never_expire route data should not expire after 3 seconds", function(done) {
     this.timeout(4000); // allow 5 secs to execute
-    setTimeout(function() {
+    setTimeout(() => {
       let url = "http://localhost:" + express_port + "/never_expire";
-      request(url, function(error, response, body) {
+      request(url, (error, response, body) => {
         if (error) {
           throw error;
         }
@@ -189,9 +189,9 @@ describe("test with small express server", function() {
     }, 3100);
   });
 
-  it("/never_expire/delete route data should be deleted", function(done) {
+  it("/never_expire/delete route data should be deleted", done => {
     let url = "http://localhost:" + express_port + "/delete_never_expire";
-    request(url, function(error, response, body) {
+    request(url, (error, response, body) => {
       if (error) {
         throw error;
       }
@@ -207,7 +207,7 @@ describe("test with small express server", function() {
     });
   });
 
-  after(function(done) {
+  after(done => {
     process.kill(spawn.pid);
     done();
   });
