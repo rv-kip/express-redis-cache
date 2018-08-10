@@ -37,7 +37,7 @@ app.use(bodyParser.json());
 /* ======== home  ======== */
 
 function handle_timestamp(req, res) {
-  res.set({ "Content-Type": "text/json" });
+  res.set({ "Content-Type": "application/json" });
   var timestamp = { timestamp: moment().unix() };
   return res.json(timestamp);
 }
