@@ -9,7 +9,7 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "babel lib -d dist",
-    "test": "npm run build && mocha --inspect-brk --compilers js:@babel/register -R nyan test"
+    "test": "npm run build && mocha --exit --compilers js:@babel/register -R nyan test"
   },
   "repository": {
     "type": "git",
