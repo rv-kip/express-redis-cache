@@ -4,6 +4,7 @@
 
   var path      =   require('path');
   var assert    =   require('assert');
+  var util      =   require('util')
 
   var mocha     =   require('mocha');
   var should    =   require('should');
@@ -27,24 +28,37 @@
   };
 
   /** Emulate res **/
-  var res = {
+  var resTemplate = {
     statusCode: 200,
     send: function (body) {
 
     },
+    write: function () {},
+    end: function () {},
     _headers: {
       'content-type': 'text/plain'
     }
   };
+
+  var res;
 
   /** Emulate next **/
   var next = function () {
     // res.send(entry.body);
   };
 
+  var reset = function (done) {
+    res = util._extend({}, resTemplate)
+    cache.del('*', function () {
+      done();
+    })
+  }
+
   describe ( 'route', function () {
 
     var middleware, error, results;
+
+    before( function (done) { reset(done); } )
 
     it ( 'should be a function', function () {
       cache.route.should.be.a.Function();
@@ -115,9 +129,62 @@
       });
     });
   });
+
+  describe ( 'streaming binary response', function () {
+
+    var middleware, error, results;
+
+    before( function (done) { reset(done); } )
+
+    it ( 'should be a function', function () {
+      cache.route.should.be.a.Function();
+    });
+
+    it ( 'should return a function', function () {
+      middleware = cache.route({name: 'binary', expire: _expire, binary: true});
+      middleware.should.be.a.Function();
+    });
+
+    describe('On Calling the route', function () {
+
+      it ( 'should call next', function (done) {
+        middleware(
+          req,
+          res,
+          function (error) {
+            if ( error ) {
+              throw error;
+            }
+            should.not.exist(res._cache_content);
+            res.write(new Buffer('hello ', 'binary'));
+            res.write(new Buffer('folks!', 'binary'));
+            res.end();
+            done();
+          });
+      });
+
+      it ( 'should accumulate content in response', function () {
+        res._cache_content.should.be.a.Buffer;
+        res._cache_content.toString().should.equal('hello folks!')
+      });
+
+      it ( 'should have created the cache entry', function (done) {
+        cache.get('binary', function (error, $results) {
+          if ( error ) {
+            throw error;
+          }
+          $results.length.should.be.above(0);
+          done();
+        })
+      });
+    });
+  });
+
   describe ( 'binaryroute', function () {
 
     var middleware, error, results;
+
+    before( function (done) { reset(done); } )
 
     it ( 'should be a function', function () {
       cache.route.should.be.a.Function();
