@@ -333,7 +333,7 @@ Where `options` is an object that has the following properties:
 
 # API
 
-The `route` method is designed to integrate easily with Express. You can also define your own caching logics using the other methos of the API shown below.
+The `route` method is designed to integrate easily with Express. You can also define your own caching logics using the other methods of the API shown below.
 
 ## `get` Get cache entries
 
