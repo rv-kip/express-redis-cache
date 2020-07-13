@@ -14,6 +14,7 @@
   var host      =   process.env.EX_RE_CA_HOST || 'localhost';
   var port      =   process.env.EX_RE_CA_PORT || 6379;
 
+  var _noexpire =   "i don't expire";
   var _name     =   'test1';
   var _body     =   'test1 test1 test1';
   var _type     =   'text/plain';
@@ -44,7 +45,7 @@
     });
 
     it ( 'should allow for zero expiration', function(done) {
-      cache.add(_name, _body, { expire: 0 },
+      cache.add(_noexpire, _body, { expire: 0 },
         function($error, $name, $entry) {
           var resp;
           if($entry.expire !== 0) {
