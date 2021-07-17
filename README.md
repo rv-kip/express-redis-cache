@@ -215,7 +215,10 @@ app.get('/index.html',
   function (req, res)  { ... });
 ```
 
-You can also specify
+## Cache-Control header
+
+Redis middleware add a cache-control header with a max-age based on your route expiration,
+you can opt-out of this behavior by using `res.express_redis_cache_disable_cache_control=true`
 
 # Content Type
 
