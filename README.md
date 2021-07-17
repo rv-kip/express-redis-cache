@@ -289,6 +289,13 @@ cache.on('deprecated', function (deprecated) {
 });
 ```
 
+## Cache status header
+
+You can opt-in to get a header in the response that gives you the status of the redis cache.
+Use `res.express_redis_cache_status=true|false` - default to false
+
+The response will include the header `redis-cache-status=Hit|Miss`
+
 # The Entry Model
 
 This is the object synopsis we use to represent a cache entry:
